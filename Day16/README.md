@@ -29,3 +29,44 @@ GPIOD_MODER |= (1 << 24);  // 2. 後設定 (Set)
 1. **電路圖 (Schematic)**：告訴你實體硬體接在哪根腳位上 (例如 LED 接在 PD12)。
 2. **參考手冊 (Reference Manual)**：厚達千頁的字典。提供 Memory Map 讓你查出暫存器位址，並詳細解釋每個 Bit 的功能 (如 `01` 代表 Output Mode)。
 3. **規格書 (Datasheet)**：記載硬體的電氣極限 (如最高時脈、容許電壓)。
+
+## 5. 🚀 $O(1)$ 極速區間遮罩 (Bitwise Range Mask)
+要在不影響其他 Bits 的情況下，替換掉一個暫存器中連續的 Bits：
+* **一般做法**：使用 `for` 迴圈一個一個 Bit 清零。
+* **業界大神解法**：利用 `(1U << length) - 1` 瞬間產生連續的 `1`，再推移到位址上作為遮罩。
+```c
+uint32_t base_mask = (1U << length) - 1; 
+uint32_t target_mask = base_mask << start_bit;
+reg &= ~target_mask;
+reg |= (value << start_bit);
+```
+
+## 6. 💀 致命的傳值 Memory Leak
+當在函式內部呼叫 `malloc` 分配記憶體時，如果只傳遞單層指標 `int *ptr`，這叫做**傳值 (Pass by Value)**。
+* 電腦只會複製指標的值給函式，`malloc` 配置的新記憶體只會綁定在區域變數上。函式結束後，記憶體變成無主孤魂 (Memory Leak)，而外面的指標依舊是 `NULL`。
+* **正確解法**：使用 **指標的指標 (Double Pointer, `int **ptr`)** 來傳遞外層指標的「地址」，或是直接將分配好的指標 **`return`** 出來。
+
+## 7. ⭕ 環狀佇列 100% 空間利用
+傳統的環狀佇列為了區分「全空」與「全滿」(此時 `head == tail`)，通常會故意浪費一個格子。
+如果面試官要求不能浪費空間且不准使用計數器：
+* **解法**：在結構體中加入一個狀態標記 `bool last;`。
+* 在 `enqueue` 時設定 `last = true` (最後動作是寫)。
+* 在 `dequeue` 時設定 `last = false` (最後動作是讀)。
+* 如果 `head == tail` 且 `last == false`，代表剛讀完最後一筆資料，為**全空**。
+* 如果 `head == tail` 且 `last == true`，代表剛寫滿最後一筆資料，為**全滿**。
+
+## 8. 🔍 尋找左邊界 (Lower Bound) 的安全演算法
+在已排序但有重複數字的陣列中尋找目標的「第一次出現位置」：
+* **❌ 錯誤寫法**：直接檢查鄰居 `arr[mid - 1]`。如果 `mid` 剛好是 `0`，會導致 `arr[-1]` 越界存取引發 Segmentation Fault。
+* **✅ 業界寫法 (存檔裝死法)**：
+```c
+int result = -1;
+while (low <= high) {
+    int mid = low + ((high - low) >> 1); 
+    if (arr[mid] == target) {
+        result = mid;       // 1. 先「存檔」
+        high = mid - 1;     // 2. 裝死！逼迫迴圈繼續往左半邊找
+    } // ... 其餘正常二分搜尋邏輯
+}
+```
+這個寫法讓 `while(low <= high)` 成為了一道堅固的防火牆，永遠不會算出越界的 `mid`！
