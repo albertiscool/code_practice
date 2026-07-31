@@ -1,0 +1,33 @@
+# Day 44: 總複習 Part 4 - STM32 硬體周邊 (ADC 轉換、PWM 調速與 DMA 乒乓雙緩衝)
+
+今天是 10 天特訓總複習的第四天，我們深入複習了 DMA 記憶體直接存取的 CPU 解放原理與環形雙緩衝 (Ping-Pong Buffer)、12-bit ADC 解析度電壓換算與多通道 DMA 掃描，以及 PWM 計數器 (CNT/CCR) 的暫存器調速控制。
+
+---
+
+## 📝 實戰考題與詳細解答 (Mock Interview Questions)
+
+### 題目 1【硬體傳輸極致：DMA 運作原理與雙緩衝】
+* **原問題**：DMA 搬移資料時 CPU 在忙什麼？DMA 雙緩衝 (`Half-Transfer` / `Transfer-Complete`) 如何消滅讀寫衝突？
+* **解析與解答**：
+  1. **零 CPU 介入**：DMA 控制器於硬體背景直接搬移資料。CPU 完全解放，可專心執行高階算術 (如 YOLO AI / 演算法 / 任務排程)，僅在全緩衝填滿時接受 1 次中斷。
+  2. **乒乓雙緩衝 (Ping-Pong Buffer)**：當 DMA 自動填滿前半段 (0~499) 觸發 HT 中斷時，DMA 繼續寫入後半段 (500~999)，而 CPU 醒來處理前半段；當填滿後半段觸發 TC 中斷時，DMA 轉頭寫入前半段，CPU 處理後半段。雙方永遠錯開，無讀寫衝突與 Race Condition。
+
+### 題目 2【訊號轉換與採樣：ADC 類比數位轉換】
+* **原問題**：12-bit ADC ($V_{REF} = 3.3\text{V}$) 讀出 `2048` 代表幾伏特？多通道採樣為何「ADC + DMA」優於單純 ADC 中斷？
+* **解析與解答**：
+  1. **電壓換算**：12-bit 最大值為 $4095$。$V_{actual} = 3.3\text{V} \times \frac{2048}{4095} \approx \mathbf{1.65\text{V}}$。
+  2. **ADC + DMA 掃描模式**：若用單純 ADC 中斷，8 個通道每轉換完 1 個就會引發 1 次 ISR，一輪中斷 8 次，CPU 頻繁停擺。採用 ADC Scan + DMA 模式，DMA 自動將 8 通道數字寫入 RAM 陣列 `adc_buf[8]`，採樣完一輪僅發送 1 次中斷，效率提升 8 倍。
+
+### 題目 3【計數器與控制：PWM 波形產生】
+* **原問題**：佔空比 (Duty Cycle) 25% 的物理意義？當 `CNT < CCR` 為高電位時，提高轉速應增大還是減小 `CCR`？
+* **解析與解答**：
+  1. **佔空比定義**：佔空比是指在一個完整 PWM 週期內，**高電位 (High / 3.3V) 所占的時間比例**。25% Duty Cycle 代表 25% 時間為高電位，75% 時間為低電位 (0V)。
+  2. **暫存器比較 (增大 `CCR`)**：當 `CNT < CCR` 輸出高電位時，增大 `CCR` 會讓 `CNT` 需要計數更長時間才能達到門檻，進而延長高電位時間（增加佔空比），輸出更多平均能量提高馬達轉速。
+
+---
+
+## ⚙️ 核心公式複習
+* **ADC 電壓轉換公式**：
+  $$\text{Voltage} = V_{REF} \times \left( \frac{\text{ADC\_RAW}}{2^N - 1} \right)$$
+* **PWM 佔空比計算**：
+  $$\text{Duty Cycle (\%)} = \left( \frac{\text{CCR}}{\text{ARR}} \right) \times 100\%$$
