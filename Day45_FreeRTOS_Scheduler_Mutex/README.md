@@ -23,3 +23,21 @@
 * **解析與解答**：
   1. **ISR 嚴禁 Block/Sleep**：若 Mutex 已被佔用，`xSemaphoreTake` 會嘗試讓調用者進入休眠 (Block) 讓出 CPU。然而 **ISR 屬於中斷上下文，沒有 TCB 亦絕不允許休眠**！在 ISR 拿鎖會引發核心 Assertion 崩潰或系統死鎖。且 Mutex 的優先權繼承對沒有任務優先級的 ISR 完全無效。
   2. **Task Notification (任務通知)**：在 ISR 1-to-1 單向通知場景下，官方最推薦 `vTaskNotifyGiveFromISR()`。因為它直接修改目標 Task TCB 內部的 32-bit 變數，不需要配置 Semaphore 佇列結構體，**節省高達 ~45% RAM 且切換速度更快**！
+
+---
+
+## 🚀 歷史專題：1997 年 NASA 火星探路者號死機案
+
+1997 年 NASA 的「火星探路者號 (Mars Pathfinder)」登陸火星後，突然開始頻繁地無預警重啟關機。工程師緊急除錯後發現原因正是 **Priority Inversion (優先權逆轉)**：
+* **Task_High (高優先級 - 總線通訊)**：需要拿 Mutex 收集數據傳回地球。
+* **Task_Low (低優先級 - 氣象感測)**：拿到 Mutex 在讀取火星溫度。
+* **Task_Medium (中優先級 - 漫長影音處理)**：不需要 Mutex，但優先級比 Low 高。
+
+**慘案過程**：Task_Low 握鎖 ➡️ Task_High 等鎖休眠 ➡️ 不需鎖的 Task_Medium 搶佔 Task_Low 獨佔 CPU 狂跑 ➡️ Task_Low 無法歸還鎖 ➡️ Task_High 永遠卡死 ➡️ 看門狗 (Watchdog) 認定當機強制重啟！
+* **NASA 的解藥**：工程師從地球遠端發送補丁軟體修復 VxWorks RTOS，開啟 Mutex 的 **Priority Inheritance (優先權繼承)** 才成功拯救了任務！
+
+---
+
+## ⚔️ 為什麼 Binary Semaphore 不能解決優先權逆轉？
+* **Binary Semaphore (二元號誌)**：**無擁有者概念 (No Ownership)**。任何 Task 或 ISR 皆可自由 Take / Give，FreeRTOS 無法得知號誌目前屬於哪一個 Task，故無法發動優先權繼承。
+* **Mutex (互斥鎖)**：**嚴格遵循「誰上鎖，就必須由誰解鎖」 (Ownership)**。FreeRTOS 內部 TCB 會記載 `pxMutexHolder = Task_C`。當 Task_A 搶鎖失敗時，系統便可精準尋找到 Task_C 並將其優先級暫時提升至與 Task_A 同高！
