@@ -24,3 +24,28 @@
 * **解析與解答**：
   1. **預設 Pass by Value (複製值)**：FreeRTOS 預設使用 `memcpy` 將整份結構體內容複製進 Queue 緩衝區（防止發送端局部變數銷毀導致接收端讀到髒資料）。若結構體極大，工程師會手動建立指標 Queue 傳送位址。
   2. **休眠等待與 `errQUEUE_FULL`**：Task A 會進入 `Blocked` 狀態休眠等待 1000ms。若 1000ms 後仍滿，`xQueueSend` 會喚醒 Task A 並回傳 **`errQUEUE_FULL` (`pdFAIL` / 0)**。
+
+---
+
+## 🚀 專題特訓：高階指標 Queue (Queue of Pointers) 與 C 語言語法陷阱
+
+在傳輸巨量數據（如 2000 Bytes 影像或音訊）時，為了防範 `memcpy` 拖慢 CPU 效能，工程師會建立「專門傳送指標位址 (4 Bytes)」的 Queue：
+
+```c
+// 1. 建立裝載 4-Byte 指標位址的 Queue
+QueueHandle_t img_queue = xQueueCreate(5, sizeof(uint8_t *));
+
+// 2. 在 Heap 配置大空間
+uint8_t *img_ptr = (uint8_t *)malloc(2000); 
+
+// 3. 正確發送：傳入指標變數自身的記憶體位址 (&img_ptr)
+xQueueSend(img_queue, &img_ptr, 0); 
+```
+
+### 💥 三種 `xQueueSend` 傳參寫法物理對比
+
+| 寫法 | 型態 (Type) | 實體數值 (Value) | 傳給 `xQueueSend` 的下場 |
+| :--- | :--- | :--- | :--- |
+| **`&img_ptr`** | `uint8_t **` | `0x20000010` (指標變數自己的位址) | ✅ **成功將位址 `0x20008000` 複製進 Queue，完美運作** |
+| **`img_ptr`** | `uint8_t *` | `0x20008000` (影像資料在 Heap 的位址) | ❌ **把開頭 4 像素數據當位址裝入 Queue，接收端讀取跳出 HardFault 死機** |
+| **`*img_ptr`** | `uint8_t` | `0xFF` (第一個像素的值 255) | ❌ **把數字 255 強制當成位址 `0x000000FF` 讀取，發送端當場死機** |
