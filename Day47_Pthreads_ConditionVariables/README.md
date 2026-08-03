@@ -23,3 +23,19 @@
 * **解析與解答**：
   1. **喚醒數量差異**：`pthread_cond_signal()` 僅喚醒**至少一個**等待中的 Thread (適合 1-to-1 生產者/消費者)；`pthread_cond_broadcast()` 則會喚醒**所有**休眠等待該條件的 Threads。
   2. **緊急廣播選用 `broadcast`**：多任務 (風扇、LED、Log) 等待緊急事件時，必須使用 `pthread_cond_broadcast()` 確保全家大小通通叫醒執行緊急處置。
+
+---
+
+## 🚀 專題特訓：Process vs Thread 記憶體地圖與 `while` 迴圈防禦時間線
+
+### 1. Process vs Thread 記憶體邊界
+* **Process (行程)** ➡️ **獨立隔離**：Process A 與 Process B 擁有獨立 MMU 頁表，彼此記憶體完全隔離（需使用 `shm_open` 共享記憶體進行 IPC）。
+* **Thread (執行緒)** ➡️ **共享記憶體**：同 Process 內的 Threads 共享 **Heap、Data 全域變數與 FD**，僅擁有私有 Stack。多執行緒同時讀寫全域變數會引發 **Race Condition**，故必須使用 `pthread_mutex_t` 保護。
+
+### 2. 虛假喚醒中 `if` 引發 `-1` Underflow 災難的時間線
+當 `g_data_count = 0` 時，Consumer A 與 Consumer B 皆通過 `if` 檢查並睡在 `pthread_cond_wait` 內部：
+1. Producer 產出 **1 個資料** (`g_data_count = 1`) 並發動廣播。
+2. Consumer A 搶到 Mutex 先醒來，將資料拿走 (`g_data_count--` 變為 `0`) 後解鎖離開。
+3. Consumer B 隨後搶到 Mutex 醒來：
+   * **若使用 `if`**：Consumer B 已於睡前通過 `if` 檢查，醒來後**不重新檢查條件**，直接向下執行 `g_data_count--` ➡️ **`g_data_count` 變為 `-1` (Underflow 記憶體爆掉！)**。
+   * **若使用 `while`**：Consumer B 醒來後**強制重飛回頂端重新檢查 `while (g_data_count == 0)`**，發現資料已遭 A 搶走，再次安全進入 `pthread_cond_wait` 繼續休眠！
