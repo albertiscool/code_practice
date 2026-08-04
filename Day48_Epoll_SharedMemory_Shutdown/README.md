@@ -23,3 +23,23 @@
 * **解析與解答**：
   1. **MMU 實體記憶體映射 (零拷貝)**：`shm_open()` + `mmap()` 將 Process A 與 B 的虛擬記憶體頁表對應至 **同一個實體 RAM 頁框**。A 寫入資料 B 立刻可見，完全無需經過核心 `memcpy` 拷貝。
   2. **Async-Signal-Safe 優雅關機**：Signal Handler 屬於非同步中斷，呼叫非可重入函式 (如 `printf` 或需搶鎖的 `malloc`) 極易引發死鎖與 Heap 損毀。標準做法為僅修改 `volatile sig_atomic_t g_running = 0` 旗標，由主迴圈離開後執行安全資源釋放與優雅關機 (Graceful Shutdown)。
+
+---
+
+## 🚀 專題特訓：Linux 高效能 I/O、ET 模式險境與安全關機總複習
+
+### 1. `select`/`poll` ($O(N)$) vs `epoll` ($O(1)$) 管理員比喻
+* **`select`/`poll` ($O(N)$)**：每次外送員送來便當，住戶都要重新填寫 10,000 戶名單複製給管理員。管理員需跑 `for` 迴圈挨家挨戶敲 10,000 戶門 ($O(N)$) 尋找誰的便當到了。
+* **`epoll` ($O(1)$)**：
+  * **紅黑樹 (Red-Black Tree)**：管理員大廳立了公告牌，住戶只需註冊一次 (`epoll_ctl`)，免去每次複製名單開銷。
+  * **就緒雙向鏈表 (Ready List)**：便當抵達時，硬體中斷自動將名牌掛入就緒鏈表。
+  * **`epoll_wait()`**：管理員只需查看就緒鏈表，秒殺取得目標 FD，時間複雜度為 **$O(1)$**。
+
+### 2. LT (準位觸發) vs ET (邊緣觸發) 鬧鐘比喻與 Non-blocking 必備
+* **LT (Level Triggered)** ➡️ **強迫症老媽鬧鐘**：只要緩衝區內還有 1KB 殘留資料（Level 1），每次 `epoll_wait()` 都會持續喚醒提醒。
+* **ET (Edge Triggered)** ➡️ **只響一聲的冷酷鬧鐘**：僅在「新封包抵達（0 變 1）」上升邊緣通知 1 次。若未一次讀光，殘留 1KB 將滯留緩衝區引發 **Data Starvation 沉睡死鎖**。
+* **ET 搭配 Non-blocking 必備**：為讀光資料必須寫 `while(read())` 迴圈。若 Socket 為 **Blocking (阻塞)**，讀空後的最後一次 `read()` 將導致 **CPU 執行緒永久睡死**！使用 **Non-blocking** 可在讀空時回傳 `-1` (帶 `EAGAIN` / `EWOULDBLOCK`) 安全跳出迴圈。
+
+### 3. Shared Memory 零拷貝與 Async-Signal-Safe 優雅關機
+* **Shared Memory 零拷貝**：`shm_open()` + `mmap()` 透過 MMU 將 Process A 與 B 的虛擬頁表直接對應至 **同一個實體 RAM 頁框**。A 寫入資料 B 瞬間可見，中途 **0 次 `memcpy` 拷貝**。
+* **Async-Signal-Safe 優雅關機**：Signal Handler 會在任意代碼位置中斷主程式。Handler 內部若呼叫 `printf` 或 `malloc`（需搶內部 Heap 鎖），會引發 **死鎖 (Deadlock) 或 Heap 損毀**。標準作法為 Handler 僅將 `volatile sig_atomic_t g_running = 0` 修改，由主迴圈跳出後執行安全資源清理與 Graceful Shutdown。
