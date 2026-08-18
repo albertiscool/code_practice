@@ -6,6 +6,25 @@
 
 ## 🔍 1. I2C (Inter-Integrated Circuit) 深度硬體考點與除錯
 
+### 📊 I2C 讀寫流程與主從傳輸方向圖解
+![I2C 通訊流程與主從方向圖解](./i2c_flow.png)
+
+#### 🔄 寫入 (Write) vs 讀取 (Read) 訊號傳輸方向對照：
+1. **開始信號 (Start)**：由 **Master ➡️ Slave**（SCL 為高時，SDA 由高往下拉低）。
+2. **設備地址 (7-bit Slave Address)**：由 **Master ➡️ Slave** 發送點名。
+3. **讀寫位元 (1-bit R/W)**：由 **Master ➡️ Slave**（`0` 代表寫入 Write / `1` 代表讀取 Read）。
+4. **設備應答 (1-bit ACK/NACK)**：由 **Slave ➡️ Master** 回覆（拉低為 ACK `0` / 沒拉低為 NACK `1`）。
+5. **資料傳輸 (8-bit Data) 與 資料應答 (1-bit ACK/NACK)**：
+   * **寫入模式 (Write = 0)**：
+     * 資料 (Data)：**Master ➡️ Slave**
+     * 應答 (ACK)：**Slave ➡️ Master**
+   * **讀取模式 (Read = 1)**：
+     * 資料 (Data)：**Slave ➡️ Master**
+     * 應答 (ACK/NACK)：**Master ➡️ Slave**（Master 讀完最後一筆時故意發 NACK 告知結束）
+6. **停止信號 (Stop)**：由 **Master ➡️ Slave**（SCL 為高時，SDA 由低往上拉高）。
+
+---
+
 ### 1. Open-Drain (開漏輸出) 與 Pull-up (上拉電阻) 原理
 * **硬體結構**：I2C 晶片引腳內部只有一個連到 GND 的 N-MOS 開關：
   * 輸出 `0` ➡️ N-MOS 導通，主動拉低接地 (0V / LOW)。
