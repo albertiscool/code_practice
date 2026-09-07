@@ -1,0 +1,19 @@
+[10.462s] Invoking command in '/home/a720a/ros2_ws/build/dht11_pkg': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/a720a/ros2_ws/build/dht11_pkg/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/a720a/ros2_ws/install/dht11_pkg/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/a720a/ros2_ws/build/dht11_pkg/build --no-deps symlink_data
+[13.335s] running develop
+[15.412s] running egg_info
+[15.521s] writing dht11_pkg.egg-info/PKG-INFO
+[15.523s] writing dependency_links to dht11_pkg.egg-info/dependency_links.txt
+[15.524s] writing entry points to dht11_pkg.egg-info/entry_points.txt
+[15.525s] writing requirements to dht11_pkg.egg-info/requires.txt
+[15.526s] writing top-level names to dht11_pkg.egg-info/top_level.txt
+[15.749s] reading manifest file 'dht11_pkg.egg-info/SOURCES.txt'
+[15.754s] writing manifest file 'dht11_pkg.egg-info/SOURCES.txt'
+[15.882s] running build_ext
+[15.892s] Creating /home/a720a/ros2_ws/install/dht11_pkg/lib/python3.12/site-packages/dht11-pkg.egg-link (link to .)
+[15.898s] Installing monitor script to /home/a720a/ros2_ws/install/dht11_pkg/lib/dht11_pkg
+[15.900s] Installing publisher script to /home/a720a/ros2_ws/install/dht11_pkg/lib/dht11_pkg
+[15.901s] Installing subscriber script to /home/a720a/ros2_ws/install/dht11_pkg/lib/dht11_pkg
+[15.904s] 
+[15.904s] Installed /home/a720a/ros2_ws/build/dht11_pkg
+[15.905s] running symlink_data
+[16.116s] Invoked command in '/home/a720a/ros2_ws/build/dht11_pkg' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/a720a/ros2_ws/build/dht11_pkg/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/a720a/ros2_ws/install/dht11_pkg/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/a720a/ros2_ws/build/dht11_pkg/build --no-deps symlink_data

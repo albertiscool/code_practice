@@ -1,0 +1,17 @@
+[8.289s] Invoking command in '/home/fr/ros2_ws/balloon_ws/build/serial_bridge': PYTHONPATH=/home/fr/ros2_ws/balloon_ws/build/serial_bridge/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/fr/ros2_ws/balloon_ws/install/serial_bridge/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/fr/ros2_ws/balloon_ws/build/serial_bridge/build --no-deps symlink_data
+[10.420s] running develop
+[12.153s] running egg_info
+[12.155s] writing serial_bridge.egg-info/PKG-INFO
+[12.159s] writing dependency_links to serial_bridge.egg-info/dependency_links.txt
+[12.164s] writing entry points to serial_bridge.egg-info/entry_points.txt
+[12.167s] writing requirements to serial_bridge.egg-info/requires.txt
+[12.169s] writing top-level names to serial_bridge.egg-info/top_level.txt
+[12.184s] reading manifest file 'serial_bridge.egg-info/SOURCES.txt'
+[12.191s] writing manifest file 'serial_bridge.egg-info/SOURCES.txt'
+[12.209s] running build_ext
+[12.216s] Creating /home/fr/ros2_ws/balloon_ws/install/serial_bridge/lib/python3.10/site-packages/serial-bridge.egg-link (link to .)
+[12.223s] Installing serial_bridge_node script to /home/fr/ros2_ws/balloon_ws/install/serial_bridge/lib/serial_bridge
+[12.234s] 
+[12.237s] Installed /home/fr/ros2_ws/balloon_ws/build/serial_bridge
+[12.246s] running symlink_data
+[12.764s] Invoked command in '/home/fr/ros2_ws/balloon_ws/build/serial_bridge' returned '0': PYTHONPATH=/home/fr/ros2_ws/balloon_ws/build/serial_bridge/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/fr/ros2_ws/balloon_ws/install/serial_bridge/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/fr/ros2_ws/balloon_ws/build/serial_bridge/build --no-deps symlink_data

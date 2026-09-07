@@ -1,0 +1,6 @@
+source;share/dht11_pkg/hook/pythonpath.dsv
+source;share/dht11_pkg/hook/pythonpath.sh
+source;share/dht11_pkg/hook/ament_prefix_path.dsv
+source;share/dht11_pkg/hook/ament_prefix_path.sh
+source;../../build/dht11_pkg/share/dht11_pkg/hook/pythonpath_develop.dsv
+source;../../build/dht11_pkg/share/dht11_pkg/hook/pythonpath_develop.sh

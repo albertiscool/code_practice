@@ -1,0 +1,131 @@
+[3.923s] [34mcolcon[0m [1;30mDEBUG[0m [32mCommand line arguments: ['/usr/bin/colcon', 'build', '--symlink-install'][0m
+[3.924s] [34mcolcon[0m [1;30mDEBUG[0m [32mParsed command line arguments: Namespace(log_base=None, log_level=None, verb_name='build', build_base='build', install_base='install', merge_install=False, symlink_install=True, test_result_base=None, continue_on_error=False, executor='parallel', parallel_workers=4, event_handlers=None, ignore_user_meta=False, metas=['./colcon.meta'], base_paths=['.'], packages_ignore=None, packages_ignore_regex=None, paths=None, packages_up_to=None, packages_up_to_regex=None, packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_select_by_dep=None, packages_skip_by_dep=None, packages_skip_up_to=None, packages_select_build_failed=False, packages_skip_build_finished=False, packages_select_test_failures=False, packages_skip_test_passed=False, packages_select=None, packages_skip=None, packages_select_regex=None, packages_skip_regex=None, packages_start=None, packages_end=None, allow_overriding=[], cmake_args=None, cmake_target=None, cmake_target_skip_unavailable=False, cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, ament_cmake_args=None, catkin_cmake_args=None, catkin_skip_building_tests=False, mixin_files=None, mixin=None, verb_parser=<colcon_mixin.mixin.mixin_argument.MixinArgumentDecorator object at 0xffffa92e5ea0>, verb_extension=<colcon_core.verb.build.BuildVerb object at 0xffffa93fb490>, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0xffffa93fb490>>, mixin_verb=('build',))[0m
+[5.748s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(colcon_meta) check parameters
+[5.749s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(recursive) check parameters
+[5.749s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(ignore) check parameters
+[5.749s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(path) check parameters
+[5.749s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(colcon_meta) discover
+[5.750s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(recursive) discover
+[5.750s] [34mcolcon.colcon_core.package_discovery[0m [1;30mINFO[0m Crawling recursively for packages in '/home/fr/ros2_ws/balloon_ws'
+[5.750s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extensions ['ignore', 'ignore_ament_install']
+[5.751s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'ignore'
+[5.751s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'ignore_ament_install'
+[5.751s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extensions ['colcon_pkg']
+[5.752s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'colcon_pkg'
+[5.752s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extensions ['colcon_meta']
+[5.752s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'colcon_meta'
+[5.752s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extensions ['ros']
+[5.752s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'ros'
+[6.027s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extensions ['cmake', 'python']
+[6.027s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'cmake'
+[6.028s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'python'
+[6.028s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extensions ['python_setup_py']
+[6.029s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'python_setup_py'
+[6.030s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(build) by extensions ['ignore', 'ignore_ament_install']
+[6.031s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(build) by extension 'ignore'
+[6.032s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(build) ignored
+[6.033s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(install) by extensions ['ignore', 'ignore_ament_install']
+[6.034s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(install) by extension 'ignore'
+[6.035s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(install) ignored
+[6.036s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(log) by extensions ['ignore', 'ignore_ament_install']
+[6.037s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(log) by extension 'ignore'
+[6.037s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(log) ignored
+[6.039s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extensions ['ignore', 'ignore_ament_install']
+[6.040s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extension 'ignore'
+[6.041s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extension 'ignore_ament_install'
+[6.042s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extensions ['colcon_pkg']
+[6.042s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extension 'colcon_pkg'
+[6.043s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extensions ['colcon_meta']
+[6.043s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extension 'colcon_meta'
+[6.044s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extensions ['ros']
+[6.045s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extension 'ros'
+[6.046s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extensions ['cmake', 'python']
+[6.046s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extension 'cmake'
+[6.047s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extension 'python'
+[6.048s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extensions ['python_setup_py']
+[6.048s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extension 'python_setup_py'
+[6.051s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/balloon_detector) by extensions ['ignore', 'ignore_ament_install']
+[6.052s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/balloon_detector) by extension 'ignore'
+[6.052s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/balloon_detector) by extension 'ignore_ament_install'
+[6.053s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/balloon_detector) by extensions ['colcon_pkg']
+[6.054s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/balloon_detector) by extension 'colcon_pkg'
+[6.054s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/balloon_detector) by extensions ['colcon_meta']
+[6.055s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/balloon_detector) by extension 'colcon_meta'
+[6.056s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/balloon_detector) by extensions ['ros']
+[6.056s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/balloon_detector) by extension 'ros'
+[6.087s] [34mcolcon.colcon_core.package_identification[0m [1;30mDEBUG[0m [32mPackage 'src/balloon_detector' with type 'ros.ament_python' and name 'balloon_detector'[0m
+[6.088s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(recursive) using defaults
+[6.088s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(ignore) discover
+[6.089s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(ignore) using defaults
+[6.089s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(path) discover
+[6.090s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(path) using defaults
+[6.264s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(prefix_path) check parameters
+[6.265s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(prefix_path) discover
+[6.323s] [34mcolcon.colcon_installed_package_information.package_discovery[0m [1;30mDEBUG[0m [32mFound 3 installed packages in /home/fr/ros2_ws/install[0m
+[6.348s] [34mcolcon.colcon_installed_package_information.package_discovery[0m [1;30mDEBUG[0m [32mFound 273 installed packages in /opt/ros/humble[0m
+[6.356s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(prefix_path) using defaults
+[7.143s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'balloon_detector' build argument 'cmake_args' from command line to 'None'
+[7.143s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'balloon_detector' build argument 'cmake_target' from command line to 'None'
+[7.144s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'balloon_detector' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[7.144s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'balloon_detector' build argument 'cmake_clean_cache' from command line to 'False'
+[7.144s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'balloon_detector' build argument 'cmake_clean_first' from command line to 'False'
+[7.144s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'balloon_detector' build argument 'cmake_force_configure' from command line to 'False'
+[7.144s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'balloon_detector' build argument 'ament_cmake_args' from command line to 'None'
+[7.144s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'balloon_detector' build argument 'catkin_cmake_args' from command line to 'None'
+[7.144s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'balloon_detector' build argument 'catkin_skip_building_tests' from command line to 'False'
+[7.145s] [34mcolcon.colcon_core.verb[0m [1;30mDEBUG[0m [32mBuilding package 'balloon_detector' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/fr/ros2_ws/balloon_ws/build/balloon_detector', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/fr/ros2_ws/balloon_ws/install/balloon_detector', 'merge_install': False, 'path': '/home/fr/ros2_ws/balloon_ws/src/balloon_detector', 'symlink_install': True, 'test_result_base': None}[0m
+[7.145s] [34mcolcon.colcon_core.executor[0m [1;30mINFO[0m Executing jobs using 'parallel' executor
+[7.153s] [34mcolcon.colcon_parallel_executor.executor.parallel[0m [1;30mDEBUG[0m [32mrun_until_complete[0m
+[7.157s] [34mcolcon.colcon_ros.task.ament_python.build[0m [1;30mINFO[0m Building ROS package in '/home/fr/ros2_ws/balloon_ws/src/balloon_detector' with build type 'ament_python'
+[7.165s] [34mcolcon.colcon_core.shell[0m [1;30mLevel 1[0m create_environment_hook('balloon_detector', 'ament_prefix_path')
+[7.199s] [34mcolcon.colcon_core.plugin_system[0m [1;30mINFO[0m Skipping extension 'colcon_core.shell.bat': Not used on non-Windows systems
+[7.200s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook '/home/fr/ros2_ws/balloon_ws/install/balloon_detector/share/balloon_detector/hook/ament_prefix_path.ps1'
+[7.212s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment descriptor '/home/fr/ros2_ws/balloon_ws/install/balloon_detector/share/balloon_detector/hook/ament_prefix_path.dsv'
+[7.215s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook '/home/fr/ros2_ws/balloon_ws/install/balloon_detector/share/balloon_detector/hook/ament_prefix_path.sh'
+[7.220s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[7.221s] [34mcolcon.colcon_core.shell[0m [1;30mDEBUG[0m [32mSkip shell extension 'dsv' for command environment[0m
+[10.070s] [34mcolcon.colcon_core.task.python.build[0m [1;30mINFO[0m Building Python package in '/home/fr/ros2_ws/balloon_ws/src/balloon_detector'
+[10.072s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[10.072s] [34mcolcon.colcon_core.shell[0m [1;30mDEBUG[0m [32mSkip shell extension 'dsv' for command environment[0m
+[12.288s] [34mcolcon.colcon_core.event_handler.log_command[0m [1;30mDEBUG[0m [32mInvoking command in '/home/fr/ros2_ws/balloon_ws/build/balloon_detector': PYTHONPATH=/home/fr/ros2_ws/balloon_ws/build/balloon_detector/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/fr/ros2_ws/balloon_ws/install/balloon_detector/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/fr/ros2_ws/balloon_ws/build/balloon_detector/build --no-deps symlink_data[0m
+[14.896s] [34mcolcon.colcon_core.shell[0m [1;30mLevel 1[0m create_environment_hook('balloon_detector', 'pythonpath_develop')
+[14.897s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook '/home/fr/ros2_ws/balloon_ws/build/balloon_detector/share/balloon_detector/hook/pythonpath_develop.ps1'
+[14.898s] [34mcolcon.colcon_core.event_handler.log_command[0m [1;30mDEBUG[0m [32mInvoked command in '/home/fr/ros2_ws/balloon_ws/build/balloon_detector' returned '0': PYTHONPATH=/home/fr/ros2_ws/balloon_ws/build/balloon_detector/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/fr/ros2_ws/balloon_ws/install/balloon_detector/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/fr/ros2_ws/balloon_ws/build/balloon_detector/build --no-deps symlink_data[0m
+[14.901s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment descriptor '/home/fr/ros2_ws/balloon_ws/build/balloon_detector/share/balloon_detector/hook/pythonpath_develop.dsv'
+[14.902s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook '/home/fr/ros2_ws/balloon_ws/build/balloon_detector/share/balloon_detector/hook/pythonpath_develop.sh'
+[14.931s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/fr/ros2_ws/balloon_ws/install/balloon_detector' for CMake module files
+[14.934s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/fr/ros2_ws/balloon_ws/install/balloon_detector' for CMake config files
+[14.938s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/fr/ros2_ws/balloon_ws/install/balloon_detector/lib'
+[14.939s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/fr/ros2_ws/balloon_ws/install/balloon_detector/bin'
+[14.939s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/fr/ros2_ws/balloon_ws/install/balloon_detector/lib/pkgconfig/balloon_detector.pc'
+[14.940s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/fr/ros2_ws/balloon_ws/install/balloon_detector/lib/python3.10/site-packages'
+[14.941s] [34mcolcon.colcon_core.shell[0m [1;30mLevel 1[0m create_environment_hook('balloon_detector', 'pythonpath')
+[14.942s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook '/home/fr/ros2_ws/balloon_ws/install/balloon_detector/share/balloon_detector/hook/pythonpath.ps1'
+[14.944s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment descriptor '/home/fr/ros2_ws/balloon_ws/install/balloon_detector/share/balloon_detector/hook/pythonpath.dsv'
+[14.946s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook '/home/fr/ros2_ws/balloon_ws/install/balloon_detector/share/balloon_detector/hook/pythonpath.sh'
+[14.949s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/fr/ros2_ws/balloon_ws/install/balloon_detector/bin'
+[14.949s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m create_environment_scripts_only(balloon_detector)
+[14.951s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/fr/ros2_ws/balloon_ws/install/balloon_detector/share/balloon_detector/package.ps1'
+[14.959s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package descriptor '/home/fr/ros2_ws/balloon_ws/install/balloon_detector/share/balloon_detector/package.dsv'
+[14.962s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/fr/ros2_ws/balloon_ws/install/balloon_detector/share/balloon_detector/package.sh'
+[14.966s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/fr/ros2_ws/balloon_ws/install/balloon_detector/share/balloon_detector/package.bash'
+[14.971s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/fr/ros2_ws/balloon_ws/install/balloon_detector/share/balloon_detector/package.zsh'
+[14.975s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m create_file_with_runtime_dependencies(/home/fr/ros2_ws/balloon_ws/install/balloon_detector/share/colcon-core/packages/balloon_detector)
+[14.976s] [34mcolcon.colcon_parallel_executor.executor.parallel[0m [1;30mDEBUG[0m [32mclosing loop[0m
+[14.978s] [34mcolcon.colcon_parallel_executor.executor.parallel[0m [1;30mDEBUG[0m [32mloop closed[0m
+[14.978s] [34mcolcon.colcon_parallel_executor.executor.parallel[0m [1;30mDEBUG[0m [32mrun_until_complete finished with '0'[0m
+[14.979s] [34mcolcon.colcon_core.event_reactor[0m [1;30mDEBUG[0m [32mjoining thread[0m
+[15.071s] [34mcolcon.colcon_core.plugin_system[0m [1;30mINFO[0m Skipping extension 'colcon_notification.desktop_notification.terminal_notifier': Not used on non-Darwin systems
+[15.072s] [34mcolcon.colcon_core.plugin_system[0m [1;30mINFO[0m Skipping extension 'colcon_notification.desktop_notification.win32': Not used on non-Windows systems
+[15.072s] [34mcolcon.colcon_notification.desktop_notification[0m [1;30mINFO[0m Sending desktop notification using 'notify2'
+[15.336s] [34mcolcon.colcon_core.event_reactor[0m [1;30mDEBUG[0m [32mjoined thread[0m
+[15.338s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix script '/home/fr/ros2_ws/balloon_ws/install/local_setup.ps1'
+[15.344s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix util module '/home/fr/ros2_ws/balloon_ws/install/_local_setup_util_ps1.py'
+[15.352s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix chain script '/home/fr/ros2_ws/balloon_ws/install/setup.ps1'
+[15.360s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix script '/home/fr/ros2_ws/balloon_ws/install/local_setup.sh'
+[15.365s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix util module '/home/fr/ros2_ws/balloon_ws/install/_local_setup_util_sh.py'
+[15.369s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix chain script '/home/fr/ros2_ws/balloon_ws/install/setup.sh'
+[15.380s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix script '/home/fr/ros2_ws/balloon_ws/install/local_setup.bash'
+[15.385s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix chain script '/home/fr/ros2_ws/balloon_ws/install/setup.bash'
+[15.394s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix script '/home/fr/ros2_ws/balloon_ws/install/local_setup.zsh'
+[15.399s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix chain script '/home/fr/ros2_ws/balloon_ws/install/setup.zsh'

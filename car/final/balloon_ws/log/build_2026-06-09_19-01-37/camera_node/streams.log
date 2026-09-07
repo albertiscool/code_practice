@@ -1,0 +1,17 @@
+[9.893s] Invoking command in '/home/fr/ros2_ws/balloon_ws/build/camera_node': PYTHONPATH=/home/fr/ros2_ws/balloon_ws/build/camera_node/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/fr/ros2_ws/balloon_ws/install/camera_node/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/fr/ros2_ws/balloon_ws/build/camera_node/build --no-deps symlink_data
+[12.161s] running develop
+[13.927s] running egg_info
+[13.929s] writing camera_node.egg-info/PKG-INFO
+[13.932s] writing dependency_links to camera_node.egg-info/dependency_links.txt
+[13.936s] writing entry points to camera_node.egg-info/entry_points.txt
+[13.938s] writing requirements to camera_node.egg-info/requires.txt
+[13.939s] writing top-level names to camera_node.egg-info/top_level.txt
+[13.950s] reading manifest file 'camera_node.egg-info/SOURCES.txt'
+[13.955s] writing manifest file 'camera_node.egg-info/SOURCES.txt'
+[13.965s] running build_ext
+[13.967s] Creating /home/fr/ros2_ws/balloon_ws/install/camera_node/lib/python3.10/site-packages/camera-node.egg-link (link to .)
+[13.973s] Installing usb_camera_node script to /home/fr/ros2_ws/balloon_ws/install/camera_node/lib/camera_node
+[13.975s] 
+[13.975s] Installed /home/fr/ros2_ws/balloon_ws/build/camera_node
+[13.976s] running symlink_data
+[14.272s] Invoked command in '/home/fr/ros2_ws/balloon_ws/build/camera_node' returned '0': PYTHONPATH=/home/fr/ros2_ws/balloon_ws/build/camera_node/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/fr/ros2_ws/balloon_ws/install/camera_node/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/fr/ros2_ws/balloon_ws/build/camera_node/build --no-deps symlink_data

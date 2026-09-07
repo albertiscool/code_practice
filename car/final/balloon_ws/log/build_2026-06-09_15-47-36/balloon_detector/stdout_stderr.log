@@ -1,0 +1,15 @@
+running develop
+running egg_info
+writing balloon_detector.egg-info/PKG-INFO
+writing dependency_links to balloon_detector.egg-info/dependency_links.txt
+writing entry points to balloon_detector.egg-info/entry_points.txt
+writing requirements to balloon_detector.egg-info/requires.txt
+writing top-level names to balloon_detector.egg-info/top_level.txt
+reading manifest file 'balloon_detector.egg-info/SOURCES.txt'
+writing manifest file 'balloon_detector.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/fr/ros2_ws/balloon_ws/install/balloon_detector/lib/python3.10/site-packages/balloon-detector.egg-link (link to .)
+Installing balloon_detector_node script to /home/fr/ros2_ws/balloon_ws/install/balloon_detector/lib/balloon_detector
+
+Installed /home/fr/ros2_ws/balloon_ws/build/balloon_detector
+running symlink_data

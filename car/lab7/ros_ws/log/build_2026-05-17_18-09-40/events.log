@@ -1,0 +1,123 @@
+[0.000000] (-) TimerEvent: {}
+[0.002017] (yolo_detector) JobQueued: {'identifier': 'yolo_detector', 'dependencies': OrderedDict()}
+[0.002223] (yolo_detector) JobStarted: {'identifier': 'yolo_detector'}
+[0.098990] (-) TimerEvent: {}
+[0.199804] (-) TimerEvent: {}
+[0.300735] (-) TimerEvent: {}
+[0.401453] (-) TimerEvent: {}
+[0.502148] (-) TimerEvent: {}
+[0.603007] (-) TimerEvent: {}
+[0.703719] (-) TimerEvent: {}
+[0.804723] (-) TimerEvent: {}
+[0.905350] (-) TimerEvent: {}
+[1.006031] (-) TimerEvent: {}
+[1.106769] (-) TimerEvent: {}
+[1.207382] (-) TimerEvent: {}
+[1.308377] (-) TimerEvent: {}
+[1.409879] (-) TimerEvent: {}
+[1.511604] (-) TimerEvent: {}
+[1.612664] (-) TimerEvent: {}
+[1.713626] (-) TimerEvent: {}
+[1.814271] (-) TimerEvent: {}
+[1.914989] (-) TimerEvent: {}
+[2.015723] (-) TimerEvent: {}
+[2.116353] (-) TimerEvent: {}
+[2.217009] (-) TimerEvent: {}
+[2.317646] (-) TimerEvent: {}
+[2.418285] (-) TimerEvent: {}
+[2.518925] (-) TimerEvent: {}
+[2.619520] (-) TimerEvent: {}
+[2.720106] (-) TimerEvent: {}
+[2.820803] (-) TimerEvent: {}
+[2.921541] (-) TimerEvent: {}
+[3.022309] (-) TimerEvent: {}
+[3.123195] (-) TimerEvent: {}
+[3.223977] (-) TimerEvent: {}
+[3.324940] (-) TimerEvent: {}
+[3.425733] (-) TimerEvent: {}
+[3.526388] (-) TimerEvent: {}
+[3.627105] (-) TimerEvent: {}
+[3.727826] (-) TimerEvent: {}
+[3.828688] (-) TimerEvent: {}
+[3.929467] (-) TimerEvent: {}
+[4.030070] (-) TimerEvent: {}
+[4.130802] (-) TimerEvent: {}
+[4.231503] (-) TimerEvent: {}
+[4.332170] (-) TimerEvent: {}
+[4.433059] (-) TimerEvent: {}
+[4.533814] (-) TimerEvent: {}
+[4.634487] (-) TimerEvent: {}
+[4.735198] (-) TimerEvent: {}
+[4.835872] (-) TimerEvent: {}
+[4.936621] (-) TimerEvent: {}
+[5.037229] (-) TimerEvent: {}
+[5.137938] (-) TimerEvent: {}
+[5.238553] (-) TimerEvent: {}
+[5.339183] (-) TimerEvent: {}
+[5.439904] (-) TimerEvent: {}
+[5.540679] (-) TimerEvent: {}
+[5.641372] (-) TimerEvent: {}
+[5.742470] (-) TimerEvent: {}
+[5.843221] (-) TimerEvent: {}
+[5.944346] (-) TimerEvent: {}
+[6.045729] (-) TimerEvent: {}
+[6.071286] (yolo_detector) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', '-W', 'ignore:easy_install command is deprecated', 'setup.py', 'egg_info', '--egg-base', '../../build/yolo_detector', 'build', '--build-base', '/home/a720a/ros_ws/build/yolo_detector/build', 'install', '--record', '/home/a720a/ros_ws/build/yolo_detector/install.log', '--single-version-externally-managed', 'install_data'], 'cwd': '/home/a720a/ros_ws/src/yolo_detector', 'env': {'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'a720a', 'XDG_SESSION_TYPE': 'wayland', 'CLUTTER_DISABLE_MIPMAPPED_TEXT': '1', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/jazzy/opt/rviz_ogre_vendor/lib:/opt/ros/jazzy/lib/aarch64-linux-gnu:/opt/ros/jazzy/opt/gz_math_vendor/lib:/opt/ros/jazzy/opt/gz_utils_vendor/lib:/opt/ros/jazzy/opt/gz_cmake_vendor/lib:/opt/ros/jazzy/lib', 'HOME': '/home/a720a', 'OLDPWD': '/home/a720a/ros_ws', 'DESKTOP_SESSION': 'ubuntu', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'SYSTEMD_EXEC_PID': '1676', 'GSM_SKIP_SSH_AGENT_WORKAROUND': 'true', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'COLORTERM': 'truecolor', 'DEBUGINFOD_URLS': 'https://debuginfod.ubuntu.com', 'IM_CONFIG_PHASE': '1', 'WAYLAND_DISPLAY': 'wayland-0', 'ROS_DISTRO': 'jazzy', 'LOGNAME': 'a720a', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'MEMORY_PRESSURE_WATCH': '/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/session.slice/org.gnome.Shell@wayland.service/memory.pressure', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'a720a', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'PATH': '/opt/ros/jazzy/bin:/home/a720a/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin', 'SESSION_MANAGER': 'local/720a:@/tmp/.ICE-unix/1646,unix/720a:/tmp/.ICE-unix/1646', 'XDG_MENU_PREFIX': 'gnome-', 'GNOME_TERMINAL_SCREEN': '/org/gnome/Terminal/screen/0dd07193_e91a_4dcc_989c_53c812000974', 'GNOME_SETUP_DISPLAY': ':1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/.mutter-Xwaylandauth.JATOP3', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:', 'GNOME_TERMINAL_SERVICE': ':1.134', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'AMENT_PREFIX_PATH': '/opt/ros/jazzy', 'SHELL': '/bin/bash', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'ROS_AUTOMATIC_DISCOVERY_RANGE': 'SUBNET', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/a720a/ros_ws/build/yolo_detector', 'LC_ALL': 'en_US.UTF-8', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/a720a/ros_ws/build/yolo_detector/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/a720a/ros_ws/install/yolo_detector/lib/python3.12/site-packages:/opt/ros/jazzy/lib/python3.12/site-packages', 'COLCON': '1', 'MEMORY_PRESSURE_WRITE': 'c29tZSAyMDAwMDAgMjAwMDAwMAA=', 'VTE_VERSION': '7600', 'CMAKE_PREFIX_PATH': '/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor'}, 'shell': False}
+[6.145934] (-) TimerEvent: {}
+[6.246630] (-) TimerEvent: {}
+[6.347557] (-) TimerEvent: {}
+[6.450141] (-) TimerEvent: {}
+[6.551150] (-) TimerEvent: {}
+[6.652473] (-) TimerEvent: {}
+[6.753498] (-) TimerEvent: {}
+[6.854713] (-) TimerEvent: {}
+[6.956086] (-) TimerEvent: {}
+[7.056862] (-) TimerEvent: {}
+[7.157519] (-) TimerEvent: {}
+[7.258498] (-) TimerEvent: {}
+[7.359333] (-) TimerEvent: {}
+[7.460010] (-) TimerEvent: {}
+[7.560669] (-) TimerEvent: {}
+[7.661276] (-) TimerEvent: {}
+[7.761973] (-) TimerEvent: {}
+[7.826168] (yolo_detector) StdoutLine: {'line': b'running egg_info\n'}
+[7.862136] (-) TimerEvent: {}
+[7.949921] (yolo_detector) StdoutLine: {'line': b'writing ../../build/yolo_detector/yolo_detector.egg-info/PKG-INFO\n'}
+[7.952742] (yolo_detector) StdoutLine: {'line': b'writing dependency_links to ../../build/yolo_detector/yolo_detector.egg-info/dependency_links.txt\n'}
+[7.954182] (yolo_detector) StdoutLine: {'line': b'writing entry points to ../../build/yolo_detector/yolo_detector.egg-info/entry_points.txt\n'}
+[7.956673] (yolo_detector) StdoutLine: {'line': b'writing requirements to ../../build/yolo_detector/yolo_detector.egg-info/requires.txt\n'}
+[7.957862] (yolo_detector) StdoutLine: {'line': b'writing top-level names to ../../build/yolo_detector/yolo_detector.egg-info/top_level.txt\n'}
+[7.962292] (-) TimerEvent: {}
+[8.062899] (-) TimerEvent: {}
+[8.163500] (-) TimerEvent: {}
+[8.216630] (yolo_detector) StdoutLine: {'line': b"reading manifest file '../../build/yolo_detector/yolo_detector.egg-info/SOURCES.txt'\n"}
+[8.221682] (yolo_detector) StdoutLine: {'line': b"writing manifest file '../../build/yolo_detector/yolo_detector.egg-info/SOURCES.txt'\n"}
+[8.222514] (yolo_detector) StdoutLine: {'line': b'running build\n'}
+[8.223183] (yolo_detector) StdoutLine: {'line': b'running build_py\n'}
+[8.226560] (yolo_detector) StdoutLine: {'line': b'running install\n'}
+[8.260555] (yolo_detector) StdoutLine: {'line': b'running install_lib\n'}
+[8.263645] (-) TimerEvent: {}
+[8.364280] (-) TimerEvent: {}
+[8.420658] (yolo_detector) StdoutLine: {'line': b'running install_data\n'}
+[8.422911] (yolo_detector) StdoutLine: {'line': b'running install_egg_info\n'}
+[8.464466] (-) TimerEvent: {}
+[8.554534] (yolo_detector) StdoutLine: {'line': b"removing '/home/a720a/ros_ws/install/yolo_detector/lib/python3.12/site-packages/yolo_detector-0.0.0-py3.12.egg-info' (and everything under it)\n"}
+[8.557810] (yolo_detector) StdoutLine: {'line': b'Copying ../../build/yolo_detector/yolo_detector.egg-info to /home/a720a/ros_ws/install/yolo_detector/lib/python3.12/site-packages/yolo_detector-0.0.0-py3.12.egg-info\n'}
+[8.564614] (-) TimerEvent: {}
+[8.565118] (yolo_detector) StdoutLine: {'line': b'running install_scripts\n'}
+[8.664787] (-) TimerEvent: {}
+[8.765440] (-) TimerEvent: {}
+[8.866090] (-) TimerEvent: {}
+[8.966732] (-) TimerEvent: {}
+[9.067322] (-) TimerEvent: {}
+[9.167966] (-) TimerEvent: {}
+[9.268708] (-) TimerEvent: {}
+[9.369370] (-) TimerEvent: {}
+[9.470026] (-) TimerEvent: {}
+[9.495244] (yolo_detector) StdoutLine: {'line': b'Installing camera_node script to /home/a720a/ros_ws/install/yolo_detector/lib/yolo_detector\n'}
+[9.503034] (yolo_detector) StdoutLine: {'line': b'Installing yolo_node script to /home/a720a/ros_ws/install/yolo_detector/lib/yolo_detector\n'}
+[9.505561] (yolo_detector) StdoutLine: {'line': b"writing list of installed files to '/home/a720a/ros_ws/build/yolo_detector/install.log'\n"}
+[9.570473] (-) TimerEvent: {}
+[9.671781] (-) TimerEvent: {}
+[9.694871] (yolo_detector) CommandEnded: {'returncode': 0}
+[9.767188] (yolo_detector) JobEnded: {'identifier': 'yolo_detector', 'rc': 0}
+[9.771227] (-) EventReactorShutdown: {}

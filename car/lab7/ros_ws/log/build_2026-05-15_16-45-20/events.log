@@ -1,0 +1,134 @@
+[0.000000] (-) TimerEvent: {}
+[0.001966] (yolo_detector) JobQueued: {'identifier': 'yolo_detector', 'dependencies': OrderedDict()}
+[0.002156] (yolo_detector) JobStarted: {'identifier': 'yolo_detector'}
+[0.099080] (-) TimerEvent: {}
+[0.199893] (-) TimerEvent: {}
+[0.300545] (-) TimerEvent: {}
+[0.401272] (-) TimerEvent: {}
+[0.501895] (-) TimerEvent: {}
+[0.602525] (-) TimerEvent: {}
+[0.703199] (-) TimerEvent: {}
+[0.803845] (-) TimerEvent: {}
+[0.904441] (-) TimerEvent: {}
+[1.005093] (-) TimerEvent: {}
+[1.105727] (-) TimerEvent: {}
+[1.206555] (-) TimerEvent: {}
+[1.309401] (-) TimerEvent: {}
+[1.410103] (-) TimerEvent: {}
+[1.510822] (-) TimerEvent: {}
+[1.611441] (-) TimerEvent: {}
+[1.712143] (-) TimerEvent: {}
+[1.812823] (-) TimerEvent: {}
+[1.913512] (-) TimerEvent: {}
+[2.014204] (-) TimerEvent: {}
+[2.114831] (-) TimerEvent: {}
+[2.215428] (-) TimerEvent: {}
+[2.316072] (-) TimerEvent: {}
+[2.416703] (-) TimerEvent: {}
+[2.517374] (-) TimerEvent: {}
+[2.618167] (-) TimerEvent: {}
+[2.718882] (-) TimerEvent: {}
+[2.819565] (-) TimerEvent: {}
+[2.920275] (-) TimerEvent: {}
+[3.021214] (-) TimerEvent: {}
+[3.122908] (-) TimerEvent: {}
+[3.223585] (-) TimerEvent: {}
+[3.324434] (-) TimerEvent: {}
+[3.425183] (-) TimerEvent: {}
+[3.525849] (-) TimerEvent: {}
+[3.626446] (-) TimerEvent: {}
+[3.727125] (-) TimerEvent: {}
+[3.827799] (-) TimerEvent: {}
+[3.928387] (-) TimerEvent: {}
+[4.029070] (-) TimerEvent: {}
+[4.129842] (-) TimerEvent: {}
+[4.230517] (-) TimerEvent: {}
+[4.331219] (-) TimerEvent: {}
+[4.431866] (-) TimerEvent: {}
+[4.532461] (-) TimerEvent: {}
+[4.633105] (-) TimerEvent: {}
+[4.733700] (-) TimerEvent: {}
+[4.834350] (-) TimerEvent: {}
+[4.935015] (-) TimerEvent: {}
+[5.035603] (-) TimerEvent: {}
+[5.136272] (-) TimerEvent: {}
+[5.236938] (-) TimerEvent: {}
+[5.337550] (-) TimerEvent: {}
+[5.438303] (-) TimerEvent: {}
+[5.539439] (-) TimerEvent: {}
+[5.640638] (-) TimerEvent: {}
+[5.664085] (yolo_detector) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', '-W', 'ignore:easy_install command is deprecated', 'setup.py', 'egg_info', '--egg-base', '../../build/yolo_detector', 'build', '--build-base', '/home/a720a/ros_ws/build/yolo_detector/build', 'install', '--record', '/home/a720a/ros_ws/build/yolo_detector/install.log', '--single-version-externally-managed', 'install_data'], 'cwd': '/home/a720a/ros_ws/src/yolo_detector', 'env': {'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'a720a', 'XDG_SESSION_TYPE': 'wayland', 'CLUTTER_DISABLE_MIPMAPPED_TEXT': '1', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/jazzy/opt/rviz_ogre_vendor/lib:/opt/ros/jazzy/lib/aarch64-linux-gnu:/opt/ros/jazzy/opt/gz_math_vendor/lib:/opt/ros/jazzy/opt/gz_utils_vendor/lib:/opt/ros/jazzy/opt/gz_cmake_vendor/lib:/opt/ros/jazzy/lib', 'HOME': '/home/a720a', 'OLDPWD': '/home/a720a/ros_ws/src', 'DESKTOP_SESSION': 'ubuntu', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'SYSTEMD_EXEC_PID': '1708', 'GSM_SKIP_SSH_AGENT_WORKAROUND': 'true', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'COLORTERM': 'truecolor', 'DEBUGINFOD_URLS': 'https://debuginfod.ubuntu.com', 'IM_CONFIG_PHASE': '1', 'WAYLAND_DISPLAY': 'wayland-0', 'COLCON_PREFIX_PATH': '/home/a720a/ros_ws/install', 'ROS_DISTRO': 'jazzy', 'LOGNAME': 'a720a', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'MEMORY_PRESSURE_WATCH': '/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/session.slice/org.gnome.Shell@wayland.service/memory.pressure', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'a720a', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'PATH': '/opt/ros/jazzy/bin:/home/a720a/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin', 'SESSION_MANAGER': 'local/720a:@/tmp/.ICE-unix/1676,unix/720a:/tmp/.ICE-unix/1676', 'XDG_MENU_PREFIX': 'gnome-', 'GNOME_TERMINAL_SCREEN': '/org/gnome/Terminal/screen/a2cdca35_061d_4f8c_ba91_3ff3d403d7c8', 'GNOME_SETUP_DISPLAY': ':1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/.mutter-Xwaylandauth.6KKJP3', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:', 'GNOME_TERMINAL_SERVICE': ':1.121', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'AMENT_PREFIX_PATH': '/opt/ros/jazzy', 'SHELL': '/bin/bash', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'ROS_AUTOMATIC_DISCOVERY_RANGE': 'SUBNET', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/a720a/ros_ws/build/yolo_detector', 'LC_ALL': 'en_US.UTF-8', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/a720a/ros_ws/build/yolo_detector/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/a720a/ros_ws/install/yolo_detector/lib/python3.12/site-packages:/opt/ros/jazzy/lib/python3.12/site-packages', 'COLCON': '1', 'MEMORY_PRESSURE_WRITE': 'c29tZSAyMDAwMDAgMjAwMDAwMAA=', 'VTE_VERSION': '7600', 'CMAKE_PREFIX_PATH': '/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor'}, 'shell': False}
+[5.740862] (-) TimerEvent: {}
+[5.841528] (-) TimerEvent: {}
+[5.942230] (-) TimerEvent: {}
+[6.042874] (-) TimerEvent: {}
+[6.143552] (-) TimerEvent: {}
+[6.244242] (-) TimerEvent: {}
+[6.344858] (-) TimerEvent: {}
+[6.445463] (-) TimerEvent: {}
+[6.546125] (-) TimerEvent: {}
+[6.646720] (-) TimerEvent: {}
+[6.747409] (-) TimerEvent: {}
+[6.848125] (-) TimerEvent: {}
+[6.948818] (-) TimerEvent: {}
+[7.049415] (-) TimerEvent: {}
+[7.150072] (-) TimerEvent: {}
+[7.201400] (yolo_detector) StdoutLine: {'line': b'running egg_info\n'}
+[7.202852] (yolo_detector) StdoutLine: {'line': b'creating ../../build/yolo_detector/yolo_detector.egg-info\n'}
+[7.250221] (-) TimerEvent: {}
+[7.313132] (yolo_detector) StdoutLine: {'line': b'writing ../../build/yolo_detector/yolo_detector.egg-info/PKG-INFO\n'}
+[7.314434] (yolo_detector) StdoutLine: {'line': b'writing dependency_links to ../../build/yolo_detector/yolo_detector.egg-info/dependency_links.txt\n'}
+[7.315320] (yolo_detector) StdoutLine: {'line': b'writing entry points to ../../build/yolo_detector/yolo_detector.egg-info/entry_points.txt\n'}
+[7.316055] (yolo_detector) StdoutLine: {'line': b'writing requirements to ../../build/yolo_detector/yolo_detector.egg-info/requires.txt\n'}
+[7.316782] (yolo_detector) StdoutLine: {'line': b'writing top-level names to ../../build/yolo_detector/yolo_detector.egg-info/top_level.txt\n'}
+[7.317491] (yolo_detector) StdoutLine: {'line': b"writing manifest file '../../build/yolo_detector/yolo_detector.egg-info/SOURCES.txt'\n"}
+[7.350364] (-) TimerEvent: {}
+[7.450956] (-) TimerEvent: {}
+[7.544943] (yolo_detector) StdoutLine: {'line': b"reading manifest file '../../build/yolo_detector/yolo_detector.egg-info/SOURCES.txt'\n"}
+[7.548228] (yolo_detector) StdoutLine: {'line': b"writing manifest file '../../build/yolo_detector/yolo_detector.egg-info/SOURCES.txt'\n"}
+[7.548966] (yolo_detector) StdoutLine: {'line': b'running build\n'}
+[7.549557] (yolo_detector) StdoutLine: {'line': b'running build_py\n'}
+[7.550212] (yolo_detector) StdoutLine: {'line': b'creating /home/a720a/ros_ws/build/yolo_detector/build\n'}
+[7.550821] (yolo_detector) StdoutLine: {'line': b'creating /home/a720a/ros_ws/build/yolo_detector/build/lib\n'}
+[7.551322] (-) TimerEvent: {}
+[7.551819] (yolo_detector) StdoutLine: {'line': b'creating /home/a720a/ros_ws/build/yolo_detector/build/lib/yolo_detector\n'}
+[7.552426] (yolo_detector) StdoutLine: {'line': b'copying yolo_detector/__init__.py -> /home/a720a/ros_ws/build/yolo_detector/build/lib/yolo_detector\n'}
+[7.553824] (yolo_detector) StdoutLine: {'line': b'copying yolo_detector/camera_node.py -> /home/a720a/ros_ws/build/yolo_detector/build/lib/yolo_detector\n'}
+[7.554844] (yolo_detector) StdoutLine: {'line': b'copying yolo_detector/yolo_node.py -> /home/a720a/ros_ws/build/yolo_detector/build/lib/yolo_detector\n'}
+[7.561577] (yolo_detector) StdoutLine: {'line': b'running install\n'}
+[7.596187] (yolo_detector) StdoutLine: {'line': b'running install_lib\n'}
+[7.651481] (-) TimerEvent: {}
+[7.708012] (yolo_detector) StdoutLine: {'line': b'creating /home/a720a/ros_ws/install/yolo_detector/lib/python3.12/site-packages/yolo_detector\n'}
+[7.708780] (yolo_detector) StdoutLine: {'line': b'copying /home/a720a/ros_ws/build/yolo_detector/build/lib/yolo_detector/__init__.py -> /home/a720a/ros_ws/install/yolo_detector/lib/python3.12/site-packages/yolo_detector\n'}
+[7.709588] (yolo_detector) StdoutLine: {'line': b'copying /home/a720a/ros_ws/build/yolo_detector/build/lib/yolo_detector/camera_node.py -> /home/a720a/ros_ws/install/yolo_detector/lib/python3.12/site-packages/yolo_detector\n'}
+[7.710554] (yolo_detector) StdoutLine: {'line': b'copying /home/a720a/ros_ws/build/yolo_detector/build/lib/yolo_detector/yolo_node.py -> /home/a720a/ros_ws/install/yolo_detector/lib/python3.12/site-packages/yolo_detector\n'}
+[7.713348] (yolo_detector) StdoutLine: {'line': b'byte-compiling /home/a720a/ros_ws/install/yolo_detector/lib/python3.12/site-packages/yolo_detector/__init__.py to __init__.cpython-312.pyc\n'}
+[7.714972] (yolo_detector) StdoutLine: {'line': b'byte-compiling /home/a720a/ros_ws/install/yolo_detector/lib/python3.12/site-packages/yolo_detector/camera_node.py to camera_node.cpython-312.pyc\n'}
+[7.717823] (yolo_detector) StdoutLine: {'line': b'byte-compiling /home/a720a/ros_ws/install/yolo_detector/lib/python3.12/site-packages/yolo_detector/yolo_node.py to yolo_node.cpython-312.pyc\n'}
+[7.721124] (yolo_detector) StdoutLine: {'line': b'running install_data\n'}
+[7.721855] (yolo_detector) StdoutLine: {'line': b'creating /home/a720a/ros_ws/install/yolo_detector/share/ament_index\n'}
+[7.722542] (yolo_detector) StdoutLine: {'line': b'creating /home/a720a/ros_ws/install/yolo_detector/share/ament_index/resource_index\n'}
+[7.723063] (yolo_detector) StdoutLine: {'line': b'creating /home/a720a/ros_ws/install/yolo_detector/share/ament_index/resource_index/packages\n'}
+[7.723628] (yolo_detector) StdoutLine: {'line': b'copying resource/yolo_detector -> /home/a720a/ros_ws/install/yolo_detector/share/ament_index/resource_index/packages\n'}
+[7.724342] (yolo_detector) StdoutLine: {'line': b'copying package.xml -> /home/a720a/ros_ws/install/yolo_detector/share/yolo_detector\n'}
+[7.724951] (yolo_detector) StdoutLine: {'line': b'running install_egg_info\n'}
+[7.751623] (-) TimerEvent: {}
+[7.843127] (yolo_detector) StdoutLine: {'line': b'Copying ../../build/yolo_detector/yolo_detector.egg-info to /home/a720a/ros_ws/install/yolo_detector/lib/python3.12/site-packages/yolo_detector-0.0.0-py3.12.egg-info\n'}
+[7.849275] (yolo_detector) StdoutLine: {'line': b'running install_scripts\n'}
+[7.851810] (-) TimerEvent: {}
+[7.952354] (-) TimerEvent: {}
+[8.052992] (-) TimerEvent: {}
+[8.153719] (-) TimerEvent: {}
+[8.254310] (-) TimerEvent: {}
+[8.354899] (-) TimerEvent: {}
+[8.455521] (-) TimerEvent: {}
+[8.556207] (-) TimerEvent: {}
+[8.656847] (-) TimerEvent: {}
+[8.685989] (yolo_detector) StdoutLine: {'line': b'Installing camera_node script to /home/a720a/ros_ws/install/yolo_detector/lib/yolo_detector\n'}
+[8.686994] (yolo_detector) StdoutLine: {'line': b'Installing yolo_node script to /home/a720a/ros_ws/install/yolo_detector/lib/yolo_detector\n'}
+[8.688629] (yolo_detector) StdoutLine: {'line': b"writing list of installed files to '/home/a720a/ros_ws/build/yolo_detector/install.log'\n"}
+[8.757100] (-) TimerEvent: {}
+[8.854285] (yolo_detector) CommandEnded: {'returncode': 0}
+[8.857225] (-) TimerEvent: {}
+[8.932825] (yolo_detector) JobEnded: {'identifier': 'yolo_detector', 'rc': 0}
+[8.936397] (-) EventReactorShutdown: {}

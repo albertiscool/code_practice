@@ -1,0 +1,32 @@
+[5.974s] Invoking command in '/home/a720a/ros2_ws/src/dht11_pkg': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/a720a/ros2_ws/build/dht11_pkg/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/a720a/ros2_ws/install/dht11_pkg/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/dht11_pkg build --build-base /home/a720a/ros2_ws/build/dht11_pkg/build install --record /home/a720a/ros2_ws/build/dht11_pkg/install.log --single-version-externally-managed install_data
+[7.491s] running egg_info
+[7.599s] writing ../../build/dht11_pkg/dht11_pkg.egg-info/PKG-INFO
+[7.601s] writing dependency_links to ../../build/dht11_pkg/dht11_pkg.egg-info/dependency_links.txt
+[7.603s] writing entry points to ../../build/dht11_pkg/dht11_pkg.egg-info/entry_points.txt
+[7.604s] writing requirements to ../../build/dht11_pkg/dht11_pkg.egg-info/requires.txt
+[7.605s] writing top-level names to ../../build/dht11_pkg/dht11_pkg.egg-info/top_level.txt
+[7.823s] reading manifest file '../../build/dht11_pkg/dht11_pkg.egg-info/SOURCES.txt'
+[7.828s] writing manifest file '../../build/dht11_pkg/dht11_pkg.egg-info/SOURCES.txt'
+[7.829s] running build
+[7.829s] running build_py
+[7.831s] copying dht11_pkg/dht11_publisher.py -> /home/a720a/ros2_ws/build/dht11_pkg/build/lib/dht11_pkg
+[7.833s] copying dht11_pkg/dht11_subscriber.py -> /home/a720a/ros2_ws/build/dht11_pkg/build/lib/dht11_pkg
+[7.835s] copying dht11_pkg/dht11_monitor.py -> /home/a720a/ros2_ws/build/dht11_pkg/build/lib/dht11_pkg
+[7.837s] running install
+[7.868s] running install_lib
+[7.981s] copying /home/a720a/ros2_ws/build/dht11_pkg/build/lib/dht11_pkg/dht11_publisher.py -> /home/a720a/ros2_ws/install/dht11_pkg/lib/python3.12/site-packages/dht11_pkg
+[7.982s] copying /home/a720a/ros2_ws/build/dht11_pkg/build/lib/dht11_pkg/dht11_subscriber.py -> /home/a720a/ros2_ws/install/dht11_pkg/lib/python3.12/site-packages/dht11_pkg
+[7.983s] copying /home/a720a/ros2_ws/build/dht11_pkg/build/lib/dht11_pkg/dht11_monitor.py -> /home/a720a/ros2_ws/install/dht11_pkg/lib/python3.12/site-packages/dht11_pkg
+[7.986s] byte-compiling /home/a720a/ros2_ws/install/dht11_pkg/lib/python3.12/site-packages/dht11_pkg/dht11_publisher.py to dht11_publisher.cpython-312.pyc
+[7.990s] byte-compiling /home/a720a/ros2_ws/install/dht11_pkg/lib/python3.12/site-packages/dht11_pkg/dht11_subscriber.py to dht11_subscriber.cpython-312.pyc
+[7.993s] byte-compiling /home/a720a/ros2_ws/install/dht11_pkg/lib/python3.12/site-packages/dht11_pkg/dht11_monitor.py to dht11_monitor.cpython-312.pyc
+[7.996s] running install_data
+[7.998s] running install_egg_info
+[8.112s] removing '/home/a720a/ros2_ws/install/dht11_pkg/lib/python3.12/site-packages/dht11_pkg-0.0.0-py3.12.egg-info' (and everything under it)
+[8.114s] Copying ../../build/dht11_pkg/dht11_pkg.egg-info to /home/a720a/ros2_ws/install/dht11_pkg/lib/python3.12/site-packages/dht11_pkg-0.0.0-py3.12.egg-info
+[8.121s] running install_scripts
+[9.015s] Installing monitor script to /home/a720a/ros2_ws/install/dht11_pkg/lib/dht11_pkg
+[9.017s] Installing publisher script to /home/a720a/ros2_ws/install/dht11_pkg/lib/dht11_pkg
+[9.018s] Installing subscriber script to /home/a720a/ros2_ws/install/dht11_pkg/lib/dht11_pkg
+[9.020s] writing list of installed files to '/home/a720a/ros2_ws/build/dht11_pkg/install.log'
+[9.198s] Invoked command in '/home/a720a/ros2_ws/src/dht11_pkg' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/a720a/ros2_ws/build/dht11_pkg/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/a720a/ros2_ws/install/dht11_pkg/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/dht11_pkg build --build-base /home/a720a/ros2_ws/build/dht11_pkg/build install --record /home/a720a/ros2_ws/build/dht11_pkg/install.log --single-version-externally-managed install_data

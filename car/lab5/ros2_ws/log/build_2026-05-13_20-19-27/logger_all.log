@@ -1,0 +1,117 @@
+[2.390s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'build', '--packages-select', 'dht11_pkg', '--symlink-install']
+[2.391s] DEBUG:colcon:Parsed command line arguments: Namespace(log_base=None, log_level=None, verb_name='build', build_base='build', install_base='install', merge_install=False, symlink_install=True, test_result_base=None, continue_on_error=False, executor='parallel', parallel_workers=4, event_handlers=None, ignore_user_meta=False, metas=['./colcon.meta'], base_paths=['.'], packages_ignore=None, packages_ignore_regex=None, paths=None, packages_up_to=None, packages_up_to_regex=None, packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_select_by_dep=None, packages_skip_by_dep=None, packages_skip_up_to=None, packages_select_build_failed=False, packages_skip_build_finished=False, packages_select_test_failures=False, packages_skip_test_passed=False, packages_select=['dht11_pkg'], packages_skip=None, packages_select_regex=None, packages_skip_regex=None, packages_start=None, packages_end=None, cmake_args=None, cmake_target=None, cmake_target_skip_unavailable=False, cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, ament_cmake_args=None, catkin_cmake_args=None, catkin_skip_building_tests=False, verb_parser=<colcon_defaults.argument_parser.defaults.DefaultArgumentsDecorator object at 0xffff80ba0800>, verb_extension=<colcon_core.verb.build.BuildVerb object at 0xffff80d90710>, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0xffff80d90710>>)
+[2.892s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[2.893s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[2.893s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[2.893s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[2.893s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) discover
+[2.893s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[2.894s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/home/a720a/ros2_ws'
+[2.894s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ignore', 'ignore_ament_install']
+[2.895s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore'
+[2.895s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore_ament_install'
+[2.895s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_pkg']
+[2.895s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_pkg'
+[2.896s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_meta']
+[2.896s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_meta'
+[2.896s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ros']
+[2.896s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ros'
+[3.082s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['cmake', 'python']
+[3.083s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'cmake'
+[3.083s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python'
+[3.083s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['python_setup_py']
+[3.083s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python_setup_py'
+[3.084s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extensions ['ignore', 'ignore_ament_install']
+[3.084s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extension 'ignore'
+[3.085s] Level 1:colcon.colcon_core.package_identification:_identify(build) ignored
+[3.085s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extensions ['ignore', 'ignore_ament_install']
+[3.086s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extension 'ignore'
+[3.086s] Level 1:colcon.colcon_core.package_identification:_identify(install) ignored
+[3.086s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extensions ['ignore', 'ignore_ament_install']
+[3.087s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extension 'ignore'
+[3.087s] Level 1:colcon.colcon_core.package_identification:_identify(log) ignored
+[3.088s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['ignore', 'ignore_ament_install']
+[3.088s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ignore'
+[3.089s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ignore_ament_install'
+[3.089s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['colcon_pkg']
+[3.089s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'colcon_pkg'
+[3.090s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['colcon_meta']
+[3.090s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'colcon_meta'
+[3.090s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['ros']
+[3.090s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ros'
+[3.091s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['cmake', 'python']
+[3.091s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'cmake'
+[3.091s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'python'
+[3.091s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['python_setup_py']
+[3.091s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'python_setup_py'
+[3.092s] Level 1:colcon.colcon_core.package_identification:_identify(src/dht11_pkg) by extensions ['ignore', 'ignore_ament_install']
+[3.093s] Level 1:colcon.colcon_core.package_identification:_identify(src/dht11_pkg) by extension 'ignore'
+[3.093s] Level 1:colcon.colcon_core.package_identification:_identify(src/dht11_pkg) by extension 'ignore_ament_install'
+[3.093s] Level 1:colcon.colcon_core.package_identification:_identify(src/dht11_pkg) by extensions ['colcon_pkg']
+[3.094s] Level 1:colcon.colcon_core.package_identification:_identify(src/dht11_pkg) by extension 'colcon_pkg'
+[3.094s] Level 1:colcon.colcon_core.package_identification:_identify(src/dht11_pkg) by extensions ['colcon_meta']
+[3.094s] Level 1:colcon.colcon_core.package_identification:_identify(src/dht11_pkg) by extension 'colcon_meta'
+[3.094s] Level 1:colcon.colcon_core.package_identification:_identify(src/dht11_pkg) by extensions ['ros']
+[3.094s] Level 1:colcon.colcon_core.package_identification:_identify(src/dht11_pkg) by extension 'ros'
+[3.108s] DEBUG:colcon.colcon_core.package_identification:Package 'src/dht11_pkg' with type 'ros.ament_python' and name 'dht11_pkg'
+[3.108s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
+[3.108s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) discover
+[3.108s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) using defaults
+[3.108s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) discover
+[3.109s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) using defaults
+[3.254s] Level 5:colcon.colcon_core.verb:set package 'dht11_pkg' build argument 'cmake_args' from command line to 'None'
+[3.255s] Level 5:colcon.colcon_core.verb:set package 'dht11_pkg' build argument 'cmake_target' from command line to 'None'
+[3.255s] Level 5:colcon.colcon_core.verb:set package 'dht11_pkg' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[3.255s] Level 5:colcon.colcon_core.verb:set package 'dht11_pkg' build argument 'cmake_clean_cache' from command line to 'False'
+[3.255s] Level 5:colcon.colcon_core.verb:set package 'dht11_pkg' build argument 'cmake_clean_first' from command line to 'False'
+[3.255s] Level 5:colcon.colcon_core.verb:set package 'dht11_pkg' build argument 'cmake_force_configure' from command line to 'False'
+[3.256s] Level 5:colcon.colcon_core.verb:set package 'dht11_pkg' build argument 'ament_cmake_args' from command line to 'None'
+[3.258s] Level 5:colcon.colcon_core.verb:set package 'dht11_pkg' build argument 'catkin_cmake_args' from command line to 'None'
+[3.258s] Level 5:colcon.colcon_core.verb:set package 'dht11_pkg' build argument 'catkin_skip_building_tests' from command line to 'False'
+[3.259s] DEBUG:colcon.colcon_core.verb:Building package 'dht11_pkg' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/a720a/ros2_ws/build/dht11_pkg', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/a720a/ros2_ws/install/dht11_pkg', 'merge_install': False, 'path': '/home/a720a/ros2_ws/src/dht11_pkg', 'symlink_install': True, 'test_result_base': None}
+[3.259s] INFO:colcon.colcon_core.executor:Executing jobs using 'parallel' executor
+[3.263s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete
+[3.264s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/home/a720a/ros2_ws/src/dht11_pkg' with build type 'ament_python'
+[3.265s] Level 1:colcon.colcon_core.shell:create_environment_hook('dht11_pkg', 'ament_prefix_path')
+[3.298s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_core.shell.bat': Not used on non-Windows systems
+[3.300s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/a720a/ros2_ws/install/dht11_pkg/share/dht11_pkg/hook/ament_prefix_path.dsv'
+[3.312s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/a720a/ros2_ws/install/dht11_pkg/share/dht11_pkg/hook/ament_prefix_path.sh'
+[3.319s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[4.920s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/home/a720a/ros2_ws/src/dht11_pkg'
+[4.922s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[13.727s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/a720a/ros2_ws/build/dht11_pkg': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/a720a/ros2_ws/build/dht11_pkg/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/a720a/ros2_ws/install/dht11_pkg/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/a720a/ros2_ws/build/dht11_pkg/build --no-deps symlink_data
+[19.378s] Level 1:colcon.colcon_core.shell:create_environment_hook('dht11_pkg', 'pythonpath_develop')
+[19.380s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/a720a/ros2_ws/build/dht11_pkg/share/dht11_pkg/hook/pythonpath_develop.dsv'
+[19.381s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/a720a/ros2_ws/build/dht11_pkg' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/a720a/ros2_ws/build/dht11_pkg/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/a720a/ros2_ws/install/dht11_pkg/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/a720a/ros2_ws/build/dht11_pkg/build --no-deps symlink_data
+[19.385s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/a720a/ros2_ws/build/dht11_pkg/share/dht11_pkg/hook/pythonpath_develop.sh'
+[19.420s] Level 1:colcon.colcon_core.environment:checking '/home/a720a/ros2_ws/install/dht11_pkg' for CMake module files
+[19.425s] Level 1:colcon.colcon_core.environment:checking '/home/a720a/ros2_ws/install/dht11_pkg' for CMake config files
+[19.431s] Level 1:colcon.colcon_core.environment:checking '/home/a720a/ros2_ws/install/dht11_pkg/lib'
+[19.432s] Level 1:colcon.colcon_core.environment:checking '/home/a720a/ros2_ws/install/dht11_pkg/bin'
+[19.432s] Level 1:colcon.colcon_core.environment:checking '/home/a720a/ros2_ws/install/dht11_pkg/lib/pkgconfig/dht11_pkg.pc'
+[19.433s] Level 1:colcon.colcon_core.environment:checking '/home/a720a/ros2_ws/install/dht11_pkg/lib/python3.12/site-packages'
+[19.434s] Level 1:colcon.colcon_core.shell:create_environment_hook('dht11_pkg', 'pythonpath')
+[19.434s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/a720a/ros2_ws/install/dht11_pkg/share/dht11_pkg/hook/pythonpath.dsv'
+[19.436s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/a720a/ros2_ws/install/dht11_pkg/share/dht11_pkg/hook/pythonpath.sh'
+[19.440s] Level 1:colcon.colcon_core.environment:checking '/home/a720a/ros2_ws/install/dht11_pkg/bin'
+[19.441s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(dht11_pkg)
+[19.442s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/a720a/ros2_ws/install/dht11_pkg/share/dht11_pkg/package.dsv'
+[19.446s] INFO:colcon.colcon_core.shell:Creating package script '/home/a720a/ros2_ws/install/dht11_pkg/share/dht11_pkg/package.sh'
+[19.451s] INFO:colcon.colcon_core.shell:Creating package script '/home/a720a/ros2_ws/install/dht11_pkg/share/dht11_pkg/package.bash'
+[19.460s] INFO:colcon.colcon_core.shell:Creating package script '/home/a720a/ros2_ws/install/dht11_pkg/share/dht11_pkg/package.zsh'
+[19.466s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/a720a/ros2_ws/install/dht11_pkg/share/colcon-core/packages/dht11_pkg)
+[19.469s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:closing loop
+[19.471s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:loop closed
+[19.472s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete finished with '0'
+[19.472s] DEBUG:colcon.colcon_core.event_reactor:joining thread
+[19.561s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.terminal_notifier': Not used on non-Darwin systems
+[19.562s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.win32': Not used on non-Windows systems
+[19.562s] INFO:colcon.colcon_notification.desktop_notification:Sending desktop notification using 'notify2'
+[19.788s] DEBUG:colcon.colcon_core.event_reactor:joined thread
+[19.790s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/a720a/ros2_ws/install/local_setup.sh'
+[19.795s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/a720a/ros2_ws/install/_local_setup_util_sh.py'
+[19.803s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/a720a/ros2_ws/install/setup.sh'
+[19.811s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/a720a/ros2_ws/install/local_setup.bash'
+[19.816s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/a720a/ros2_ws/install/setup.bash'
+[19.822s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/a720a/ros2_ws/install/local_setup.zsh'
+[19.827s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/a720a/ros2_ws/install/setup.zsh'

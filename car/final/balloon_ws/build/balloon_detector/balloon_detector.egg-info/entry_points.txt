@@ -1,0 +1,3 @@
+[console_scripts]
+balloon_detector_node = balloon_detector.balloon_detector_node:main
+

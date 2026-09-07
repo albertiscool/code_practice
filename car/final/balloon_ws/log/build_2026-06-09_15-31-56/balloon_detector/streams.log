@@ -1,0 +1,24 @@
+[5.119s] Invoking command in '/home/fr/ros2_ws/balloon_ws/build/balloon_detector': PYTHONPATH=/home/fr/ros2_ws/balloon_ws/build/balloon_detector/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/fr/ros2_ws/balloon_ws/install/balloon_detector/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/fr/ros2_ws/balloon_ws/build/balloon_detector/build --no-deps symlink_data
+[6.529s] running develop
+[7.543s] running egg_info
+[7.543s] creating balloon_detector.egg-info
+[7.544s] writing balloon_detector.egg-info/PKG-INFO
+[7.545s] writing dependency_links to balloon_detector.egg-info/dependency_links.txt
+[7.546s] writing entry points to balloon_detector.egg-info/entry_points.txt
+[7.546s] writing requirements to balloon_detector.egg-info/requires.txt
+[7.547s] writing top-level names to balloon_detector.egg-info/top_level.txt
+[7.548s] writing manifest file 'balloon_detector.egg-info/SOURCES.txt'
+[7.555s] reading manifest file 'balloon_detector.egg-info/SOURCES.txt'
+[7.558s] writing manifest file 'balloon_detector.egg-info/SOURCES.txt'
+[7.565s] running build_ext
+[7.566s] Creating /home/fr/ros2_ws/balloon_ws/install/balloon_detector/lib/python3.10/site-packages/balloon-detector.egg-link (link to .)
+[7.569s] Installing balloon_detector_node script to /home/fr/ros2_ws/balloon_ws/install/balloon_detector/lib/balloon_detector
+[7.571s] 
+[7.571s] Installed /home/fr/ros2_ws/balloon_ws/build/balloon_detector
+[7.572s] running symlink_data
+[7.572s] creating /home/fr/ros2_ws/balloon_ws/install/balloon_detector/share/ament_index
+[7.573s] creating /home/fr/ros2_ws/balloon_ws/install/balloon_detector/share/ament_index/resource_index
+[7.573s] creating /home/fr/ros2_ws/balloon_ws/install/balloon_detector/share/ament_index/resource_index/packages
+[7.574s] symbolically linking /home/fr/ros2_ws/balloon_ws/build/balloon_detector/resource/balloon_detector -> /home/fr/ros2_ws/balloon_ws/install/balloon_detector/share/ament_index/resource_index/packages
+[7.575s] symbolically linking /home/fr/ros2_ws/balloon_ws/build/balloon_detector/package.xml -> /home/fr/ros2_ws/balloon_ws/install/balloon_detector/share/balloon_detector
+[7.730s] Invoked command in '/home/fr/ros2_ws/balloon_ws/build/balloon_detector' returned '0': PYTHONPATH=/home/fr/ros2_ws/balloon_ws/build/balloon_detector/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/fr/ros2_ws/balloon_ws/install/balloon_detector/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/fr/ros2_ws/balloon_ws/build/balloon_detector/build --no-deps symlink_data

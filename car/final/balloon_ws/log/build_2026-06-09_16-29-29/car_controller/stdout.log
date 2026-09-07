@@ -1,0 +1,22 @@
+running develop
+running egg_info
+creating car_controller.egg-info
+writing car_controller.egg-info/PKG-INFO
+writing dependency_links to car_controller.egg-info/dependency_links.txt
+writing entry points to car_controller.egg-info/entry_points.txt
+writing requirements to car_controller.egg-info/requires.txt
+writing top-level names to car_controller.egg-info/top_level.txt
+writing manifest file 'car_controller.egg-info/SOURCES.txt'
+reading manifest file 'car_controller.egg-info/SOURCES.txt'
+writing manifest file 'car_controller.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/fr/ros2_ws/balloon_ws/install/car_controller/lib/python3.10/site-packages/car-controller.egg-link (link to .)
+Installing controller_node script to /home/fr/ros2_ws/balloon_ws/install/car_controller/lib/car_controller
+
+Installed /home/fr/ros2_ws/balloon_ws/build/car_controller
+running symlink_data
+creating /home/fr/ros2_ws/balloon_ws/install/car_controller/share/ament_index
+creating /home/fr/ros2_ws/balloon_ws/install/car_controller/share/ament_index/resource_index
+creating /home/fr/ros2_ws/balloon_ws/install/car_controller/share/ament_index/resource_index/packages
+symbolically linking /home/fr/ros2_ws/balloon_ws/build/car_controller/resource/car_controller -> /home/fr/ros2_ws/balloon_ws/install/car_controller/share/ament_index/resource_index/packages
+symbolically linking /home/fr/ros2_ws/balloon_ws/build/car_controller/package.xml -> /home/fr/ros2_ws/balloon_ws/install/car_controller/share/car_controller

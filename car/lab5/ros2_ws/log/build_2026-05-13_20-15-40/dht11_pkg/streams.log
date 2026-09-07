@@ -1,0 +1,21 @@
+[5.594s] Invoking command in '/home/a720a/ros2_ws/build/dht11_pkg': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/a720a/ros2_ws/build/dht11_pkg/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/a720a/ros2_ws/install/dht11_pkg/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/a720a/ros2_ws/build/dht11_pkg/build --no-deps symlink_data --force
+[7.476s] running develop
+[8.755s] running egg_info
+[8.867s] writing dht11_pkg.egg-info/PKG-INFO
+[8.869s] writing dependency_links to dht11_pkg.egg-info/dependency_links.txt
+[8.872s] writing entry points to dht11_pkg.egg-info/entry_points.txt
+[8.873s] writing requirements to dht11_pkg.egg-info/requires.txt
+[8.874s] writing top-level names to dht11_pkg.egg-info/top_level.txt
+[9.087s] reading manifest file 'dht11_pkg.egg-info/SOURCES.txt'
+[9.092s] writing manifest file 'dht11_pkg.egg-info/SOURCES.txt'
+[9.205s] running build_ext
+[9.207s] Creating /home/a720a/ros2_ws/install/dht11_pkg/lib/python3.12/site-packages/dht11-pkg.egg-link (link to .)
+[9.210s] Installing monitor script to /home/a720a/ros2_ws/install/dht11_pkg/lib/dht11_pkg
+[9.211s] Installing publisher script to /home/a720a/ros2_ws/install/dht11_pkg/lib/dht11_pkg
+[9.212s] Installing subscriber script to /home/a720a/ros2_ws/install/dht11_pkg/lib/dht11_pkg
+[9.214s] 
+[9.214s] Installed /home/a720a/ros2_ws/build/dht11_pkg
+[9.215s] running symlink_data
+[9.216s] symbolically linking /home/a720a/ros2_ws/build/dht11_pkg/resource/dht11_pkg -> /home/a720a/ros2_ws/install/dht11_pkg/share/ament_index/resource_index/packages
+[9.217s] symbolically linking /home/a720a/ros2_ws/build/dht11_pkg/package.xml -> /home/a720a/ros2_ws/install/dht11_pkg/share/dht11_pkg
+[9.410s] Invoked command in '/home/a720a/ros2_ws/build/dht11_pkg' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/a720a/ros2_ws/build/dht11_pkg/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/a720a/ros2_ws/install/dht11_pkg/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/a720a/ros2_ws/build/dht11_pkg/build --no-deps symlink_data --force

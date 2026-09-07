@@ -1,0 +1,36 @@
+[11.018s] Invoking command in '/home/a720a/ros2_ws/src/dht11_pkg': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/a720a/ros2_ws/build/dht11_pkg/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/a720a/ros2_ws/install/dht11_pkg/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/dht11_pkg build --build-base /home/a720a/ros2_ws/build/dht11_pkg/build install --record /home/a720a/ros2_ws/build/dht11_pkg/install.log --single-version-externally-managed install_data
+[12.542s] running egg_info
+[12.544s] creating ../../build/dht11_pkg/dht11_pkg.egg-info
+[12.648s] writing ../../build/dht11_pkg/dht11_pkg.egg-info/PKG-INFO
+[12.650s] writing dependency_links to ../../build/dht11_pkg/dht11_pkg.egg-info/dependency_links.txt
+[12.651s] writing entry points to ../../build/dht11_pkg/dht11_pkg.egg-info/entry_points.txt
+[12.652s] writing requirements to ../../build/dht11_pkg/dht11_pkg.egg-info/requires.txt
+[12.653s] writing top-level names to ../../build/dht11_pkg/dht11_pkg.egg-info/top_level.txt
+[12.653s] writing manifest file '../../build/dht11_pkg/dht11_pkg.egg-info/SOURCES.txt'
+[12.874s] reading manifest file '../../build/dht11_pkg/dht11_pkg.egg-info/SOURCES.txt'
+[12.878s] writing manifest file '../../build/dht11_pkg/dht11_pkg.egg-info/SOURCES.txt'
+[12.878s] running build
+[12.879s] running build_py
+[12.880s] creating /home/a720a/ros2_ws/build/dht11_pkg/build
+[12.880s] creating /home/a720a/ros2_ws/build/dht11_pkg/build/lib
+[12.881s] creating /home/a720a/ros2_ws/build/dht11_pkg/build/lib/dht11_pkg
+[12.881s] copying dht11_pkg/__init__.py -> /home/a720a/ros2_ws/build/dht11_pkg/build/lib/dht11_pkg
+[12.882s] running install
+[12.913s] running install_lib
+[13.022s] creating /home/a720a/ros2_ws/install/dht11_pkg/lib/python3.12/site-packages/dht11_pkg
+[13.023s] copying /home/a720a/ros2_ws/build/dht11_pkg/build/lib/dht11_pkg/__init__.py -> /home/a720a/ros2_ws/install/dht11_pkg/lib/python3.12/site-packages/dht11_pkg
+[13.027s] byte-compiling /home/a720a/ros2_ws/install/dht11_pkg/lib/python3.12/site-packages/dht11_pkg/__init__.py to __init__.cpython-312.pyc
+[13.028s] running install_data
+[13.029s] creating /home/a720a/ros2_ws/install/dht11_pkg/share/ament_index
+[13.030s] creating /home/a720a/ros2_ws/install/dht11_pkg/share/ament_index/resource_index
+[13.030s] creating /home/a720a/ros2_ws/install/dht11_pkg/share/ament_index/resource_index/packages
+[13.031s] copying resource/dht11_pkg -> /home/a720a/ros2_ws/install/dht11_pkg/share/ament_index/resource_index/packages
+[13.031s] copying package.xml -> /home/a720a/ros2_ws/install/dht11_pkg/share/dht11_pkg
+[13.032s] running install_egg_info
+[13.146s] Copying ../../build/dht11_pkg/dht11_pkg.egg-info to /home/a720a/ros2_ws/install/dht11_pkg/lib/python3.12/site-packages/dht11_pkg-0.0.0-py3.12.egg-info
+[13.153s] running install_scripts
+[13.961s] Installing monitor script to /home/a720a/ros2_ws/install/dht11_pkg/lib/dht11_pkg
+[13.962s] Installing publisher script to /home/a720a/ros2_ws/install/dht11_pkg/lib/dht11_pkg
+[13.963s] Installing subscriber script to /home/a720a/ros2_ws/install/dht11_pkg/lib/dht11_pkg
+[13.964s] writing list of installed files to '/home/a720a/ros2_ws/build/dht11_pkg/install.log'
+[14.140s] Invoked command in '/home/a720a/ros2_ws/src/dht11_pkg' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/a720a/ros2_ws/build/dht11_pkg/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/a720a/ros2_ws/install/dht11_pkg/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/dht11_pkg build --build-base /home/a720a/ros2_ws/build/dht11_pkg/build install --record /home/a720a/ros2_ws/build/dht11_pkg/install.log --single-version-externally-managed install_data

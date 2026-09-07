@@ -1,0 +1,13 @@
+package.xml
+setup.cfg
+setup.py
+camera_node/__init__.py
+camera_node/usb_camera_node.py
+camera_node.egg-info/PKG-INFO
+camera_node.egg-info/SOURCES.txt
+camera_node.egg-info/dependency_links.txt
+camera_node.egg-info/entry_points.txt
+camera_node.egg-info/requires.txt
+camera_node.egg-info/top_level.txt
+camera_node.egg-info/zip-safe
+resource/camera_node

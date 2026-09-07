@@ -1,0 +1,120 @@
+[0.000000] (-) TimerEvent: {}
+[0.002136] (dht11_pkg) JobQueued: {'identifier': 'dht11_pkg', 'dependencies': OrderedDict()}
+[0.003082] (dht11_pkg) JobStarted: {'identifier': 'dht11_pkg'}
+[0.099159] (-) TimerEvent: {}
+[0.199971] (-) TimerEvent: {}
+[0.300610] (-) TimerEvent: {}
+[0.401358] (-) TimerEvent: {}
+[0.502088] (-) TimerEvent: {}
+[0.602729] (-) TimerEvent: {}
+[0.703424] (-) TimerEvent: {}
+[0.804105] (-) TimerEvent: {}
+[0.904725] (-) TimerEvent: {}
+[1.005377] (-) TimerEvent: {}
+[1.106038] (-) TimerEvent: {}
+[1.206779] (-) TimerEvent: {}
+[1.307850] (-) TimerEvent: {}
+[1.408676] (-) TimerEvent: {}
+[1.509406] (-) TimerEvent: {}
+[1.610073] (-) TimerEvent: {}
+[1.710714] (-) TimerEvent: {}
+[1.811455] (-) TimerEvent: {}
+[1.912142] (-) TimerEvent: {}
+[2.012793] (-) TimerEvent: {}
+[2.113439] (-) TimerEvent: {}
+[2.214085] (-) TimerEvent: {}
+[2.314669] (-) TimerEvent: {}
+[2.415304] (-) TimerEvent: {}
+[2.515965] (-) TimerEvent: {}
+[2.616622] (-) TimerEvent: {}
+[2.717517] (-) TimerEvent: {}
+[2.818404] (-) TimerEvent: {}
+[2.919206] (-) TimerEvent: {}
+[3.020012] (-) TimerEvent: {}
+[3.120756] (-) TimerEvent: {}
+[3.221471] (-) TimerEvent: {}
+[3.322265] (-) TimerEvent: {}
+[3.422940] (-) TimerEvent: {}
+[3.523592] (-) TimerEvent: {}
+[3.624382] (-) TimerEvent: {}
+[3.725060] (-) TimerEvent: {}
+[3.825651] (-) TimerEvent: {}
+[3.926298] (-) TimerEvent: {}
+[4.026975] (-) TimerEvent: {}
+[4.127622] (-) TimerEvent: {}
+[4.228311] (-) TimerEvent: {}
+[4.328956] (-) TimerEvent: {}
+[4.429528] (-) TimerEvent: {}
+[4.530144] (-) TimerEvent: {}
+[4.630716] (-) TimerEvent: {}
+[4.731359] (-) TimerEvent: {}
+[4.832041] (-) TimerEvent: {}
+[4.932609] (-) TimerEvent: {}
+[5.033257] (-) TimerEvent: {}
+[5.133949] (-) TimerEvent: {}
+[5.234630] (-) TimerEvent: {}
+[5.335346] (-) TimerEvent: {}
+[5.436148] (-) TimerEvent: {}
+[5.537314] (-) TimerEvent: {}
+[5.592951] (dht11_pkg) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', '-W', 'ignore:easy_install command is deprecated', 'setup.py', 'develop', '--editable', '--build-directory', '/home/a720a/ros2_ws/build/dht11_pkg/build', '--no-deps', 'symlink_data', '--force'], 'cwd': '/home/a720a/ros2_ws/build/dht11_pkg', 'env': {'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'a720a', 'XDG_SESSION_TYPE': 'wayland', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/jazzy/opt/rviz_ogre_vendor/lib:/opt/ros/jazzy/lib/aarch64-linux-gnu:/opt/ros/jazzy/opt/gz_math_vendor/lib:/opt/ros/jazzy/opt/gz_utils_vendor/lib:/opt/ros/jazzy/opt/gz_cmake_vendor/lib:/opt/ros/jazzy/lib', 'HOME': '/home/a720a', 'OLDPWD': '/home/a720a/ros2_ws', 'DESKTOP_SESSION': 'ubuntu', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'DBUS_STARTER_BUS_TYPE': 'session', 'SYSTEMD_EXEC_PID': '1629', 'GSM_SKIP_SSH_AGENT_WORKAROUND': 'true', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus,guid=10b7e359cc6b55b294dfe5be6a04150d', 'COLORTERM': 'truecolor', 'DEBUGINFOD_URLS': 'https://debuginfod.ubuntu.com', 'IM_CONFIG_PHASE': '1', 'WAYLAND_DISPLAY': 'wayland-0', 'COLCON_PREFIX_PATH': '/home/a720a/ros2_ws/install', 'ROS_DISTRO': 'jazzy', 'LOGNAME': 'a720a', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'MEMORY_PRESSURE_WATCH': '/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/app-gnome\\x2dsession\\x2dmanager.slice/gnome-session-manager@ubuntu.service/memory.pressure', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'a720a', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'PATH': '/opt/ros/jazzy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin', 'SESSION_MANAGER': 'local/720a:@/tmp/.ICE-unix/1629,unix/720a:/tmp/.ICE-unix/1629', 'XDG_MENU_PREFIX': 'gnome-', 'GNOME_TERMINAL_SCREEN': '/org/gnome/Terminal/screen/4936b475_ec94_47c1_8cba_816ee387ada4', 'GNOME_SETUP_DISPLAY': ':1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/.mutter-Xwaylandauth.CBTLP3', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:', 'GNOME_TERMINAL_SERVICE': ':1.275', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'AMENT_PREFIX_PATH': '/home/a720a/ros2_ws/install/dht11_pkg:/opt/ros/jazzy', 'SHELL': '/bin/bash', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'ROS_AUTOMATIC_DISCOVERY_RANGE': 'SUBNET', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/a720a/ros2_ws/build/dht11_pkg', 'LC_ALL': 'en_US.UTF-8', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'DBUS_STARTER_ADDRESS': 'unix:path=/run/user/1000/bus,guid=10b7e359cc6b55b294dfe5be6a04150d', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/a720a/ros2_ws/build/dht11_pkg/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/a720a/ros2_ws/install/dht11_pkg/lib/python3.12/site-packages:/home/a720a/ros2_ws/install/dht11_pkg/lib/python3.12/site-packages:/opt/ros/jazzy/lib/python3.12/site-packages', 'COLCON': '1', 'MEMORY_PRESSURE_WRITE': 'c29tZSAyMDAwMDAgMjAwMDAwMAA=', 'VTE_VERSION': '7600', 'CMAKE_PREFIX_PATH': '/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor'}, 'shell': False}
+[5.637497] (-) TimerEvent: {}
+[5.738288] (-) TimerEvent: {}
+[5.838932] (-) TimerEvent: {}
+[5.939563] (-) TimerEvent: {}
+[6.040245] (-) TimerEvent: {}
+[6.140967] (-) TimerEvent: {}
+[6.241651] (-) TimerEvent: {}
+[6.342395] (-) TimerEvent: {}
+[6.443047] (-) TimerEvent: {}
+[6.543668] (-) TimerEvent: {}
+[6.644342] (-) TimerEvent: {}
+[6.744940] (-) TimerEvent: {}
+[6.845566] (-) TimerEvent: {}
+[6.946251] (-) TimerEvent: {}
+[7.046891] (-) TimerEvent: {}
+[7.147532] (-) TimerEvent: {}
+[7.248185] (-) TimerEvent: {}
+[7.348862] (-) TimerEvent: {}
+[7.449491] (-) TimerEvent: {}
+[7.479403] (dht11_pkg) StdoutLine: {'line': b'running develop\n'}
+[7.549640] (-) TimerEvent: {}
+[7.650295] (-) TimerEvent: {}
+[7.750989] (-) TimerEvent: {}
+[7.851745] (-) TimerEvent: {}
+[7.952549] (-) TimerEvent: {}
+[8.053203] (-) TimerEvent: {}
+[8.153853] (-) TimerEvent: {}
+[8.254456] (-) TimerEvent: {}
+[8.355114] (-) TimerEvent: {}
+[8.455717] (-) TimerEvent: {}
+[8.556436] (-) TimerEvent: {}
+[8.657148] (-) TimerEvent: {}
+[8.757760] (-) TimerEvent: {}
+[8.758703] (dht11_pkg) StdoutLine: {'line': b'running egg_info\n'}
+[8.857959] (-) TimerEvent: {}
+[8.869459] (dht11_pkg) StdoutLine: {'line': b'writing dht11_pkg.egg-info/PKG-INFO\n'}
+[8.872732] (dht11_pkg) StdoutLine: {'line': b'writing dependency_links to dht11_pkg.egg-info/dependency_links.txt\n'}
+[8.875242] (dht11_pkg) StdoutLine: {'line': b'writing entry points to dht11_pkg.egg-info/entry_points.txt\n'}
+[8.876444] (dht11_pkg) StdoutLine: {'line': b'writing requirements to dht11_pkg.egg-info/requires.txt\n'}
+[8.877283] (dht11_pkg) StdoutLine: {'line': b'writing top-level names to dht11_pkg.egg-info/top_level.txt\n'}
+[8.958126] (-) TimerEvent: {}
+[9.058713] (-) TimerEvent: {}
+[9.090902] (dht11_pkg) StdoutLine: {'line': b"reading manifest file 'dht11_pkg.egg-info/SOURCES.txt'\n"}
+[9.095690] (dht11_pkg) StdoutLine: {'line': b"writing manifest file 'dht11_pkg.egg-info/SOURCES.txt'\n"}
+[9.158907] (-) TimerEvent: {}
+[9.208266] (dht11_pkg) StdoutLine: {'line': b'running build_ext\n'}
+[9.210115] (dht11_pkg) StdoutLine: {'line': b'Creating /home/a720a/ros2_ws/install/dht11_pkg/lib/python3.12/site-packages/dht11-pkg.egg-link (link to .)\n'}
+[9.213428] (dht11_pkg) StdoutLine: {'line': b'Installing monitor script to /home/a720a/ros2_ws/install/dht11_pkg/lib/dht11_pkg\n'}
+[9.214626] (dht11_pkg) StdoutLine: {'line': b'Installing publisher script to /home/a720a/ros2_ws/install/dht11_pkg/lib/dht11_pkg\n'}
+[9.215735] (dht11_pkg) StdoutLine: {'line': b'Installing subscriber script to /home/a720a/ros2_ws/install/dht11_pkg/lib/dht11_pkg\n'}
+[9.217184] (dht11_pkg) StdoutLine: {'line': b'\n'}
+[9.217946] (dht11_pkg) StdoutLine: {'line': b'Installed /home/a720a/ros2_ws/build/dht11_pkg\n'}
+[9.218443] (dht11_pkg) StdoutLine: {'line': b'running symlink_data\n'}
+[9.219108] (dht11_pkg) StdoutLine: {'line': b'symbolically linking /home/a720a/ros2_ws/build/dht11_pkg/resource/dht11_pkg -> /home/a720a/ros2_ws/install/dht11_pkg/share/ament_index/resource_index/packages\n'}
+[9.219869] (dht11_pkg) StdoutLine: {'line': b'symbolically linking /home/a720a/ros2_ws/build/dht11_pkg/package.xml -> /home/a720a/ros2_ws/install/dht11_pkg/share/dht11_pkg\n'}
+[9.259311] (-) TimerEvent: {}
+[9.360474] (-) TimerEvent: {}
+[9.411709] (dht11_pkg) CommandEnded: {'returncode': 0}
+[9.461027] (-) TimerEvent: {}
+[9.491064] (dht11_pkg) JobEnded: {'identifier': 'dht11_pkg', 'rc': 0}
+[9.499052] (-) EventReactorShutdown: {}

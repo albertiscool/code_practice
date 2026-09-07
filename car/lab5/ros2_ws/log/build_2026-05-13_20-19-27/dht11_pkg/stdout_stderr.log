@@ -1,0 +1,17 @@
+running develop
+running egg_info
+writing dht11_pkg.egg-info/PKG-INFO
+writing dependency_links to dht11_pkg.egg-info/dependency_links.txt
+writing entry points to dht11_pkg.egg-info/entry_points.txt
+writing requirements to dht11_pkg.egg-info/requires.txt
+writing top-level names to dht11_pkg.egg-info/top_level.txt
+reading manifest file 'dht11_pkg.egg-info/SOURCES.txt'
+writing manifest file 'dht11_pkg.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/a720a/ros2_ws/install/dht11_pkg/lib/python3.12/site-packages/dht11-pkg.egg-link (link to .)
+Installing monitor script to /home/a720a/ros2_ws/install/dht11_pkg/lib/dht11_pkg
+Installing publisher script to /home/a720a/ros2_ws/install/dht11_pkg/lib/dht11_pkg
+Installing subscriber script to /home/a720a/ros2_ws/install/dht11_pkg/lib/dht11_pkg
+
+Installed /home/a720a/ros2_ws/build/dht11_pkg
+running symlink_data

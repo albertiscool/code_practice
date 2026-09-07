@@ -1,0 +1,17 @@
+[5.628s] Invoking command in '/home/fr/ros2_ws/balloon_ws/build/balloon_detector': PYTHONPATH=/home/fr/ros2_ws/balloon_ws/build/balloon_detector/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/fr/ros2_ws/balloon_ws/install/balloon_detector/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/fr/ros2_ws/balloon_ws/build/balloon_detector/build --no-deps symlink_data
+[7.707s] running develop
+[9.112s] running egg_info
+[9.113s] writing balloon_detector.egg-info/PKG-INFO
+[9.114s] writing dependency_links to balloon_detector.egg-info/dependency_links.txt
+[9.116s] writing entry points to balloon_detector.egg-info/entry_points.txt
+[9.119s] writing requirements to balloon_detector.egg-info/requires.txt
+[9.122s] writing top-level names to balloon_detector.egg-info/top_level.txt
+[9.159s] reading manifest file 'balloon_detector.egg-info/SOURCES.txt'
+[9.172s] writing manifest file 'balloon_detector.egg-info/SOURCES.txt'
+[9.182s] running build_ext
+[9.184s] Creating /home/fr/ros2_ws/balloon_ws/install/balloon_detector/lib/python3.10/site-packages/balloon-detector.egg-link (link to .)
+[9.193s] Installing balloon_detector_node script to /home/fr/ros2_ws/balloon_ws/install/balloon_detector/lib/balloon_detector
+[9.215s] 
+[9.217s] Installed /home/fr/ros2_ws/balloon_ws/build/balloon_detector
+[9.227s] running symlink_data
+[9.645s] Invoked command in '/home/fr/ros2_ws/balloon_ws/build/balloon_detector' returned '0': PYTHONPATH=/home/fr/ros2_ws/balloon_ws/build/balloon_detector/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/fr/ros2_ws/balloon_ws/install/balloon_detector/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/fr/ros2_ws/balloon_ws/build/balloon_detector/build --no-deps symlink_data

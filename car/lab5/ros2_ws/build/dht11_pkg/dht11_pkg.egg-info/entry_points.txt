@@ -1,0 +1,4 @@
+[console_scripts]
+monitor = dht11_pkg.dht11_monitor:main
+publisher = dht11_pkg.dht11_publisher:main
+subscriber = dht11_pkg.dht11_subscriber:main

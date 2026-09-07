@@ -1,0 +1,230 @@
+[0.000000] (-) TimerEvent: {}
+[0.001869] (balloon_detector) JobQueued: {'identifier': 'balloon_detector', 'dependencies': OrderedDict()}
+[0.002040] (camera_node) JobQueued: {'identifier': 'camera_node', 'dependencies': OrderedDict()}
+[0.002537] (car_controller) JobQueued: {'identifier': 'car_controller', 'dependencies': OrderedDict()}
+[0.002629] (serial_bridge) JobQueued: {'identifier': 'serial_bridge', 'dependencies': OrderedDict()}
+[0.002712] (balloon_detector) JobStarted: {'identifier': 'balloon_detector'}
+[0.098898] (-) TimerEvent: {}
+[0.109040] (camera_node) JobStarted: {'identifier': 'camera_node'}
+[0.143760] (car_controller) JobStarted: {'identifier': 'car_controller'}
+[0.178640] (serial_bridge) JobStarted: {'identifier': 'serial_bridge'}
+[0.199181] (-) TimerEvent: {}
+[0.300285] (-) TimerEvent: {}
+[0.400985] (-) TimerEvent: {}
+[0.501764] (-) TimerEvent: {}
+[0.602610] (-) TimerEvent: {}
+[0.703600] (-) TimerEvent: {}
+[0.804918] (-) TimerEvent: {}
+[0.906581] (-) TimerEvent: {}
+[1.007583] (-) TimerEvent: {}
+[1.108402] (-) TimerEvent: {}
+[1.209201] (-) TimerEvent: {}
+[1.310337] (-) TimerEvent: {}
+[1.411415] (-) TimerEvent: {}
+[1.512493] (-) TimerEvent: {}
+[1.614811] (-) TimerEvent: {}
+[1.715823] (-) TimerEvent: {}
+[1.816784] (-) TimerEvent: {}
+[1.917618] (-) TimerEvent: {}
+[2.018547] (-) TimerEvent: {}
+[2.119585] (-) TimerEvent: {}
+[2.220676] (-) TimerEvent: {}
+[2.321451] (-) TimerEvent: {}
+[2.422538] (-) TimerEvent: {}
+[2.523882] (-) TimerEvent: {}
+[2.625129] (-) TimerEvent: {}
+[2.725965] (-) TimerEvent: {}
+[2.827031] (-) TimerEvent: {}
+[2.928085] (-) TimerEvent: {}
+[3.029115] (-) TimerEvent: {}
+[3.129897] (-) TimerEvent: {}
+[3.230671] (-) TimerEvent: {}
+[3.331445] (-) TimerEvent: {}
+[3.432174] (-) TimerEvent: {}
+[3.532940] (-) TimerEvent: {}
+[3.633861] (-) TimerEvent: {}
+[3.735584] (-) TimerEvent: {}
+[3.836441] (-) TimerEvent: {}
+[3.937298] (-) TimerEvent: {}
+[4.038714] (-) TimerEvent: {}
+[4.140167] (-) TimerEvent: {}
+[4.240887] (-) TimerEvent: {}
+[4.341594] (-) TimerEvent: {}
+[4.442398] (-) TimerEvent: {}
+[4.543062] (-) TimerEvent: {}
+[4.643766] (-) TimerEvent: {}
+[4.744493] (-) TimerEvent: {}
+[4.845214] (-) TimerEvent: {}
+[4.946097] (-) TimerEvent: {}
+[5.047329] (-) TimerEvent: {}
+[5.148569] (-) TimerEvent: {}
+[5.249999] (-) TimerEvent: {}
+[5.351118] (-) TimerEvent: {}
+[5.451855] (-) TimerEvent: {}
+[5.552585] (-) TimerEvent: {}
+[5.653495] (-) TimerEvent: {}
+[5.756278] (-) TimerEvent: {}
+[5.857197] (-) TimerEvent: {}
+[5.957914] (-) TimerEvent: {}
+[6.058646] (-) TimerEvent: {}
+[6.159330] (-) TimerEvent: {}
+[6.260033] (-) TimerEvent: {}
+[6.361009] (-) TimerEvent: {}
+[6.462274] (-) TimerEvent: {}
+[6.564880] (-) TimerEvent: {}
+[6.666740] (-) TimerEvent: {}
+[6.768249] (-) TimerEvent: {}
+[6.869656] (-) TimerEvent: {}
+[6.970726] (-) TimerEvent: {}
+[7.071726] (-) TimerEvent: {}
+[7.172779] (-) TimerEvent: {}
+[7.273787] (-) TimerEvent: {}
+[7.375374] (-) TimerEvent: {}
+[7.476553] (-) TimerEvent: {}
+[7.577689] (-) TimerEvent: {}
+[7.678883] (-) TimerEvent: {}
+[7.779990] (-) TimerEvent: {}
+[7.880967] (-) TimerEvent: {}
+[7.982026] (-) TimerEvent: {}
+[8.083080] (-) TimerEvent: {}
+[8.184725] (-) TimerEvent: {}
+[8.286282] (-) TimerEvent: {}
+[8.387838] (-) TimerEvent: {}
+[8.488789] (-) TimerEvent: {}
+[8.589710] (-) TimerEvent: {}
+[8.691000] (-) TimerEvent: {}
+[8.791845] (-) TimerEvent: {}
+[8.892975] (-) TimerEvent: {}
+[8.994846] (-) TimerEvent: {}
+[9.097146] (-) TimerEvent: {}
+[9.198363] (-) TimerEvent: {}
+[9.300939] (-) TimerEvent: {}
+[9.403529] (-) TimerEvent: {}
+[9.505999] (-) TimerEvent: {}
+[9.598329] (serial_bridge) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', '-W', 'ignore:easy_install command is deprecated', 'setup.py', 'develop', '--editable', '--build-directory', '/home/fr/ros2_ws/balloon_ws/build/serial_bridge/build', '--no-deps', 'symlink_data'], 'cwd': '/home/fr/ros2_ws/balloon_ws/build/serial_bridge', 'env': {'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'fr', 'LC_TIME': 'lzh_TW', 'XDG_SESSION_TYPE': 'wayland', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/aarch64-linux-gnu:/opt/ros/humble/lib', 'HOME': '/home/fr', 'OLDPWD': '/home/fr/ros2_ws/balloon_ws/src/balloon_detector/launch', 'DESKTOP_SESSION': 'ubuntu', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'LC_MONETARY': 'lzh_TW', 'SYSTEMD_EXEC_PID': '25885', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'COLORTERM': 'truecolor', 'IM_CONFIG_PHASE': '1', 'WAYLAND_DISPLAY': 'wayland-0', 'ROS_DISTRO': 'humble', 'LOGNAME': 'fr', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'fr', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'ROS_LOCALHOST_ONLY': '0', 'PATH': '/opt/ros/humble/bin:/home/fr/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin', 'SESSION_MANAGER': 'local/fr-desktop:@/tmp/.ICE-unix/25837,unix/fr-desktop:/tmp/.ICE-unix/25837', 'XDG_MENU_PREFIX': 'gnome-', 'LC_ADDRESS': 'lzh_TW', 'GNOME_TERMINAL_SCREEN': '/org/gnome/Terminal/screen/4ead40b8_da79_4864_aa0b_842c9da785ac', 'GNOME_SETUP_DISPLAY': ':1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'LC_TELEPHONE': 'lzh_TW', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/.mutter-Xwaylandauth.62JOQ3', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:', 'GNOME_TERMINAL_SERVICE': ':1.107', 'SSH_AGENT_LAUNCHER': 'gnome-keyring', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'AMENT_PREFIX_PATH': '/opt/ros/humble', 'SHELL': '/bin/bash', 'LC_NAME': 'lzh_TW', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'LC_MEASUREMENT': 'lzh_TW', 'LC_IDENTIFICATION': 'lzh_TW', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/fr/ros2_ws/balloon_ws/build/serial_bridge', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/fr/ros2_ws/balloon_ws/build/serial_bridge/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/fr/ros2_ws/balloon_ws/install/serial_bridge/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages', 'LC_NUMERIC': 'lzh_TW', 'LC_PAPER': 'lzh_TW', 'COLCON': '1', 'VTE_VERSION': '6800'}, 'shell': False}
+[9.614110] (-) TimerEvent: {}
+[9.647193] (car_controller) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', '-W', 'ignore:easy_install command is deprecated', 'setup.py', 'develop', '--editable', '--build-directory', '/home/fr/ros2_ws/balloon_ws/build/car_controller/build', '--no-deps', 'symlink_data'], 'cwd': '/home/fr/ros2_ws/balloon_ws/build/car_controller', 'env': {'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'fr', 'LC_TIME': 'lzh_TW', 'XDG_SESSION_TYPE': 'wayland', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/aarch64-linux-gnu:/opt/ros/humble/lib', 'HOME': '/home/fr', 'OLDPWD': '/home/fr/ros2_ws/balloon_ws/src/balloon_detector/launch', 'DESKTOP_SESSION': 'ubuntu', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'LC_MONETARY': 'lzh_TW', 'SYSTEMD_EXEC_PID': '25885', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'COLORTERM': 'truecolor', 'IM_CONFIG_PHASE': '1', 'WAYLAND_DISPLAY': 'wayland-0', 'ROS_DISTRO': 'humble', 'LOGNAME': 'fr', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'fr', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'ROS_LOCALHOST_ONLY': '0', 'PATH': '/opt/ros/humble/bin:/home/fr/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin', 'SESSION_MANAGER': 'local/fr-desktop:@/tmp/.ICE-unix/25837,unix/fr-desktop:/tmp/.ICE-unix/25837', 'XDG_MENU_PREFIX': 'gnome-', 'LC_ADDRESS': 'lzh_TW', 'GNOME_TERMINAL_SCREEN': '/org/gnome/Terminal/screen/4ead40b8_da79_4864_aa0b_842c9da785ac', 'GNOME_SETUP_DISPLAY': ':1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'LC_TELEPHONE': 'lzh_TW', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/.mutter-Xwaylandauth.62JOQ3', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:', 'GNOME_TERMINAL_SERVICE': ':1.107', 'SSH_AGENT_LAUNCHER': 'gnome-keyring', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'AMENT_PREFIX_PATH': '/opt/ros/humble', 'SHELL': '/bin/bash', 'LC_NAME': 'lzh_TW', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'LC_MEASUREMENT': 'lzh_TW', 'LC_IDENTIFICATION': 'lzh_TW', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/fr/ros2_ws/balloon_ws/build/car_controller', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/fr/ros2_ws/balloon_ws/build/car_controller/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/fr/ros2_ws/balloon_ws/install/car_controller/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages', 'LC_NUMERIC': 'lzh_TW', 'LC_PAPER': 'lzh_TW', 'COLCON': '1', 'VTE_VERSION': '6800'}, 'shell': False}
+[9.665713] (balloon_detector) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', '-W', 'ignore:easy_install command is deprecated', 'setup.py', 'develop', '--editable', '--build-directory', '/home/fr/ros2_ws/balloon_ws/build/balloon_detector/build', '--no-deps', 'symlink_data'], 'cwd': '/home/fr/ros2_ws/balloon_ws/build/balloon_detector', 'env': {'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'fr', 'LC_TIME': 'lzh_TW', 'XDG_SESSION_TYPE': 'wayland', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/aarch64-linux-gnu:/opt/ros/humble/lib', 'HOME': '/home/fr', 'OLDPWD': '/home/fr/ros2_ws/balloon_ws/src/balloon_detector/launch', 'DESKTOP_SESSION': 'ubuntu', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'LC_MONETARY': 'lzh_TW', 'SYSTEMD_EXEC_PID': '25885', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'COLORTERM': 'truecolor', 'IM_CONFIG_PHASE': '1', 'WAYLAND_DISPLAY': 'wayland-0', 'ROS_DISTRO': 'humble', 'LOGNAME': 'fr', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'fr', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'ROS_LOCALHOST_ONLY': '0', 'PATH': '/opt/ros/humble/bin:/home/fr/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin', 'SESSION_MANAGER': 'local/fr-desktop:@/tmp/.ICE-unix/25837,unix/fr-desktop:/tmp/.ICE-unix/25837', 'XDG_MENU_PREFIX': 'gnome-', 'LC_ADDRESS': 'lzh_TW', 'GNOME_TERMINAL_SCREEN': '/org/gnome/Terminal/screen/4ead40b8_da79_4864_aa0b_842c9da785ac', 'GNOME_SETUP_DISPLAY': ':1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'LC_TELEPHONE': 'lzh_TW', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/.mutter-Xwaylandauth.62JOQ3', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:', 'GNOME_TERMINAL_SERVICE': ':1.107', 'SSH_AGENT_LAUNCHER': 'gnome-keyring', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'AMENT_PREFIX_PATH': '/opt/ros/humble', 'SHELL': '/bin/bash', 'LC_NAME': 'lzh_TW', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'LC_MEASUREMENT': 'lzh_TW', 'LC_IDENTIFICATION': 'lzh_TW', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/fr/ros2_ws/balloon_ws/build/balloon_detector', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/fr/ros2_ws/balloon_ws/build/balloon_detector/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/fr/ros2_ws/balloon_ws/install/balloon_detector/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages', 'LC_NUMERIC': 'lzh_TW', 'LC_PAPER': 'lzh_TW', 'COLCON': '1', 'VTE_VERSION': '6800'}, 'shell': False}
+[9.697162] (camera_node) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', '-W', 'ignore:easy_install command is deprecated', 'setup.py', 'develop', '--editable', '--build-directory', '/home/fr/ros2_ws/balloon_ws/build/camera_node/build', '--no-deps', 'symlink_data'], 'cwd': '/home/fr/ros2_ws/balloon_ws/build/camera_node', 'env': {'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'fr', 'LC_TIME': 'lzh_TW', 'XDG_SESSION_TYPE': 'wayland', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/aarch64-linux-gnu:/opt/ros/humble/lib', 'HOME': '/home/fr', 'OLDPWD': '/home/fr/ros2_ws/balloon_ws/src/balloon_detector/launch', 'DESKTOP_SESSION': 'ubuntu', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'LC_MONETARY': 'lzh_TW', 'SYSTEMD_EXEC_PID': '25885', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'COLORTERM': 'truecolor', 'IM_CONFIG_PHASE': '1', 'WAYLAND_DISPLAY': 'wayland-0', 'ROS_DISTRO': 'humble', 'LOGNAME': 'fr', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'fr', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'ROS_LOCALHOST_ONLY': '0', 'PATH': '/opt/ros/humble/bin:/home/fr/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin', 'SESSION_MANAGER': 'local/fr-desktop:@/tmp/.ICE-unix/25837,unix/fr-desktop:/tmp/.ICE-unix/25837', 'XDG_MENU_PREFIX': 'gnome-', 'LC_ADDRESS': 'lzh_TW', 'GNOME_TERMINAL_SCREEN': '/org/gnome/Terminal/screen/4ead40b8_da79_4864_aa0b_842c9da785ac', 'GNOME_SETUP_DISPLAY': ':1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'LC_TELEPHONE': 'lzh_TW', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/.mutter-Xwaylandauth.62JOQ3', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:', 'GNOME_TERMINAL_SERVICE': ':1.107', 'SSH_AGENT_LAUNCHER': 'gnome-keyring', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'AMENT_PREFIX_PATH': '/opt/ros/humble', 'SHELL': '/bin/bash', 'LC_NAME': 'lzh_TW', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'LC_MEASUREMENT': 'lzh_TW', 'LC_IDENTIFICATION': 'lzh_TW', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/fr/ros2_ws/balloon_ws/build/camera_node', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/fr/ros2_ws/balloon_ws/build/camera_node/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/fr/ros2_ws/balloon_ws/install/camera_node/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages', 'LC_NUMERIC': 'lzh_TW', 'LC_PAPER': 'lzh_TW', 'COLCON': '1', 'VTE_VERSION': '6800'}, 'shell': False}
+[9.714371] (-) TimerEvent: {}
+[9.815606] (-) TimerEvent: {}
+[9.917182] (-) TimerEvent: {}
+[10.018679] (-) TimerEvent: {}
+[10.120504] (-) TimerEvent: {}
+[10.221991] (-) TimerEvent: {}
+[10.322973] (-) TimerEvent: {}
+[10.423885] (-) TimerEvent: {}
+[10.524858] (-) TimerEvent: {}
+[10.625697] (-) TimerEvent: {}
+[10.726617] (-) TimerEvent: {}
+[10.827585] (-) TimerEvent: {}
+[10.928581] (-) TimerEvent: {}
+[11.029578] (-) TimerEvent: {}
+[11.130561] (-) TimerEvent: {}
+[11.231542] (-) TimerEvent: {}
+[11.332619] (-) TimerEvent: {}
+[11.433773] (-) TimerEvent: {}
+[11.534920] (-) TimerEvent: {}
+[11.635929] (-) TimerEvent: {}
+[11.642513] (serial_bridge) StdoutLine: {'line': b'running develop\n'}
+[11.674851] (car_controller) StdoutLine: {'line': b'running develop\n'}
+[11.736254] (-) TimerEvent: {}
+[11.802148] (balloon_detector) StdoutLine: {'line': b'running develop\n'}
+[11.836515] (-) TimerEvent: {}
+[11.874263] (camera_node) StdoutLine: {'line': b'running develop\n'}
+[11.936793] (-) TimerEvent: {}
+[12.037921] (-) TimerEvent: {}
+[12.139719] (-) TimerEvent: {}
+[12.241391] (-) TimerEvent: {}
+[12.342870] (-) TimerEvent: {}
+[12.444164] (-) TimerEvent: {}
+[12.545340] (-) TimerEvent: {}
+[12.646908] (-) TimerEvent: {}
+[12.748899] (-) TimerEvent: {}
+[12.850663] (-) TimerEvent: {}
+[12.952471] (-) TimerEvent: {}
+[13.054282] (-) TimerEvent: {}
+[13.155334] (-) TimerEvent: {}
+[13.256371] (-) TimerEvent: {}
+[13.357328] (-) TimerEvent: {}
+[13.458306] (-) TimerEvent: {}
+[13.559212] (-) TimerEvent: {}
+[13.660338] (-) TimerEvent: {}
+[13.761702] (-) TimerEvent: {}
+[13.780957] (car_controller) StdoutLine: {'line': b'running egg_info\n'}
+[13.783921] (car_controller) StdoutLine: {'line': b'writing car_controller.egg-info/PKG-INFO\n'}
+[13.784738] (car_controller) StdoutLine: {'line': b'writing dependency_links to car_controller.egg-info/dependency_links.txt\n'}
+[13.786035] (car_controller) StdoutLine: {'line': b'writing entry points to car_controller.egg-info/entry_points.txt\n'}
+[13.787619] (car_controller) StdoutLine: {'line': b'writing requirements to car_controller.egg-info/requires.txt\n'}
+[13.788824] (car_controller) StdoutLine: {'line': b'writing top-level names to car_controller.egg-info/top_level.txt\n'}
+[13.816442] (car_controller) StdoutLine: {'line': b"reading manifest file 'car_controller.egg-info/SOURCES.txt'\n"}
+[13.822393] (car_controller) StdoutLine: {'line': b"writing manifest file 'car_controller.egg-info/SOURCES.txt'\n"}
+[13.830855] (car_controller) StdoutLine: {'line': b'running build_ext\n'}
+[13.843216] (car_controller) StdoutLine: {'line': b'Creating /home/fr/ros2_ws/balloon_ws/install/car_controller/lib/python3.10/site-packages/car-controller.egg-link (link to .)\n'}
+[13.850837] (car_controller) StdoutLine: {'line': b'Installing controller_node script to /home/fr/ros2_ws/balloon_ws/install/car_controller/lib/car_controller\n'}
+[13.851742] (serial_bridge) StdoutLine: {'line': b'running egg_info\n'}
+[13.854967] (serial_bridge) StdoutLine: {'line': b'writing serial_bridge.egg-info/PKG-INFO\n'}
+[13.856183] (serial_bridge) StdoutLine: {'line': b'writing dependency_links to serial_bridge.egg-info/dependency_links.txt\n'}
+[13.858296] (car_controller) StdoutLine: {'line': b'\n'}
+[13.859176] (car_controller) StdoutLine: {'line': b'Installed /home/fr/ros2_ws/balloon_ws/build/car_controller\n'}
+[13.860435] (car_controller) StdoutLine: {'line': b'running symlink_data\n'}
+[13.861277] (serial_bridge) StdoutLine: {'line': b'writing entry points to serial_bridge.egg-info/entry_points.txt\n'}
+[13.861816] (-) TimerEvent: {}
+[13.863391] (serial_bridge) StdoutLine: {'line': b'writing requirements to serial_bridge.egg-info/requires.txt\n'}
+[13.864587] (serial_bridge) StdoutLine: {'line': b'writing top-level names to serial_bridge.egg-info/top_level.txt\n'}
+[13.889148] (serial_bridge) StdoutLine: {'line': b"reading manifest file 'serial_bridge.egg-info/SOURCES.txt'\n"}
+[13.897287] (serial_bridge) StdoutLine: {'line': b"writing manifest file 'serial_bridge.egg-info/SOURCES.txt'\n"}
+[13.924324] (serial_bridge) StdoutLine: {'line': b'running build_ext\n'}
+[13.925449] (serial_bridge) StdoutLine: {'line': b'Creating /home/fr/ros2_ws/balloon_ws/install/serial_bridge/lib/python3.10/site-packages/serial-bridge.egg-link (link to .)\n'}
+[13.935187] (serial_bridge) StdoutLine: {'line': b'Installing serial_bridge_node script to /home/fr/ros2_ws/balloon_ws/install/serial_bridge/lib/serial_bridge\n'}
+[13.938367] (serial_bridge) StdoutLine: {'line': b'\n'}
+[13.939219] (serial_bridge) StdoutLine: {'line': b'Installed /home/fr/ros2_ws/balloon_ws/build/serial_bridge\n'}
+[13.940679] (serial_bridge) StdoutLine: {'line': b'running symlink_data\n'}
+[13.962180] (-) TimerEvent: {}
+[14.003027] (balloon_detector) StdoutLine: {'line': b'running egg_info\n'}
+[14.007247] (balloon_detector) StdoutLine: {'line': b'writing balloon_detector.egg-info/PKG-INFO\n'}
+[14.008242] (balloon_detector) StdoutLine: {'line': b'writing dependency_links to balloon_detector.egg-info/dependency_links.txt\n'}
+[14.008965] (balloon_detector) StdoutLine: {'line': b'writing entry points to balloon_detector.egg-info/entry_points.txt\n'}
+[14.009509] (balloon_detector) StdoutLine: {'line': b'writing requirements to balloon_detector.egg-info/requires.txt\n'}
+[14.010690] (balloon_detector) StdoutLine: {'line': b'writing top-level names to balloon_detector.egg-info/top_level.txt\n'}
+[14.042980] (balloon_detector) StdoutLine: {'line': b"reading manifest file 'balloon_detector.egg-info/SOURCES.txt'\n"}
+[14.062460] (-) TimerEvent: {}
+[14.074619] (balloon_detector) StdoutLine: {'line': b"writing manifest file 'balloon_detector.egg-info/SOURCES.txt'\n"}
+[14.102927] (balloon_detector) StdoutLine: {'line': b'running build_ext\n'}
+[14.106982] (balloon_detector) StdoutLine: {'line': b'Creating /home/fr/ros2_ws/balloon_ws/install/balloon_detector/lib/python3.10/site-packages/balloon-detector.egg-link (link to .)\n'}
+[14.130630] (balloon_detector) StdoutLine: {'line': b'Installing balloon_detector_node script to /home/fr/ros2_ws/balloon_ws/install/balloon_detector/lib/balloon_detector\n'}
+[14.134227] (balloon_detector) StdoutLine: {'line': b'\n'}
+[14.135733] (balloon_detector) StdoutLine: {'line': b'Installed /home/fr/ros2_ws/balloon_ws/build/balloon_detector\n'}
+[14.139244] (balloon_detector) StdoutLine: {'line': b'running symlink_data\n'}
+[14.154952] (balloon_detector) StdoutLine: {'line': b'creating /home/fr/ros2_ws/balloon_ws/install/balloon_detector/share/balloon_detector/launch\n'}
+[14.157813] (balloon_detector) StdoutLine: {'line': b'symbolically linking /home/fr/ros2_ws/balloon_ws/build/balloon_detector/launch/balloon_robot.launch.py -> /home/fr/ros2_ws/balloon_ws/install/balloon_detector/share/balloon_detector/launch\n'}
+[14.163086] (-) TimerEvent: {}
+[14.267288] (-) TimerEvent: {}
+[14.276672] (car_controller) CommandEnded: {'returncode': 0}
+[14.367640] (-) TimerEvent: {}
+[14.470492] (-) TimerEvent: {}
+[14.491671] (car_controller) JobEnded: {'identifier': 'car_controller', 'rc': 0}
+[14.497490] (serial_bridge) CommandEnded: {'returncode': 0}
+[14.508695] (camera_node) StdoutLine: {'line': b'running egg_info\n'}
+[14.517660] (camera_node) StdoutLine: {'line': b'writing camera_node.egg-info/PKG-INFO\n'}
+[14.518492] (camera_node) StdoutLine: {'line': b'writing dependency_links to camera_node.egg-info/dependency_links.txt\n'}
+[14.519068] (camera_node) StdoutLine: {'line': b'writing entry points to camera_node.egg-info/entry_points.txt\n'}
+[14.519699] (camera_node) StdoutLine: {'line': b'writing requirements to camera_node.egg-info/requires.txt\n'}
+[14.520548] (camera_node) StdoutLine: {'line': b'writing top-level names to camera_node.egg-info/top_level.txt\n'}
+[14.524690] (camera_node) StdoutLine: {'line': b"reading manifest file 'camera_node.egg-info/SOURCES.txt'\n"}
+[14.530321] (camera_node) StdoutLine: {'line': b"writing manifest file 'camera_node.egg-info/SOURCES.txt'\n"}
+[14.538997] (camera_node) StdoutLine: {'line': b'running build_ext\n'}
+[14.540261] (camera_node) StdoutLine: {'line': b'Creating /home/fr/ros2_ws/balloon_ws/install/camera_node/lib/python3.10/site-packages/camera-node.egg-link (link to .)\n'}
+[14.545241] (camera_node) StdoutLine: {'line': b'Installing usb_camera_node script to /home/fr/ros2_ws/balloon_ws/install/camera_node/lib/camera_node\n'}
+[14.548365] (camera_node) StdoutLine: {'line': b'\n'}
+[14.552687] (camera_node) StdoutLine: {'line': b'Installed /home/fr/ros2_ws/balloon_ws/build/camera_node\n'}
+[14.554036] (camera_node) StdoutLine: {'line': b'running symlink_data\n'}
+[14.570790] (-) TimerEvent: {}
+[14.584965] (serial_bridge) JobEnded: {'identifier': 'serial_bridge', 'rc': 0}
+[14.595221] (balloon_detector) CommandEnded: {'returncode': 0}
+[14.672637] (-) TimerEvent: {}
+[14.694264] (balloon_detector) JobEnded: {'identifier': 'balloon_detector', 'rc': 0}
+[14.748745] (camera_node) CommandEnded: {'returncode': 0}
+[14.772784] (-) TimerEvent: {}
+[14.793464] (camera_node) JobEnded: {'identifier': 'camera_node', 'rc': 0}
+[14.797721] (-) EventReactorShutdown: {}

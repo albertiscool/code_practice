@@ -1,0 +1,24 @@
+[11.232s] Invoking command in '/home/fr/ros2_ws/balloon_ws/build/car_controller': PYTHONPATH=/home/fr/ros2_ws/balloon_ws/build/car_controller/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/fr/ros2_ws/balloon_ws/install/car_controller/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/fr/ros2_ws/balloon_ws/build/car_controller/build --no-deps symlink_data
+[13.917s] running develop
+[16.286s] running egg_info
+[16.287s] creating car_controller.egg-info
+[16.291s] writing car_controller.egg-info/PKG-INFO
+[16.292s] writing dependency_links to car_controller.egg-info/dependency_links.txt
+[16.293s] writing entry points to car_controller.egg-info/entry_points.txt
+[16.297s] writing requirements to car_controller.egg-info/requires.txt
+[16.297s] writing top-level names to car_controller.egg-info/top_level.txt
+[16.302s] writing manifest file 'car_controller.egg-info/SOURCES.txt'
+[16.304s] reading manifest file 'car_controller.egg-info/SOURCES.txt'
+[16.316s] writing manifest file 'car_controller.egg-info/SOURCES.txt'
+[16.327s] running build_ext
+[16.328s] Creating /home/fr/ros2_ws/balloon_ws/install/car_controller/lib/python3.10/site-packages/car-controller.egg-link (link to .)
+[16.333s] Installing controller_node script to /home/fr/ros2_ws/balloon_ws/install/car_controller/lib/car_controller
+[16.351s] 
+[16.352s] Installed /home/fr/ros2_ws/balloon_ws/build/car_controller
+[16.353s] running symlink_data
+[16.358s] creating /home/fr/ros2_ws/balloon_ws/install/car_controller/share/ament_index
+[16.359s] creating /home/fr/ros2_ws/balloon_ws/install/car_controller/share/ament_index/resource_index
+[16.360s] creating /home/fr/ros2_ws/balloon_ws/install/car_controller/share/ament_index/resource_index/packages
+[16.361s] symbolically linking /home/fr/ros2_ws/balloon_ws/build/car_controller/resource/car_controller -> /home/fr/ros2_ws/balloon_ws/install/car_controller/share/ament_index/resource_index/packages
+[16.362s] symbolically linking /home/fr/ros2_ws/balloon_ws/build/car_controller/package.xml -> /home/fr/ros2_ws/balloon_ws/install/car_controller/share/car_controller
+[16.529s] Invoked command in '/home/fr/ros2_ws/balloon_ws/build/car_controller' returned '0': PYTHONPATH=/home/fr/ros2_ws/balloon_ws/build/car_controller/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/fr/ros2_ws/balloon_ws/install/car_controller/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/fr/ros2_ws/balloon_ws/build/car_controller/build --no-deps symlink_data
