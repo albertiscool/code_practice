@@ -66,6 +66,7 @@
 ---
 
 ### 🗣️ 題 2【0x10 C / 底層記憶體：大小端 (Endianness) 探測與 32-bit 位元反轉巨集】
+* **原始碼檔案**：[`endian_check.c`](file:///c:/Users/a0907/Desktop/程式訓練/Day88_DoubleSprint_PalindromeList_TwoSum_Hamming_ValidParen_Review/endian_check.c)
 * **Runtime 大小端探測（利用 `union`）**：
   * 小端序（Little-Endian）：低位元組（LSB）放在低位址（Offset 0）。
   * 若令 `A.b = 0x10;`，當 `A.c == 0x10` 則為小端序；若 `A.c == 0x00` 則為大端序。
