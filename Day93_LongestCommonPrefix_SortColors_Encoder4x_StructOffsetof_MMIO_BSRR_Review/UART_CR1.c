@@ -1,0 +1,1 @@
+#define UART_CR1(n) *(volatile (uint32_t*) (n)) 
