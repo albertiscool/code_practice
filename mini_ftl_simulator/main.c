@@ -1,109 +1,58 @@
 #include "nand_flash.h"
-#include "ftl.h"
 #include <stdio.h>
 #include <string.h>
 
-static void print_separator(const char *title) {
-    printf("\n====================================================\n");
-    printf("  %s\n", title);
-    printf("====================================================\n");
-}
-
 int main(void) {
-    print_separator("【Mini FTL 固態硬碟主控模擬器】啟動");
-    printf("模擬規格：4 Blocks x 4 Pages/Block (共 16 物理頁), 8 個邏輯 LBA\n");
+    printf("====================================================\n");
+    printf("  【Mini FTL 專案】第一關：NAND Flash 物理層單元測試\n");
+    printf("====================================================\n\n");
 
-    // 初始化 FTL 與 NAND Flash
-    ftl_init();
-
-    // ------------------------------------------------------------------------
-    // 階段 1: 循序寫入 LBA 0 ~ 7 (填滿 8 個邏輯空間)
-    // ------------------------------------------------------------------------
-    print_separator("階段 1: 循序寫入 LBA 0 ~ 7");
-    for (uint32_t i = 0; i < LOGICAL_LBA_NUM; i++) {
-        uint8_t payload[PAGE_DATA_SIZE];
-        snprintf((char *)payload, PAGE_DATA_SIZE, "Data_v1_for_LBA_%u", i);
-        ftl_write(i, payload);
-    }
-
-    printf("\n[NAND 佈局 - 寫入 8 筆後]：\n");
+    // 1. 測試初始化
+    printf("1. 執行 nand_init()...\n");
+    nand_init();
+    printf("初始 NAND 佈局 (預期全部為 [  F  ] 且 Erase 為 0)：\n");
     nand_print_layout();
-    printf("\n[L2P 位址對映表]：\n");
-    ftl_print_l2p_table();
-    ftl_print_metrics();
+    printf("\n");
 
-    // ------------------------------------------------------------------------
-    // 階段 2: 模擬隨機覆寫 (Out-of-Place Update 產生無效垃圾頁)
-    // ------------------------------------------------------------------------
-    print_separator("階段 2: 覆寫 LBA 0, 1, 2 (產生 Invalid 頁)");
-    printf("覆寫 LBA 0, 1, 2，觀察原本舊頁面是否被自動標記為 INVALID...\n");
+    // 2. 測試寫入 (Program)
+    printf("2. 寫入資料到 Block 0, Page 0 (LBA 0)...\n");
+    uint8_t write_data[PAGE_DATA_SIZE] = "Hello_NAND_Flash_Simulation!";
+    bool prog_ok = nand_program_page(0, 0, write_data, 0);
+    printf("寫入結果: %s\n", prog_ok ? "PASS (成功)" : "FAIL (失敗)");
 
-    for (uint32_t i = 0; i < 3; i++) {
-        uint8_t payload[PAGE_DATA_SIZE];
-        snprintf((char *)payload, PAGE_DATA_SIZE, "Data_v2_NEW_LBA_%u", i);
-        ftl_write(i, payload);
-    }
-
-    printf("\n[NAND 佈局 - 覆寫後] (注意觀察 Block 0 的舊頁變為 I:L00~02)：\n");
+    printf("寫入後佈局 (預期 Block 0 Page 0 為 [V:L00])：\n");
     nand_print_layout();
-    ftl_print_l2p_table();
+    printf("\n");
 
-    // ------------------------------------------------------------------------
-    // 階段 3: 空間耗盡，自動引發 Greedy 垃圾回收 (GC)
-    // ------------------------------------------------------------------------
-    print_separator("階段 3: 持續寫入引發空間不足，自動觸發 GC");
-    printf("持續寫入 LBA 3, 4, 5, 6, 7，耗盡剩餘 Free 區塊...\n");
-
-    for (uint32_t i = 3; i < LOGICAL_LBA_NUM; i++) {
-        uint8_t payload[PAGE_DATA_SIZE];
-        snprintf((char *)payload, PAGE_DATA_SIZE, "Data_v2_NEW_LBA_%u", i);
-        ftl_write(i, payload);
+    // 3. 測試讀取 (Read)
+    printf("3. 讀取 Block 0, Page 0...\n");
+    uint8_t read_buf[PAGE_DATA_SIZE] = {0};
+    bool read_ok = nand_read_page(0, 0, read_buf);
+    if (read_ok && strcmp((char *)read_buf, (char *)write_data) == 0) {
+        printf("讀取結果: PASS (內容相符 -> \"%s\")\n", (char *)read_buf);
+    } else {
+        printf("讀取結果: FAIL (內容不符或讀取失敗)\n");
     }
+    printf("\n");
 
-    printf("\n[NAND 佈局 - GC 搬遷與抹除後]：\n");
+    // 4. 測試 NAND 核心物理限制：未抹除前禁止覆寫 (Erase-before-Write)
+    printf("4. 測試物理鐵律：試圖覆寫非 FREE 狀態的 Block 0, Page 0...\n");
+    uint8_t overwrite_data[PAGE_DATA_SIZE] = "Illegal_Overwrite!";
+    bool illegal_prog = nand_program_page(0, 0, overwrite_data, 1);
+    printf("非法覆寫防禦測試: %s (預期 FAIL 拒絕覆寫)\n\n",
+           !illegal_prog ? "PASS (成功攔截非法覆寫！)" : "FAIL (未遵循 NAND 特性！)");
+
+    // 5. 測試區塊抹除 (Erase Block)
+    printf("5. 抹除 Block 0...\n");
+    bool erase_ok = nand_erase_block(0);
+    printf("抹除結果: %s\n", erase_ok ? "PASS" : "FAIL");
+    printf("抹除後佈局 (預期 Block 0 重新變回 [  F  ]，Erase 變為 1)：\n");
     nand_print_layout();
-    ftl_print_l2p_table();
-    ftl_print_metrics();
+    printf("\n");
 
-    // ------------------------------------------------------------------------
-    // 階段 4: 資料完整性驗證 (Read Verification)
-    // ------------------------------------------------------------------------
-    print_separator("階段 4: 資料完整性校驗 (Read Verification)");
-    printf("讀取 LBA 0 ~ 7，驗證歷經 GC 搬遷後資料依然完全正確：\n");
-    bool all_passed = true;
-    for (uint32_t i = 0; i < LOGICAL_LBA_NUM; i++) {
-        uint8_t read_buf[PAGE_DATA_SIZE];
-        char expected[PAGE_DATA_SIZE];
-        snprintf(expected, PAGE_DATA_SIZE, "Data_v2_NEW_LBA_%u", i);
-
-        ftl_read(i, read_buf);
-        if (strcmp((char *)read_buf, expected) == 0) {
-            printf("  [PASS] LBA %02d 讀取成功 -> \"%s\"\n", i, (char *)read_buf);
-        } else {
-            printf("  [FAIL] LBA %02d 資料不符！預期 \"%s\", 實得 \"%s\"\n",
-                   i, expected, (char *)read_buf);
-            all_passed = false;
-        }
-    }
-
-    if (all_passed) {
-        printf("\n>>> 恭喜！所有 LBA 資料在 GC 搬遷與抹除後 100%% 保持完整！<<<\n");
-    }
-
-    // ------------------------------------------------------------------------
-    // 階段 5: TRIM 指令演示
-    // ------------------------------------------------------------------------
-    print_separator("階段 5: TRIM 指令演示 (主機通知刪除檔案)");
-    printf("Host 刪除檔案，發送 TRIM 命令釋放 LBA 6 與 LBA 7...\n");
-    ftl_trim(6);
-    ftl_trim(7);
-
-    printf("\n[NAND 佈局 - TRIM 執行後] (LBA 6, 7 的實體 Page 直接轉為 INVALID)：\n");
-    nand_print_layout();
-    ftl_print_l2p_table();
-
-    print_separator("【Mini FTL 固態硬碟模擬器】展示圓滿完成！");
-    ftl_print_metrics();
+    printf("====================================================\n");
+    printf("第一關測試完畢！若全數 PASS，代表物理層已完全達標！\n");
+    printf("====================================================\n");
 
     return 0;
 }

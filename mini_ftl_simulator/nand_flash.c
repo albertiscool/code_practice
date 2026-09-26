@@ -2,68 +2,72 @@
 #include <stdio.h>
 #include <string.h>
 
+// 實體 NAND 晶片儲存陣列 (4 個 Blocks，每個 Block 4 個 Pages)
 static NandBlock_t flash_blocks[BLOCK_NUM];
 static NandStats_t flash_stats;
 
+/*
+ * 【任務 1.1】初始化 NAND Flash
+ * 說明：
+ * 1. 將所有 Block 的所有 Page 狀態設為 PAGE_FREE。
+ * 2. 將所有 Page 的 lba 設為 -1 (代表未存放任何邏輯資料)。
+ * 3. 將所有 Page 的 data 填入 0xFF (真實 NAND 抹除後的預設位元為全 1)。
+ * 4. 將 erase_count 與 flash_stats 全數歸零。
+ */
 void nand_init(void) {
-    memset(flash_blocks, 0, sizeof(flash_blocks));
-    memset(&flash_stats, 0, sizeof(flash_stats));
-
-    for (uint32_t b = 0; b < BLOCK_NUM; b++) {
-        for (uint32_t p = 0; p < PAGES_PER_BLOCK; p++) {
-            flash_blocks[b].pages[p].state = PAGE_FREE;
-            flash_blocks[b].pages[p].lba = -1;
-            memset(flash_blocks[b].pages[p].data, 0xFF, PAGE_DATA_SIZE); // NAND 抹除後預設為 0xFF
-        }
-        flash_blocks[b].erase_count = 0;
-    }
+    // === 請在此實作你的代碼 ===
 }
 
+/*
+ * 【任務 1.2】讀取單一 Page (64 Bytes)
+ * 說明：
+ * 1. 檢查邊界條件：block 是否合法？page 是否合法？buffer_out 是否為 NULL？
+ * 2. 使用 memcpy 將該 Page 的 data 複製到 buffer_out。
+ * 3. 累加 flash_stats.read_count。
+ * 4. 成功回傳 true，失敗回傳 false。
+ */
 bool nand_read_page(uint32_t block, uint32_t page, uint8_t *buffer_out) {
-    if (block >= BLOCK_NUM || page >= PAGES_PER_BLOCK || buffer_out == NULL) {
-        return false;
-    }
-
-    memcpy(buffer_out, flash_blocks[block].pages[page].data, PAGE_DATA_SIZE);
-    flash_stats.read_count++;
-    return true;
+    // === 請在此實作你的代碼 ===
+    return false;
 }
 
+/*
+ * 【任務 1.3】寫入 (Program) 單一 Page
+ * 說明：
+ * 1. 檢查邊界條件：block, page 是否合法？buffer_in 是否為 NULL？
+ * 2. ★ 模擬 NAND 物理鐵律 (Erase-before-Write)：
+ *    如果目標 Page 的狀態「不是 PAGE_FREE」，代表在未抹除前試圖覆寫！
+ *    印出錯誤訊息並回傳 false！
+ * 3. 寫入資料：
+ *    - 將 buffer_in 內容複製到該 Page 的 data。
+ *    - 將該 Page 的狀態改為 PAGE_VALID。
+ *    - 將該 Page 的 lba 欄位記錄傳入的 lba。
+ * 4. 累加 flash_stats.program_count，回傳 true。
+ */
 bool nand_program_page(uint32_t block, uint32_t page, const uint8_t *buffer_in, int32_t lba) {
-    if (block >= BLOCK_NUM || page >= PAGES_PER_BLOCK || buffer_in == NULL) {
-        return false;
-    }
-
-    // 💥 嚴格模擬 NAND 物理限制：寫入前必須先抹除 (Erase-before-Write)！
-    if (flash_blocks[block].pages[page].state != PAGE_FREE) {
-        printf("[NAND ERROR] 試圖覆寫非 FREE 狀態的 Page (Block %u, Page %u)！違反 NAND 物理特性！\n",
-               block, page);
-        return false;
-    }
-
-    memcpy(flash_blocks[block].pages[page].data, buffer_in, PAGE_DATA_SIZE);
-    flash_blocks[block].pages[page].state = PAGE_VALID;
-    flash_blocks[block].pages[page].lba = lba;
-    flash_stats.program_count++;
-    return true;
+    // === 請在此實作你的代碼 ===
+    return false;
 }
 
+/*
+ * 【任務 1.4】抹除整個 Block (Erase)
+ * 說明：
+ * 1. 檢查 block 是否合法？
+ * 2. ★ 模擬 NAND 物理抹除特性：
+ *    抹除只能對「整個 Block」操作！
+ *    遍歷該 Block 內的所有 Page，將狀態全部重設為 PAGE_FREE，
+ *    lba 重設為 -1，data 重新刷成 0xFF。
+ * 3. 該 Block 的 erase_count 累加 1。
+ * 4. 全域統計 flash_stats.erase_count 累加 1，回傳 true。
+ */
 bool nand_erase_block(uint32_t block) {
-    if (block >= BLOCK_NUM) {
-        return false;
-    }
-
-    // 抹除只能以整個 Block 為單位進行
-    for (uint32_t p = 0; p < PAGES_PER_BLOCK; p++) {
-        flash_blocks[block].pages[p].state = PAGE_FREE;
-        flash_blocks[block].pages[p].lba = -1;
-        memset(flash_blocks[block].pages[p].data, 0xFF, PAGE_DATA_SIZE);
-    }
-    flash_blocks[block].erase_count++;
-    flash_stats.erase_count++;
-    return true;
+    // === 請在此實作你的代碼 ===
+    return false;
 }
 
+// ============================================================================
+// 底層輔助函式 (已為你寫好，提供 FTL 查詢與除錯使用)
+// ============================================================================
 void nand_set_page_state(uint32_t block, uint32_t page, PageState_t state) {
     if (block < BLOCK_NUM && page < PAGES_PER_BLOCK) {
         flash_blocks[block].pages[page].state = state;
