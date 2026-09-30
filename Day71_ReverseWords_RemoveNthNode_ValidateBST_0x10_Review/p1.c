@@ -21,34 +21,41 @@ void reverse(char* s, int start, int end)
     }
 }
 
-void reverseWords(char* s)
+char* reverseWords(char* s)
 {
-    // 防呆處理
-    if (s == NULL) return;
-    
+    if (s == NULL) return NULL;
     int len = strlen(s);
-    if (len <= 1) return;
 
-    // ------------------------------------------------------------------------
-    // 步驟 1：先將「整個字串」從頭到尾整體反轉！(呼叫 1 次 reverse 即可)
-    // "the sky is blue" ➔ "eulb si yks eht"
-    // ------------------------------------------------------------------------
+    // 步驟 1：原地清除多餘空格 (前導、尾隨、多重連續空格)
+    int slow = 0, fast = 0;
+    while (fast < len && s[fast] == ' ') fast++;
+    while (fast < len) {
+        if (s[fast] != ' ') {
+            s[slow++] = s[fast++];
+        } else {
+            s[slow++] = ' ';
+            while (fast < len && s[fast] == ' ') fast++;
+        }
+    }
+    if (slow > 0 && s[slow - 1] == ' ') slow--;
+    s[slow] = '\0';
+    len = slow;
+    if (len <= 1) return s;
+
+    // 步驟 2：整體反轉
     reverse(s, 0, len - 1);
 
-    // ------------------------------------------------------------------------
-    // 步驟 2：逐一走訪每個單字，將各單字內部再次反轉！
-    // "eulb" ➔ "blue", "si" ➔ "is", "yks" ➔ "sky", "eht" ➔ "the"
-    // ------------------------------------------------------------------------
+    // 步驟 3：單字內部個別反轉
     int start = 0;
     for (int end = 0; end <= len; end++)
     {
-        // 當遇到空格 ' ' 或是字串結尾 '\0' 時，代表一個單字結束了！
         if (s[end] == ' ' || s[end] == '\0')
         {
-            reverse(s, start, end - 1); // 將目前單字區間 [start, end - 1] 原地反轉
-            start = end + 1;            // 下一個單字的起始位置
+            reverse(s, start, end - 1);
+            start = end + 1;
         }
     }
+    return s;
 }
 
 int main()

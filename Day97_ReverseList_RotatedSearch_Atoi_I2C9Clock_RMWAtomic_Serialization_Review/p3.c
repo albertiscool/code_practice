@@ -2,6 +2,8 @@
 #include <limits.h>
 #include <ctype.h>
 
+#define my_atoi myAtoi
+
 // ============================================================================
 // 題目 3【字串轉整數 / 簡化版 atoi (String to Integer - LeetCode #8)】
 // 難度：🟡 一線 IC 設計廠 & 系統廠通訊協議/CLI/Driver 解析必備題
@@ -30,7 +32,7 @@
 //    - ⚠️ 請務必在累加過程中嚴密防範整數溢位 (Integer Overflow)！
 // ============================================================================
 
-int my_atoi(char* s) {
+int myAtoi(char* s) {
     if (s == NULL) return 0;
 
     int i = 0;

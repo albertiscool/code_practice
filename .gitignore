@@ -3,3 +3,12 @@
 *.pdb
 *.ilk
 .vscode/
+leetcode_config.json
+auto_submit.py
+batch_submit.py
+test_query.py
+leetcode_all_problems.json
+submit_results.json
+*.cookie
+
+
