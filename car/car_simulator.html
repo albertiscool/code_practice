@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智慧自走車雙車模擬器：多模式手動控制中心 (Manual Mode Switcher)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      user-select: none;
+      background-color: #0b1120;
+      color: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    .panel-card {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(51, 65, 85, 0.7);
+    }
+    canvas {
+      cursor: crosshair;
+    }
+    .d-pad-btn {
+      touch-action: manipulation;
+      user-select: none;
+      transition: all 0.08s ease;
+    }
+    .d-pad-btn:active, .d-pad-btn.active {
+      transform: scale(0.92);
+      filter: brightness(1.25);
+    }
+  </style>
+</head>
+<body class="min-h-screen p-3 md:p-5 flex flex-col items-center">
+  <!-- Header -->
+  <header class="w-full max-w-7xl mb-3 flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <div class="flex items-center gap-2">
+        <span class="inline-block w-3 h-3 rounded-full bg-cyan-400 animate-pulse"></span>
+        <h1 class="text-xl md:text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+          智慧自走車多模式模擬控制台
+          <span class="text-xs px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">Multi-Mode Control</span>
+        </h1>
+      </div>
+      <p class="text-xs md:text-sm text-slate-400 mt-1">
+        支援手動自由切換：純循線競速 / 自主避障 / 循線+避障 / 鍵盤虛擬方向盤手動遙控
+      </p>
+    </div>
+    
+    <!-- Stress Switch -->
+    <div class="flex items-center gap-3 bg-slate-800/90 px-3 py-2 rounded-xl border border-slate-700 shadow-lg">
+      <div class="text-right">
+        <div class="text-xs font-bold text-slate-200">UART 壓力負載測試</div>
+        <div class="text-[11px] text-slate-400">模擬 115200bps 密集通訊中斷</div>
+      </div>
+      <button id="btnToggleStress" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-rose-600 hover:bg-rose-500 text-white shadow-lg transition flex items-center gap-1.5">
+        <span id="stressIndicator" class="inline-block w-2 h-2 rounded-full bg-white"></span>
+        <span id="stressText">開啟壓力負載 (Stress)</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mode Selector Bar (Top Level) -->
+  <div class="w-full max-w-7xl mb-3 panel-card rounded-2xl p-2.5 flex flex-wrap items-center justify-between gap-2 shadow-xl border border-slate-700">
+    <div class="flex items-center gap-2">
+      <span class="text-xs font-bold text-slate-300 px-2 py-1 bg-slate-800 rounded-lg flex items-center gap-1.5">
+        <span>🎮</span> 模式選擇:
+      </span>
+      <div class="flex flex-wrap items-center gap-1.5">
+        <button id="modeBtn_pure_line" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 text-white transition shadow-sm">
+          🏁 純紅外線 PID 循線
+        </button>
+        <button id="modeBtn_combo" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white transition">
+          🏎️ 循線 ＋ 超音波避障
+        </button>
+        <button id="modeBtn_arena" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white transition">
+          🧱 自由迷宮純避障
+        </button>
+        <button id="modeBtn_manual" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white transition flex items-center gap-1">
+          🕹️ 手動遙控駕駛 (WASD)
+        </button>
+        <button id="modeBtn_stop" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:text-rose-400 transition">
+          🛑 一鍵緊急煞停
+        </button>
+      </div>
+    </div>
+
+    <!-- Manual Target Selector (Only active in Manual Mode) -->
+    <div id="manualTargetPanel" class="hidden items-center gap-2 bg-slate-800/90 px-3 py-1 rounded-xl border border-indigo-500/40">
+      <span class="text-xs text-indigo-300 font-bold">遙控對象:</span>
+      <select id="selectManualTarget" class="bg-slate-900 text-xs text-slate-200 border border-slate-700 rounded-lg px-2 py-1 outline-none">
+        <option value="car1">車輛 A (橘車 Non-DMA)</option>
+        <option value="car2" selected>車輛 B (藍車 DMA)</option>
+        <option value="both">雙車同步操控</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Main Grid Layout -->
+  <div class="w-full max-w-7xl grid grid-cols-1 xl:grid-cols-4 gap-4">
+    <!-- Canvas Area (3 Cols) -->
+    <div class="xl:col-span-3 flex flex-col gap-3">
+      <div class="panel-card rounded-2xl p-2 relative overflow-hidden shadow-2xl border border-slate-800">
+        <canvas id="simCanvas" width="920" height="560" class="w-full rounded-xl bg-slate-950 border border-slate-900"></canvas>
+
+        <!-- On-Screen Virtual D-Pad for Manual Mode -->
+        <div id="virtualDPad" class="hidden absolute top-4 right-4 bg-slate-900/90 p-3 rounded-2xl border border-indigo-500/50 shadow-2xl backdrop-blur flex-col items-center gap-1">
+          <div class="text-[11px] font-bold text-indigo-300 mb-1 flex items-center gap-1">
+            <span>🕹️ 虛擬方向盤</span>
+            <span class="text-[10px] text-slate-400 font-normal">(或鍵盤 WASD)</span>
+          </div>
+          <!-- Up -->
+          <button id="dpadUp" class="d-pad-btn w-10 h-10 rounded-xl bg-slate-800 hover:bg-indigo-600 text-slate-200 hover:text-white font-bold flex items-center justify-center border border-slate-700">
+            ▲
+          </button>
+          <!-- Left, Down, Right -->
+          <div class="flex gap-1">
+            <button id="dpadLeft" class="d-pad-btn w-10 h-10 rounded-xl bg-slate-800 hover:bg-indigo-600 text-slate-200 hover:text-white font-bold flex items-center justify-center border border-slate-700">
+              ◀
+            </button>
+            <button id="dpadDown" class="d-pad-btn w-10 h-10 rounded-xl bg-slate-800 hover:bg-indigo-600 text-slate-200 hover:text-white font-bold flex items-center justify-center border border-slate-700">
+              ▼
+            </button>
+            <button id="dpadRight" class="d-pad-btn w-10 h-10 rounded-xl bg-slate-800 hover:bg-indigo-600 text-slate-200 hover:text-white font-bold flex items-center justify-center border border-slate-700">
+              ▶
+            </button>
+          </div>
+        </div>
+
+        <!-- Mode & Tool Toolbar -->
+        <div class="absolute bottom-4 left-4 right-4 flex flex-wrap items-center justify-between gap-2 pointer-events-auto">
+          <!-- Active Mode Display Badge -->
+          <div class="flex items-center gap-2 bg-slate-900/90 px-3 py-1.5 rounded-xl border border-slate-700 shadow-xl">
+            <span class="text-xs text-slate-400">當前運行:</span>
+            <span id="txtCurrentModeBadge" class="text-xs font-bold text-indigo-400 font-mono">純紅外線 PID 循線競速</span>
+          </div>
+
+          <div class="flex items-center gap-1.5 bg-slate-900/90 p-1.5 rounded-xl border border-slate-700 backdrop-blur shadow-xl">
+            <button id="btnAddObs" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 transition" title="點擊在跑道上增加障礙物">
+              ➕ 放障礙物
+            </button>
+            <button id="btnClearObs" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-rose-400 hover:bg-rose-500/20 transition" title="清除所有障礙物">
+              🧹 清除障礙
+            </button>
+            <button id="btnResetCars" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-amber-400 hover:bg-amber-500/20 transition" title="重設雙車回起跑線">
+              🔄 雙車起跑線復位
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Hint -->
+      <div class="text-xs text-slate-400 flex flex-wrap items-center justify-between px-2 gap-2">
+        <span>💡 <b>操作說明</b>：點擊上方模式按鈕可隨時切換。切換至「手動遙控」後，支援鍵盤 <kbd class="px-1.5 py-0.5 bg-slate-800 rounded text-slate-200">W</kbd><kbd class="px-1.5 py-0.5 bg-slate-800 rounded text-slate-200">A</kbd><kbd class="px-1.5 py-0.5 bg-slate-800 rounded text-slate-200">S</kbd><kbd class="px-1.5 py-0.5 bg-slate-800 rounded text-slate-200">D</kbd> 駕駛！</span>
+        <span class="text-amber-400">🔥 <b>滑鼠互動</b>：畫布任意點擊可擺放障礙物，按住障礙物可任意拖曳至車前測試反應！</span>
+      </div>
+    </div>
+
+    <!-- Comparative Dashboard Sidebar (1 Col) -->
+    <div class="flex flex-col gap-3">
+      <!-- Car 1 (Non-DMA) Telemetry Card -->
+      <div class="panel-card rounded-2xl p-3.5 border-l-4 border-l-amber-500 shadow-xl">
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center gap-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+            <span class="text-xs font-bold text-amber-300 uppercase tracking-wide">車輛 A: Non-DMA (原本)</span>
+          </div>
+          <span id="badgeCar1State" class="text-[11px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono">
+            TRACKING
+          </span>
+        </div>
+        <div class="text-[11px] text-slate-400 mb-1.5">傳統 CPU 搬移 (中斷/輪詢)</div>
+
+        <!-- Individual Mode Override for Car 1 -->
+        <div class="mb-2 flex items-center justify-between bg-slate-900/60 p-1.5 rounded border border-slate-800 text-xs">
+          <span class="text-slate-400 text-[11px]">車輛 A 模式:</span>
+          <select id="selectCar1Mode" class="bg-slate-800 text-amber-300 text-xs rounded px-1.5 py-0.5 border border-slate-700 outline-none">
+            <option value="auto">跟隨全域模式</option>
+            <option value="pure_line">強制純循線</option>
+            <option value="arena">強制純避障</option>
+            <option value="manual">強制手動遙控</option>
+            <option value="stop">強制停止</option>
+          </select>
+        </div>
+
+        <!-- 3 IR Array Indicator -->
+        <div class="mb-2">
+          <div class="text-[11px] text-slate-400 mb-1">3 路紅外線循跡狀態 (IR Array):</div>
+          <div class="grid grid-cols-3 gap-1.5 text-center text-xs font-mono">
+            <div id="ir1_L" class="py-1 px-1 rounded bg-slate-800 border border-slate-700 text-slate-400">L: 0</div>
+            <div id="ir1_M" class="py-1 px-1 rounded bg-rose-950/80 border border-rose-500 text-rose-300 font-bold">M: 1</div>
+            <div id="ir1_R" class="py-1 px-1 rounded bg-slate-800 border border-slate-700 text-slate-400">R: 0</div>
+          </div>
+        </div>
+
+        <!-- CPU Load Bar -->
+        <div class="mb-2">
+          <div class="flex justify-between text-xs mb-1">
+            <span class="text-slate-400">CPU 使用率</span>
+            <span id="txtCpu1" class="font-mono text-amber-400 font-bold">42%</span>
+          </div>
+          <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+            <div id="barCpu1" class="h-full bg-amber-500 transition-all duration-100" style="width: 42%"></div>
+          </div>
+        </div>
+
+        <!-- Loop Latency & Jitter -->
+        <div class="grid grid-cols-2 gap-1.5 text-xs font-mono mb-2">
+          <div class="p-1.5 rounded bg-slate-800/80 border border-slate-700/80">
+            <div class="text-slate-400 text-[10px]">控制週期 (Loop)</div>
+            <div id="txtLoop1" class="text-amber-300 font-semibold mt-0.5">18.2 ms</div>
+          </div>
+          <div class="p-1.5 rounded bg-slate-800/80 border border-slate-700/80">
+            <div class="text-slate-400 text-[10px]">週期抖動 (Jitter)</div>
+            <div id="txtJitter1" class="text-amber-400 font-semibold mt-0.5">± 12.5 ms</div>
+          </div>
+        </div>
+
+        <div class="flex justify-between items-center text-xs font-mono bg-slate-900/60 p-1.5 rounded border border-slate-800">
+          <span class="text-slate-400 text-[11px]">超音波:</span>
+          <span id="txtDist1" class="text-slate-200 font-bold">-- cm</span>
+          <span class="text-slate-400 text-[11px]">L/R PWM:</span>
+          <span id="txtPwm1" class="text-amber-300">140 / 140</span>
+        </div>
+      </div>
+
+      <!-- Car 2 (DMA Accelerated) Telemetry Card -->
+      <div class="panel-card rounded-2xl p-3.5 border-l-4 border-l-cyan-400 shadow-xl">
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center gap-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></span>
+            <span class="text-xs font-bold text-cyan-300 uppercase tracking-wide">車輛 B: DMA 硬體加速版</span>
+          </div>
+          <span id="badgeCar2State" class="text-[11px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono">
+            TRACKING
+          </span>
+        </div>
+        <div class="text-[11px] text-slate-400 mb-1.5">DMA 雙緩衝零拷貝 (Zero-CPU)</div>
+
+        <!-- Individual Mode Override for Car 2 -->
+        <div class="mb-2 flex items-center justify-between bg-slate-900/60 p-1.5 rounded border border-slate-800 text-xs">
+          <span class="text-slate-400 text-[11px]">車輛 B 模式:</span>
+          <select id="selectCar2Mode" class="bg-slate-800 text-cyan-300 text-xs rounded px-1.5 py-0.5 border border-slate-700 outline-none">
+            <option value="auto">跟隨全域模式</option>
+            <option value="pure_line">強制純循線</option>
+            <option value="arena">強制純避障</option>
+            <option value="manual">強制手動遙控</option>
+            <option value="stop">強制停止</option>
+          </select>
+        </div>
+
+        <!-- 3 IR Array Indicator -->
+        <div class="mb-2">
+          <div class="text-[11px] text-slate-400 mb-1">3 路紅外線循跡狀態 (IR Array):</div>
+          <div class="grid grid-cols-3 gap-1.5 text-center text-xs font-mono">
+            <div id="ir2_L" class="py-1 px-1 rounded bg-slate-800 border border-slate-700 text-slate-400">L: 0</div>
+            <div id="ir2_M" class="py-1 px-1 rounded bg-rose-950/80 border border-rose-500 text-rose-300 font-bold">M: 1</div>
+            <div id="ir2_R" class="py-1 px-1 rounded bg-slate-800 border border-slate-700 text-slate-400">R: 0</div>
+          </div>
+        </div>
+
+        <!-- CPU Load Bar -->
+        <div class="mb-2">
+          <div class="flex justify-between text-xs mb-1">
+            <span class="text-slate-400">CPU 使用率</span>
+            <span id="txtCpu2" class="font-mono text-cyan-400 font-bold">12%</span>
+          </div>
+          <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+            <div id="barCpu2" class="h-full bg-cyan-400 transition-all duration-100" style="width: 12%"></div>
+          </div>
+        </div>
+
+        <!-- Loop Latency & Jitter -->
+        <div class="grid grid-cols-2 gap-1.5 text-xs font-mono mb-2">
+          <div class="p-1.5 rounded bg-slate-800/80 border border-slate-700/80">
+            <div class="text-slate-400 text-[10px]">控制週期 (Loop)</div>
+            <div id="txtLoop2" class="text-cyan-300 font-semibold mt-0.5">10.0 ms</div>
+          </div>
+          <div class="p-1.5 rounded bg-slate-800/80 border border-slate-700/80">
+            <div class="text-slate-400 text-[10px]">週期抖動 (Jitter)</div>
+            <div id="txtJitter2" class="text-emerald-400 font-semibold mt-0.5">± 0.2 ms</div>
+          </div>
+        </div>
+
+        <div class="flex justify-between items-center text-xs font-mono bg-slate-900/60 p-1.5 rounded border border-slate-800">
+          <span class="text-slate-400 text-[11px]">超音波:</span>
+          <span id="txtDist2" class="text-slate-200 font-bold">-- cm</span>
+          <span class="text-slate-400 text-[11px]">L/R PWM:</span>
+          <span id="txtPwm2" class="text-cyan-300">140 / 140</span>
+        </div>
+      </div>
+
+      <!-- Engineering Insight Card -->
+      <div class="panel-card rounded-2xl p-3 shadow-xl text-xs space-y-2">
+        <div class="font-semibold text-slate-300 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+          <span>🧠 手動模式面試體驗亮點</span>
+        </div>
+        <div class="text-slate-300 leading-relaxed text-[11px]">
+          <b>手動遙控下的 Input Lag 體驗：</b><br>
+          切換至「手動遙控」並開啟壓力負載，遙控橘車時會親身感受到按轉向鍵有 <b>0.3~0.5 秒嚴重遲滯</b>；而遙控藍車（DMA）方向盤零延遲隨按隨轉，充分展現中斷優先權與 DMA 的硬實力！
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="mt-3 text-xs text-slate-500 text-center">
+    Albert 韌體實戰系統 • 專案代碼對齊 <code class="text-slate-400">car/midterm.ino</code> (3-way IR + HC-SR04 + FSM)
+  </footer>
+
+  <script>
+    // --- Canvas & Simulation State ---
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // UI Buttons
+    const btnToggleStress = document.getElementById('btnToggleStress');
+    const stressIndicator = document.getElementById('stressIndicator');
+    const stressText = document.getElementById('stressText');
+
+    // Mode Buttons
+    const modeBtn_pure_line = document.getElementById('modeBtn_pure_line');
+    const modeBtn_combo = document.getElementById('modeBtn_combo');
+    const modeBtn_arena = document.getElementById('modeBtn_arena');
+    const modeBtn_manual = document.getElementById('modeBtn_manual');
+    const modeBtn_stop = document.getElementById('modeBtn_stop');
+    const txtCurrentModeBadge = document.getElementById('txtCurrentModeBadge');
+
+    const manualTargetPanel = document.getElementById('manualTargetPanel');
+    const selectManualTarget = document.getElementById('selectManualTarget');
+    const virtualDPad = document.getElementById('virtualDPad');
+
+    const selectCar1Mode = document.getElementById('selectCar1Mode');
+    const selectCar2Mode = document.getElementById('selectCar2Mode');
+
+    const btnAddObs = document.getElementById('btnAddObs');
+    const btnClearObs = document.getElementById('btnClearObs');
+    const btnResetCars = document.getElementById('btnResetCars');
+
+    // Telemetry Elements
+    const badgeCar1State = document.getElementById('badgeCar1State');
+    const txtCpu1 = document.getElementById('txtCpu1');
+    const barCpu1 = document.getElementById('barCpu1');
+    const txtLoop1 = document.getElementById('txtLoop1');
+    const txtJitter1 = document.getElementById('txtJitter1');
+    const txtDist1 = document.getElementById('txtDist1');
+    const txtPwm1 = document.getElementById('txtPwm1');
+    const ir1_L = document.getElementById('ir1_L');
+    const ir1_M = document.getElementById('ir1_M');
+    const ir1_R = document.getElementById('ir1_R');
+
+    const badgeCar2State = document.getElementById('badgeCar2State');
+    const txtCpu2 = document.getElementById('txtCpu2');
+    const barCpu2 = document.getElementById('barCpu2');
+    const txtLoop2 = document.getElementById('txtLoop2');
+    const txtJitter2 = document.getElementById('txtJitter2');
+    const txtDist2 = document.getElementById('txtDist2');
+    const txtPwm2 = document.getElementById('txtPwm2');
+    const ir2_L = document.getElementById('ir2_L');
+    const ir2_M = document.getElementById('ir2_M');
+    const ir2_R = document.getElementById('ir2_R');
+
+    // Modes: 'pure_line', 'combo', 'arena', 'manual', 'stop'
+    let globalMode = 'pure_line';
+    let stressEnabled = false;
+
+    // Obstacles
+    let obstacles = [];
+    let trackPoints = [];
+
+    // Keys State for Manual Drive
+    const keys = { w: false, s: false, a: false, d: false };
+
+    // --- Car Structure ---
+    function createCar(name, color, isDMA) {
+      return {
+        name,
+        color,
+        isDMA,
+        x: 0,
+        y: 0,
+        theta: 0,
+        vL: 0,
+        vR: 0,
+        width: 36,
+        length: 48,
+        trail: [],
+        sensorDistance: 26,
+        sensorSpacing: 11,
+        ir: { L: 0, M: 0, R: 0 },
+        ultrasonicDist: 999,
+        fsmState: 'TRACKING',
+        avoidTimer: 0,
+        avoidDir: 1,
+        lastError: 0,
+        integral: 0,
+        offTrackCount: 0,
+        // Simulation Jitter & Latency under Stress
+        lagCounter: 0,
+        frozenTicks: 0,
+        cpuLoad: isDMA ? 12 : 38,
+        loopTime: isDMA ? 10.0 : 16.5,
+        jitter: isDMA ? 0.2 : 4.5
+      };
+    }
+
+    const carNonDMA = createCar('Non-DMA (原本)', '#f59e0b', false);
+    const carDMA = createCar('DMA Engine', '#06b6d4', true);
+
+    // --- Generate Smooth Continuous S-Curve Closed Track ---
+    function generateTrack() {
+      trackPoints = [];
+      const w = canvas.width;
+      const h = canvas.height;
+      const totalSteps = 600;
+
+      for (let i = 0; i < totalSteps; i++) {
+        const t = (i / totalSteps) * Math.PI * 2;
+        const px = w / 2 + (w * 0.38) * Math.cos(t);
+        const py = h / 2 + (h * 0.35) * Math.sin(2 * t) / 1.55;
+        trackPoints.push({ x: px, y: py });
+      }
+    }
+
+    // --- Global Mode Switch Handler ---
+    function setGlobalMode(mode) {
+      globalMode = mode;
+
+      const allBtns = [
+        { id: 'pure_line', btn: modeBtn_pure_line },
+        { id: 'combo', btn: modeBtn_combo },
+        { id: 'arena', btn: modeBtn_arena },
+        { id: 'manual', btn: modeBtn_manual },
+        { id: 'stop', btn: modeBtn_stop }
+      ];
+
+      allBtns.forEach(item => {
+        if (item.id === mode) {
+          item.btn.className = 'px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 text-white transition shadow-sm';
+        } else {
+          item.btn.className = 'px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white transition';
+        }
+      });
+
+      // Show/Hide Manual D-Pad & Controls
+      if (mode === 'manual') {
+        manualTargetPanel.classList.remove('hidden');
+        manualTargetPanel.classList.add('flex');
+        virtualDPad.classList.remove('hidden');
+        virtualDPad.classList.add('flex');
+        txtCurrentModeBadge.textContent = '🕹️ 手動遙控駕駛模式 (WASD)';
+      } else {
+        manualTargetPanel.classList.add('hidden');
+        manualTargetPanel.classList.remove('flex');
+        virtualDPad.classList.add('hidden');
+        virtualDPad.classList.remove('flex');
+
+        if (mode === 'pure_line') {
+          txtCurrentModeBadge.textContent = '🏁 純紅外線 PID 循線競速';
+          obstacles = [];
+          resetCarsToTrack();
+        } else if (mode === 'combo') {
+          txtCurrentModeBadge.textContent = '🏎️ 循線 ＋ 超音波避障 (Combo)';
+          obstacles = [
+            { x: 680, y: 160, w: 38, h: 38 },
+            { x: 190, y: 390, w: 38, h: 38 }
+          ];
+          resetCarsToTrack();
+        } else if (mode === 'arena') {
+          txtCurrentModeBadge.textContent = '🧱 自由迷宮純避障 (Arena)';
+          initArenaObstacles();
+          carNonDMA.x = 120; carNonDMA.y = 150; carNonDMA.theta = 0;
+          carDMA.x = 120; carDMA.y = 260; carDMA.theta = 0;
+          resetCarStates();
+        } else if (mode === 'stop') {
+          txtCurrentModeBadge.textContent = '🛑 一鍵緊急煞停 (E-Stop)';
+        }
+      }
+    }
+
+    function initArenaObstacles() {
+      const w = canvas.width;
+      const h = canvas.height;
+      obstacles = [
+        { x: 10, y: 10, w: w - 20, h: 14 },
+        { x: 10, y: h - 24, w: w - 20, h: 14 },
+        { x: 10, y: 10, w: 14, h: h - 20 },
+        { x: w - 24, y: 10, w: 14, h: h - 20 },
+        { x: 260, y: 90, w: 32, h: 220 },
+        { x: 450, y: 250, w: 32, h: 230 },
+        { x: 650, y: 90, w: 32, h: 240 },
+        { x: 320, y: 370, w: 190, h: 32 }
+      ];
+    }
+
+    function resetCarsToTrack() {
+      if (trackPoints.length === 0) generateTrack();
+      const idxA = 0;
+      const idxB = 45;
+      placeCarOnTrack(carNonDMA, idxA);
+      placeCarOnTrack(carDMA, idxB);
+      resetCarStates();
+    }
+
+    function placeCarOnTrack(car, index) {
+      const p1 = trackPoints[index];
+      const p2 = trackPoints[(index + 1) % trackPoints.length];
+      car.x = p1.x;
+      car.y = p1.y;
+      car.theta = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+    }
+
+    function resetCarStates() {
+      for (const car of [carNonDMA, carDMA]) {
+        car.vL = 0;
+        car.vR = 0;
+        car.trail = [];
+        car.fsmState = 'TRACKING';
+        car.lastError = 0;
+        car.integral = 0;
+        car.lagCounter = 0;
+        car.frozenTicks = 0;
+        car.offTrackCount = 0;
+      }
+    }
+
+    // --- Fast Distance to Black Track Line ---
+    const TRACK_LINE_WIDTH = 26; // pixels
+
+    function isPointOnBlackLine(px, py) {
+      if (globalMode === 'arena' || trackPoints.length < 2) return false;
+      let minDistSq = 999999;
+      for (let i = 0; i < trackPoints.length; i += 2) {
+        const tp = trackPoints[i];
+        const d2 = (tp.x - px) ** 2 + (tp.y - py) ** 2;
+        if (d2 < minDistSq) minDistSq = d2;
+      }
+      return Math.sqrt(minDistSq) <= (TRACK_LINE_WIDTH / 2);
+    }
+
+    function getNearestTrackPoint(px, py) {
+      let minDist = 999999;
+      let nearestIdx = 0;
+      for (let i = 0; i < trackPoints.length; i += 3) {
+        const d = Math.hypot(trackPoints[i].x - px, trackPoints[i].y - py);
+        if (d < minDist) {
+          minDist = d;
+          nearestIdx = i;
+        }
+      }
+      return { pt: trackPoints[nearestIdx], dist: minDist, index: nearestIdx };
+    }
+
+    function getSensorPositions(car) {
+      const fcX = car.x + Math.cos(car.theta) * car.sensorDistance;
+      const fcY = car.y + Math.sin(car.theta) * car.sensorDistance;
+      const nx = -Math.sin(car.theta);
+      const ny = Math.cos(car.theta);
+
+      return {
+        L: { x: fcX - nx * car.sensorSpacing, y: fcY - ny * car.sensorSpacing },
+        M: { x: fcX, y: fcY },
+        R: { x: fcX + nx * car.sensorSpacing, y: fcY + ny * car.sensorSpacing }
+      };
+    }
+
+    // --- HC-SR04 Ultrasonic Raycast ---
+    function raycastUltrasonic(car) {
+      const originX = car.x + Math.cos(car.theta) * (car.length / 2);
+      const originY = car.y + Math.sin(car.theta) * (car.length / 2);
+      const maxRange = 250;
+      let minHitDist = maxRange;
+
+      function checkRay(rx, ry, rdx, rdy, p1, p2) {
+        const dx = p2.x - p1.x;
+        const dy = p2.y - p1.y;
+        const denom = rdx * dy - rdy * dx;
+        if (Math.abs(denom) < 1e-6) return null;
+        const t = ((p1.x - rx) * dy - (p1.y - ry) * dx) / denom;
+        const u = ((p1.x - rx) * rdy - (p1.y - ry) * rdx) / denom;
+        if (t >= 0 && u >= 0 && u <= 1) return t;
+        return null;
+      }
+
+      const rayAngles = [car.theta, car.theta - 0.2, car.theta + 0.2];
+      for (const ang of rayAngles) {
+        const rdx = Math.cos(ang);
+        const rdy = Math.sin(ang);
+
+        for (const obs of obstacles) {
+          const edges = [
+            { x1: obs.x, y1: obs.y, x2: obs.x + obs.w, y2: obs.y },
+            { x1: obs.x + obs.w, y1: obs.y, x2: obs.x + obs.w, y2: obs.y + obs.h },
+            { x1: obs.x + obs.w, y1: obs.y, x2: obs.x, y2: obs.y + obs.h },
+            { x1: obs.x, y1: obs.y + obs.h, x2: obs.x, y2: obs.y }
+          ];
+          for (const e of edges) {
+            const hit = checkRay(originX, originY, rdx, rdy, { x: e.x1, y: e.y1 }, { x: e.x2, y: e.y2 });
+            if (hit !== null && hit < minHitDist) minHitDist = hit;
+          }
+        }
+      }
+
+      return {
+        distCm: Math.round(minHitDist / 2),
+        hitPixels: minHitDist,
+        originX,
+        originY
+      };
+    }
+
+    // --- Control Loop for Each Car ---
+    function updateCar(car, carId) {
+      // Determine this car's active mode
+      const overrideVal = carId === 'car1' ? selectCar1Mode.value : selectCar2Mode.value;
+      const activeMode = overrideVal === 'auto' ? globalMode : overrideVal;
+
+      // 1. Simulate Stress / CPU Load
+      if (!car.isDMA && stressEnabled) {
+        car.cpuLoad = Math.min(99, 89 + Math.random() * 10);
+        car.loopTime = 52.0 + Math.random() * 25.0;
+        car.jitter = 36.0 + Math.random() * 18.0;
+
+        car.lagCounter++;
+        if (car.lagCounter % 3 !== 0) {
+          car.frozenTicks++;
+        }
+      } else if (!car.isDMA) {
+        car.cpuLoad = 38 + Math.random() * 6;
+        car.loopTime = 16.5 + Math.random() * 3.0;
+        car.jitter = 4.2 + Math.random() * 1.5;
+      } else {
+        car.cpuLoad = stressEnabled ? 14 + Math.random() * 2 : 11 + Math.random() * 2;
+        car.loopTime = 10.0 + (Math.random() - 0.5) * 0.2;
+        car.jitter = 0.2 + (Math.random() - 0.5) * 0.1;
+      }
+
+      // 2. Read Sensors
+      const sPos = getSensorPositions(car);
+      car.ir.L = isPointOnBlackLine(sPos.L.x, sPos.L.y) ? 1 : 0;
+      car.ir.M = isPointOnBlackLine(sPos.M.x, sPos.M.y) ? 1 : 0;
+      car.ir.R = isPointOnBlackLine(sPos.R.x, sPos.R.y) ? 1 : 0;
+
+      const us = raycastUltrasonic(car);
+      car.ultrasonicDist = us.distCm;
+
+      // 3. FSM Decision Making & PID Execution
+      if (!car.isDMA && stressEnabled && car.frozenTicks > 0) {
+        car.frozenTicks--;
+        // Car continues with previous PWM without reacting (CPU blocked in UART ISR!)
+      } else {
+        let pwmL = 0;
+        let pwmR = 0;
+        const basePWM = 135;
+
+        // Check if Manual Remote Drive is active for this car
+        const isManuallyControlled = (activeMode === 'manual') &&
+          (selectManualTarget.value === carId || selectManualTarget.value === 'both');
+
+        if (activeMode === 'stop') {
+          // E-STOP Mode
+          car.fsmState = 'STOP';
+          pwmL = 0; pwmR = 0;
+        } else if (isManuallyControlled) {
+          // Manual WASD Mode
+          car.fsmState = 'MANUAL';
+          const speed = basePWM * 1.1;
+
+          if (keys.w) {
+            pwmL = speed; pwmR = speed;
+            if (keys.a) { pwmL = speed * 0.35; pwmR = speed * 1.25; }
+            if (keys.d) { pwmL = speed * 1.25; pwmR = speed * 0.35; }
+          } else if (keys.s) {
+            pwmL = -speed * 0.8; pwmR = -speed * 0.8;
+          } else if (keys.a) {
+            pwmL = -speed * 0.85; pwmR = speed * 0.85;
+          } else if (keys.d) {
+            pwmL = speed * 0.85; pwmR = -speed * 0.85;
+          } else {
+            pwmL = 0; pwmR = 0;
+          }
+        } else {
+          // Autonomous Modes
+          const safeDist = 26;
+          const hasObstacle = (activeMode !== 'pure_line') && (car.ultrasonicDist < safeDist);
+
+          if (hasObstacle) {
+            if (car.fsmState !== 'BRAKE' && car.fsmState !== 'AVOID_TURN') {
+              car.fsmState = 'BRAKE';
+              car.avoidTimer = car.isDMA ? 14 : 22;
+              car.avoidDir = car === carNonDMA ? -1 : 1;
+            }
+          }
+
+          if (car.fsmState === 'BRAKE') {
+            pwmL = -45;
+            pwmR = -45;
+            car.avoidTimer--;
+            if (car.avoidTimer <= 0) {
+              car.fsmState = 'AVOID_TURN';
+              car.avoidTimer = 26;
+            }
+          } else if (car.fsmState === 'AVOID_TURN') {
+            const turnSpeed = basePWM * 0.85;
+            pwmL = -car.avoidDir * turnSpeed;
+            pwmR = car.avoidDir * turnSpeed;
+            car.avoidTimer--;
+            if (car.avoidTimer <= 0 && !hasObstacle) {
+              car.fsmState = 'TRACKING';
+            }
+          } else {
+            // TRACKING or CRUISE
+            if (activeMode === 'arena') {
+              car.fsmState = 'CRUISE';
+              pwmL = basePWM;
+              pwmR = basePWM;
+            } else {
+              // 3-Way IR PID Line Tracking
+              let error = 0;
+              const L = car.ir.L, M = car.ir.M, R = car.ir.R;
+
+              if (L === 0 && M === 1 && R === 0) {
+                error = 0;
+                car.fsmState = 'TRACKING';
+                car.offTrackCount = 0;
+              } else if (L === 1 && M === 1 && R === 0) {
+                error = -0.5;
+                car.fsmState = 'TRACKING';
+                car.offTrackCount = 0;
+              } else if (L === 1 && M === 0 && R === 0) {
+                error = -1.2;
+                car.fsmState = 'TRACKING';
+                car.offTrackCount = 0;
+              } else if (L === 0 && M === 1 && R === 1) {
+                error = +0.5;
+                car.fsmState = 'TRACKING';
+                car.offTrackCount = 0;
+              } else if (L === 0 && M === 0 && R === 1) {
+                error = +1.2;
+                car.fsmState = 'TRACKING';
+                car.offTrackCount = 0;
+              } else if (L === 1 && M === 1 && R === 1) {
+                error = 0;
+                car.fsmState = 'TRACKING';
+              } else {
+                car.fsmState = 'OFF_TRACK';
+                car.offTrackCount++;
+
+                if (car.offTrackCount < 40) {
+                  error = car.lastError > 0 ? 1.6 : -1.6;
+                } else {
+                  const near = getNearestTrackPoint(car.x, car.y);
+                  const targetAngle = Math.atan2(near.pt.y - car.y, near.pt.x - car.x);
+                  let diffAngle = targetAngle - car.theta;
+                  while (diffAngle > Math.PI) diffAngle -= Math.PI * 2;
+                  while (diffAngle < -Math.PI) diffAngle += Math.PI * 2;
+                  error = diffAngle > 0 ? 1.4 : -1.4;
+                }
+              }
+
+              const Kp = car.isDMA ? 2.2 : (stressEnabled ? 1.2 : 1.6);
+              const Kd = car.isDMA ? 2.8 : (stressEnabled ? 0.6 : 1.8);
+              const dError = error - car.lastError;
+              car.lastError = error;
+
+              const correction = (Kp * error * 45) + (Kd * dError * 45);
+
+              pwmL = Math.max(0, Math.min(255, basePWM + correction));
+              pwmR = Math.max(0, Math.min(255, basePWM - correction));
+            }
+          }
+        }
+
+        car.pwmL = pwmL;
+        car.pwmR = pwmR;
+      }
+
+      // 4. Differential Drive Kinematics
+      const maxSpeed = 2.9;
+      const speedL = ((car.pwmL || 0) / 255) * maxSpeed;
+      const speedR = ((car.pwmR || 0) / 255) * maxSpeed;
+
+      const v = (speedL + speedR) / 2;
+      const omega = (speedR - speedL) / car.width;
+
+      car.theta += omega;
+      car.theta = (car.theta + Math.PI * 2) % (Math.PI * 2);
+
+      car.x += v * Math.cos(car.theta);
+      car.y += v * Math.sin(car.theta);
+
+      car.x = Math.max(22, Math.min(canvas.width - 22, car.x));
+      car.y = Math.max(22, Math.min(canvas.height - 22, car.y));
+
+      car.trail.push({ x: car.x, y: car.y });
+      if (car.trail.length > 50) car.trail.shift();
+    }
+
+    // --- Render Loop ---
+    function render() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // 1. Grid
+      ctx.strokeStyle = '#111827';
+      ctx.lineWidth = 1;
+      for (let x = 0; x < canvas.width; x += 40) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+      }
+      for (let y = 0; y < canvas.height; y += 40) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+      }
+
+      // 2. Render Black Track Line (if not arena mode)
+      if (globalMode !== 'arena' && trackPoints.length > 1) {
+        ctx.strokeStyle = '#334155';
+        ctx.lineWidth = TRACK_LINE_WIDTH + 8;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.beginPath();
+        ctx.moveTo(trackPoints[0].x, trackPoints[0].y);
+        for (let i = 1; i < trackPoints.length; i++) ctx.lineTo(trackPoints[i].x, trackPoints[i].y);
+        ctx.closePath();
+        ctx.stroke();
+
+        ctx.strokeStyle = '#020617';
+        ctx.lineWidth = TRACK_LINE_WIDTH;
+        ctx.beginPath();
+        ctx.moveTo(trackPoints[0].x, trackPoints[0].y);
+        for (let i = 1; i < trackPoints.length; i++) ctx.lineTo(trackPoints[i].x, trackPoints[i].y);
+        ctx.closePath();
+        ctx.stroke();
+
+        ctx.strokeStyle = '#1e293b';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([8, 8]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        renderStartBanner(trackPoints[0].x, trackPoints[0].y);
+      }
+
+      // 3. Render Obstacles
+      for (const obs of obstacles) {
+        ctx.fillStyle = '#dc2626';
+        ctx.strokeStyle = '#991b1b';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.roundRect(obs.x, obs.y, obs.w, obs.h, 6);
+        ctx.fill(); ctx.stroke();
+
+        ctx.fillStyle = '#fecaca';
+        ctx.font = '10px monospace';
+        ctx.fillText('BLOCK', obs.x + 3, obs.y + obs.h / 2 + 3);
+      }
+
+      // 4. Render Both Cars
+      renderCar(carNonDMA);
+      renderCar(carDMA);
+
+      // 5. Update Telemetry UI
+      updateDashboardUI();
+    }
+
+    function renderStartBanner(x, y) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.fillStyle = '#e2e8f0';
+      ctx.fillRect(-4, -20, 8, 40);
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(-4, -20, 8, 10);
+      ctx.fillRect(-4, 0, 8, 10);
+      ctx.restore();
+    }
+
+    function renderCar(car) {
+      if (car.trail.length > 1) {
+        ctx.strokeStyle = car.isDMA ? 'rgba(6, 182, 212, 0.45)' : 'rgba(245, 158, 11, 0.45)';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(car.trail[0].x, car.trail[0].y);
+        for (let i = 1; i < car.trail.length; i++) ctx.lineTo(car.trail[i].x, car.trail[i].y);
+        ctx.stroke();
+      }
+
+      // Ultrasonic Cone
+      if (globalMode !== 'pure_line' || obstacles.length > 0) {
+        const us = raycastUltrasonic(car);
+        const beamGrad = ctx.createRadialGradient(us.originX, us.originY, 4, us.originX, us.originY, us.hitPixels);
+        if (us.distCm < 26) {
+          beamGrad.addColorStop(0, 'rgba(239, 68, 68, 0.4)');
+          beamGrad.addColorStop(1, 'rgba(239, 68, 68, 0.05)');
+        } else {
+          beamGrad.addColorStop(0, car.isDMA ? 'rgba(6, 182, 212, 0.25)' : 'rgba(245, 158, 11, 0.25)');
+          beamGrad.addColorStop(1, 'rgba(0, 0, 0, 0.01)');
+        }
+        ctx.fillStyle = beamGrad;
+        ctx.beginPath();
+        ctx.moveTo(us.originX, us.originY);
+        ctx.arc(us.originX, us.originY, us.hitPixels, car.theta - 0.2, car.theta + 0.2);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      // Car Body
+      ctx.save();
+      ctx.translate(car.x, car.y);
+      ctx.rotate(car.theta);
+
+      ctx.fillStyle = car.isDMA ? '#0891b2' : '#d97706';
+      ctx.strokeStyle = car.color;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.roundRect(-car.length / 2, -car.width / 2, car.length, car.width, 7);
+      ctx.fill(); ctx.stroke();
+
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(-12, -car.width / 2 - 5, 24, 7);
+      ctx.fillRect(-12, car.width / 2 - 2, 24, 7);
+
+      ctx.fillStyle = '#cbd5e1';
+      ctx.beginPath();
+      ctx.arc(car.length / 2 - 6, 0, 3.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 8px monospace';
+      ctx.fillText(car.isDMA ? 'DMA' : 'CPU', -8, 3);
+
+      ctx.restore();
+
+      // Draw IR Sensors in World Space
+      const sPos = getSensorPositions(car);
+      drawIR(sPos.L, car.ir.L);
+      drawIR(sPos.M, car.ir.M);
+      drawIR(sPos.R, car.ir.R);
+
+      // Name & State Tag
+      ctx.fillStyle = car.color;
+      ctx.font = 'bold 11px sans-serif';
+      let stateStr = car.fsmState;
+      if (car.fsmState === 'OFF_TRACK') stateStr = '⚠️ 脫軌';
+      else if (car.fsmState === 'TRACKING') stateStr = '🟢 循線中';
+      else if (car.fsmState === 'MANUAL') stateStr = '🕹️ 遙控中';
+      else if (car.fsmState === 'STOP') stateStr = '🛑 煞停';
+      ctx.fillText(`${car.name} [${stateStr}]`, car.x - 36, car.y - 28);
+    }
+
+    function drawIR(pos, isBlack) {
+      ctx.beginPath();
+      ctx.arc(pos.x, pos.y, 4, 0, Math.PI * 2);
+      ctx.fillStyle = isBlack ? '#ef4444' : '#10b981';
+      ctx.fill();
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+    }
+
+    // --- Telemetry Dashboard Sync ---
+    function updateDashboardUI() {
+      // Car 1 (Non-DMA)
+      txtCpu1.textContent = Math.round(carNonDMA.cpuLoad) + '%';
+      barCpu1.style.width = Math.min(100, carNonDMA.cpuLoad) + '%';
+      txtLoop1.textContent = carNonDMA.loopTime.toFixed(1) + ' ms';
+      txtJitter1.textContent = '± ' + carNonDMA.jitter.toFixed(1) + ' ms';
+      txtDist1.textContent = (carNonDMA.ultrasonicDist > 120 ? '> 120' : carNonDMA.ultrasonicDist) + ' cm';
+      txtPwm1.textContent = Math.round(carNonDMA.pwmL || 0) + ' / ' + Math.round(carNonDMA.pwmR || 0);
+
+      updateIRUI(ir1_L, carNonDMA.ir.L, 'L');
+      updateIRUI(ir1_M, carNonDMA.ir.M, 'M');
+      updateIRUI(ir1_R, carNonDMA.ir.R, 'R');
+
+      badgeCar1State.textContent = carNonDMA.fsmState;
+      if (carNonDMA.fsmState === 'OFF_TRACK') {
+        badgeCar1State.className = 'text-[11px] px-2 py-0.5 rounded bg-rose-500/30 text-rose-300 border border-rose-500/60 font-mono animate-pulse';
+      } else if (carNonDMA.fsmState === 'MANUAL') {
+        badgeCar1State.className = 'text-[11px] px-2 py-0.5 rounded bg-indigo-500/30 text-indigo-300 border border-indigo-500/60 font-mono';
+      } else if (carNonDMA.fsmState === 'STOP') {
+        badgeCar1State.className = 'text-[11px] px-2 py-0.5 rounded bg-rose-600/30 text-rose-300 border border-rose-600 font-mono';
+      } else {
+        badgeCar1State.className = 'text-[11px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono';
+      }
+
+      if (carNonDMA.cpuLoad > 75) {
+        barCpu1.className = 'h-full bg-rose-500 transition-all duration-100';
+        txtCpu1.className = 'font-mono text-rose-400 font-bold';
+      } else {
+        barCpu1.className = 'h-full bg-amber-500 transition-all duration-100';
+        txtCpu1.className = 'font-mono text-amber-400 font-bold';
+      }
+
+      // Car 2 (DMA)
+      txtCpu2.textContent = Math.round(carDMA.cpuLoad) + '%';
+      barCpu2.style.width = Math.min(100, carDMA.cpuLoad) + '%';
+      txtLoop2.textContent = carDMA.loopTime.toFixed(1) + ' ms';
+      txtJitter2.textContent = '± ' + carDMA.jitter.toFixed(1) + ' ms';
+      txtDist2.textContent = (carDMA.ultrasonicDist > 120 ? '> 120' : carDMA.ultrasonicDist) + ' cm';
+      txtPwm2.textContent = Math.round(carDMA.pwmL || 0) + ' / ' + Math.round(carDMA.pwmR || 0);
+
+      updateIRUI(ir2_L, carDMA.ir.L, 'L');
+      updateIRUI(ir2_M, carDMA.ir.M, 'M');
+      updateIRUI(ir2_R, carDMA.ir.R, 'R');
+
+      badgeCar2State.textContent = carDMA.fsmState;
+      if (carDMA.fsmState === 'MANUAL') {
+        badgeCar2State.className = 'text-[11px] px-2 py-0.5 rounded bg-indigo-500/30 text-indigo-300 border border-indigo-500/60 font-mono';
+      } else if (carDMA.fsmState === 'STOP') {
+        badgeCar2State.className = 'text-[11px] px-2 py-0.5 rounded bg-rose-600/30 text-rose-300 border border-rose-600 font-mono';
+      } else {
+        badgeCar2State.className = 'text-[11px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono';
+      }
+    }
+
+    function updateIRUI(el, val, label) {
+      if (val === 1) {
+        el.className = 'py-1 px-1 rounded bg-rose-950/80 border border-rose-500 text-rose-300 font-bold shadow-sm';
+        el.textContent = `${label}: 1 (黑)`;
+      } else {
+        el.className = 'py-1 px-1 rounded bg-slate-800 border border-slate-700 text-slate-400';
+        el.textContent = `${label}: 0 (白)`;
+      }
+    }
+
+    // --- Interactive Mode Buttons Event Listeners ---
+    modeBtn_pure_line.addEventListener('click', () => setGlobalMode('pure_line'));
+    modeBtn_combo.addEventListener('click', () => setGlobalMode('combo'));
+    modeBtn_arena.addEventListener('click', () => setGlobalMode('arena'));
+    modeBtn_manual.addEventListener('click', () => setGlobalMode('manual'));
+    modeBtn_stop.addEventListener('click', () => setGlobalMode('stop'));
+
+    // Stress Toggle
+    btnToggleStress.addEventListener('click', () => {
+      stressEnabled = !stressEnabled;
+      if (stressEnabled) {
+        btnToggleStress.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold bg-amber-500 hover:bg-amber-400 text-slate-900 shadow-lg transition flex items-center gap-1.5';
+        stressIndicator.className = 'inline-block w-2 h-2 rounded-full bg-rose-600 animate-ping';
+        stressText.textContent = '關閉壓力 (負載測試中)';
+      } else {
+        btnToggleStress.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold bg-rose-600 hover:bg-rose-500 text-white shadow-lg transition flex items-center gap-1.5';
+        stressIndicator.className = 'inline-block w-2 h-2 rounded-full bg-white';
+        stressText.textContent = '開啟壓力負載 (Stress)';
+      }
+    });
+
+    // Toolbar buttons
+    btnAddObs.addEventListener('click', () => {
+      obstacles.push({
+        x: Math.round(Math.random() * (canvas.width - 150) + 70),
+        y: Math.round(Math.random() * (canvas.height - 150) + 70),
+        w: 40,
+        h: 40
+      });
+    });
+    btnClearObs.addEventListener('click', () => { obstacles = []; });
+    btnResetCars.addEventListener('click', resetCarsToTrack);
+
+    // --- Keyboard & Virtual D-Pad Event Handlers ---
+    window.addEventListener('keydown', (e) => {
+      const k = e.key.toLowerCase();
+      if (k === 'w' || k === 'arrowup') { keys.w = true; highlightDPad('dpadUp', true); }
+      if (k === 's' || k === 'arrowdown') { keys.s = true; highlightDPad('dpadDown', true); }
+      if (k === 'a' || k === 'arrowleft') { keys.a = true; highlightDPad('dpadLeft', true); }
+      if (k === 'd' || k === 'arrowright') { keys.d = true; highlightDPad('dpadRight', true); }
+    });
+
+    window.addEventListener('keyup', (e) => {
+      const k = e.key.toLowerCase();
+      if (k === 'w' || k === 'arrowup') { keys.w = false; highlightDPad('dpadUp', false); }
+      if (k === 's' || k === 'arrowdown') { keys.s = false; highlightDPad('dpadDown', false); }
+      if (k === 'a' || k === 'arrowleft') { keys.a = false; highlightDPad('dpadLeft', false); }
+      if (k === 'd' || k === 'arrowright') { keys.d = false; highlightDPad('dpadRight', false); }
+    });
+
+    function highlightDPad(id, active) {
+      const btn = document.getElementById(id);
+      if (btn) {
+        if (active) btn.classList.add('bg-indigo-600', 'text-white');
+        else btn.classList.remove('bg-indigo-600', 'text-white');
+      }
+    }
+
+    // Touch/Mouse D-Pad Binding
+    function bindDPadButton(btnId, keyName) {
+      const btn = document.getElementById(btnId);
+      const press = () => { keys[keyName] = true; btn.classList.add('active', 'bg-indigo-600', 'text-white'); };
+      const release = () => { keys[keyName] = false; btn.classList.remove('active', 'bg-indigo-600', 'text-white'); };
+      btn.addEventListener('mousedown', press);
+      btn.addEventListener('mouseup', release);
+      btn.addEventListener('mouseleave', release);
+      btn.addEventListener('touchstart', (e) => { e.preventDefault(); press(); });
+      btn.addEventListener('touchend', (e) => { e.preventDefault(); release(); });
+    }
+
+    bindDPadButton('dpadUp', 'w');
+    bindDPadButton('dpadDown', 's');
+    bindDPadButton('dpadLeft', 'a');
+    bindDPadButton('dpadRight', 'd');
+
+    // --- Mouse Drag Obstacles ---
+    let isDragging = false;
+    let draggedObs = null;
+
+    canvas.addEventListener('mousedown', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+
+      for (const obs of obstacles) {
+        if (mx >= obs.x && mx <= obs.x + obs.w && my >= obs.y && my <= obs.y + obs.h) {
+          draggedObs = obs;
+          isDragging = true;
+          return;
+        }
+      }
+
+      // If clicked empty space, spawn new obstacle block
+      obstacles.push({ x: Math.round(mx - 20), y: Math.round(my - 20), w: 40, h: 40 });
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (isDragging && draggedObs) {
+        const rect = canvas.getBoundingClientRect();
+        draggedObs.x = e.clientX - rect.left - draggedObs.w / 2;
+        draggedObs.y = e.clientY - rect.top - draggedObs.h / 2;
+      }
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+      draggedObs = null;
+    });
+
+    // --- Main Simulation Loop ---
+    function loop() {
+      updateCar(carNonDMA, 'car1');
+      updateCar(carDMA, 'car2');
+      render();
+      requestAnimationFrame(loop);
+    }
+
+    // Startup
+    generateTrack();
+    setGlobalMode('pure_line');
+    loop();
+  </script>
+</body>
+</html>
