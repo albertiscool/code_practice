@@ -99,13 +99,13 @@ def submit_solution(slug, question_id, code_path):
 if __name__ == '__main__':
     import glob
     problem = sys.argv[1].lower() if len(sys.argv) > 1 else 'p1'
-    day_matches = glob.glob('Day110*')
-    day_dir = day_matches[0] if day_matches else 'Day110'
+    day_matches = glob.glob('Day111*')
+    day_dir = day_matches[0] if day_matches else 'Day111'
     
     mapping = {
-        'p1': ('sum-of-two-integers', 371, f'{day_dir}/p1.c'),
-        'p2': ('intersection-of-two-arrays', 349, f'{day_dir}/p2.c'),
-        'p3': ('rotate-list', 61, f'{day_dir}/p3.c')
+        'p1': ('number-of-1-bits', 191, f'{day_dir}/p1.c'),
+        'p2': ('remove-duplicates-from-sorted-array', 26, f'{day_dir}/p2.c'),
+        'p3': ('reverse-linked-list', 206, f'{day_dir}/p3.c')
     }
 
     if problem in mapping:
