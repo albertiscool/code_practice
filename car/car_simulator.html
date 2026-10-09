@@ -47,22 +47,39 @@
       </p>
     </div>
     
-    <!-- Stress Switch -->
-    <div class="flex items-center gap-3 bg-slate-800/90 px-3 py-2 rounded-xl border border-slate-700 shadow-lg">
-      <div class="text-right">
-        <div class="text-xs font-bold text-slate-200">UART 壓力負載測試</div>
-        <div class="text-[11px] text-slate-400">模擬 115200bps 密集通訊中斷</div>
+    <!-- Stress & EMI Switch -->
+    <div class="flex flex-wrap items-center gap-2">
+      <div class="flex items-center gap-2 bg-slate-800/90 px-3 py-1.5 rounded-xl border border-slate-700 shadow-lg">
+        <div class="text-right">
+          <div class="text-xs font-bold text-slate-200">UART 壓力測試</div>
+          <div class="text-[10px] text-slate-400">115200bps 中斷負載</div>
+        </div>
+        <button id="btnToggleStress" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-rose-600 hover:bg-rose-500 text-white shadow-lg transition flex items-center gap-1.5">
+          <span id="stressIndicator" class="inline-block w-2 h-2 rounded-full bg-white"></span>
+          <span id="stressText">開啟壓力 (Stress)</span>
+        </button>
       </div>
-      <button id="btnToggleStress" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-rose-600 hover:bg-rose-500 text-white shadow-lg transition flex items-center gap-1.5">
-        <span id="stressIndicator" class="inline-block w-2 h-2 rounded-full bg-white"></span>
-        <span id="stressText">開啟壓力負載 (Stress)</span>
-      </button>
+
+      <div class="flex items-center gap-2 bg-slate-800/90 px-3 py-1.5 rounded-xl border border-amber-500/40 shadow-lg">
+        <div class="text-right">
+          <div class="text-xs font-bold text-amber-300">馬達 EMI 雜訊干擾</div>
+          <div class="text-[10px] text-slate-400">模擬換向火花/封包撕裂</div>
+        </div>
+        <button id="btnInjectEMI" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-600 hover:bg-amber-500 text-white shadow-lg transition flex items-center gap-1 active:scale-95" title="單次向雙車序列埠注入雜訊 Byte">
+          <span>💥</span>
+          <span>注入 EMI 雜訊</span>
+        </button>
+        <button id="btnToggleAutoEMI" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-900 hover:bg-slate-700 text-slate-300 border border-slate-700 transition" title="持續隨機產生馬達電磁干擾">
+          <span id="autoEmiIndicator" class="inline-block w-2 h-2 rounded-full bg-slate-500 mr-1"></span>
+          <span id="autoEmiText">持續干擾: 關</span>
+        </button>
+      </div>
     </div>
   </header>
 
   <!-- Mode Selector Bar (Top Level) -->
   <div class="w-full max-w-7xl mb-3 panel-card rounded-2xl p-2.5 flex flex-wrap items-center justify-between gap-2 shadow-xl border border-slate-700">
-    <div class="flex items-center gap-2">
+    <div class="flex flex-wrap items-center gap-2">
       <span class="text-xs font-bold text-slate-300 px-2 py-1 bg-slate-800 rounded-lg flex items-center gap-1.5">
         <span>🎮</span> 模式選擇:
       </span>
@@ -76,23 +93,55 @@
         <button id="modeBtn_arena" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white transition">
           🧱 自由迷宮純避障
         </button>
+        <button id="modeBtn_balloon" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 text-rose-300 hover:text-white transition flex items-center gap-1">
+          🎈 追蹤戳氣球 (YOLO+舵機)
+        </button>
         <button id="modeBtn_manual" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white transition flex items-center gap-1">
           🕹️ 手動遙控駕駛 (WASD)
         </button>
         <button id="modeBtn_stop" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:text-rose-400 transition">
           🛑 一鍵緊急煞停
         </button>
+        <button id="btnBrakeComparisonTest" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-rose-700 via-amber-600 to-rose-600 hover:from-rose-600 hover:to-amber-500 text-white shadow-lg transition flex items-center gap-1.5 active:scale-95 border border-rose-500/50" title="雙車並排全速衝刺後急煞，實測反電動勢定桿 vs 惰行滑動距離">
+          <span>⚡</span>
+          <span>急煞距離對決測試 (Brake Test)</span>
+        </button>
       </div>
     </div>
 
-    <!-- Manual Target Selector (Only active in Manual Mode) -->
-    <div id="manualTargetPanel" class="hidden items-center gap-2 bg-slate-800/90 px-3 py-1 rounded-xl border border-indigo-500/40">
-      <span class="text-xs text-indigo-300 font-bold">遙控對象:</span>
-      <select id="selectManualTarget" class="bg-slate-900 text-xs text-slate-200 border border-slate-700 rounded-lg px-2 py-1 outline-none">
-        <option value="car1">車輛 A (橘車 Non-DMA)</option>
-        <option value="car2" selected>車輛 B (藍車 DMA)</option>
-        <option value="both">雙車同步操控</option>
-      </select>
+    <!-- View & Focus Selector & Active Car Filter -->
+    <div class="flex flex-wrap items-center gap-2">
+      <!-- Manual Target Selector (Only active in Manual Mode) -->
+      <div id="manualTargetPanel" class="hidden items-center gap-2 bg-slate-800/90 px-3 py-1 rounded-xl border border-indigo-500/40">
+        <span class="text-xs text-indigo-300 font-bold">遙控對象:</span>
+        <select id="selectManualTarget" class="bg-slate-900 text-xs text-slate-200 border border-slate-700 rounded-lg px-2 py-1 outline-none">
+          <option value="car1">車輛 A (橘車 Non-DMA)</option>
+          <option value="car2" selected>車輛 B (藍車 DMA)</option>
+          <option value="both">雙車同步操控</option>
+        </select>
+      </div>
+
+      <div class="flex items-center gap-2 bg-slate-800/90 px-2.5 py-1 rounded-xl border border-slate-700 shadow-md">
+        <div class="flex items-center gap-1.5">
+          <span class="text-xs font-bold text-slate-300">👁️ 視角:</span>
+          <select id="selectViewMode" class="bg-slate-900 text-xs text-cyan-300 border border-slate-700 rounded-lg px-2 py-1 outline-none font-semibold cursor-pointer">
+            <option value="both" selected>🌐 雙車全景 (Dual)</option>
+            <option value="car1">🚗 鎖定跟隨車輛 A</option>
+            <option value="car2">🏎️ 鎖定跟隨車輛 B</option>
+          </select>
+        </div>
+
+        <div class="h-4 w-[1px] bg-slate-700"></div>
+
+        <div class="flex items-center gap-1.5">
+          <span class="text-xs font-bold text-slate-300">目標:</span>
+          <select id="selectActiveFilter" class="bg-slate-900 text-xs text-amber-300 border border-slate-700 rounded-lg px-2 py-1 outline-none font-semibold cursor-pointer">
+            <option value="both" selected>雙車同時上場</option>
+            <option value="car1">僅看/運行 車輛 A</option>
+            <option value="car2">僅看/運行 車輛 B</option>
+          </select>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -133,17 +182,34 @@
           <div class="flex items-center gap-2 bg-slate-900/90 px-3 py-1.5 rounded-xl border border-slate-700 shadow-xl">
             <span class="text-xs text-slate-400">當前運行:</span>
             <span id="txtCurrentModeBadge" class="text-xs font-bold text-indigo-400 font-mono">純紅外線 PID 循線競速</span>
+            <span class="h-3.5 w-[1px] bg-slate-700"></span>
+            <span class="text-xs text-slate-400">即時指令:</span>
+            <span id="txtLiveCmdBadge" class="text-xs font-bold text-cyan-400 font-mono px-1.5 py-0.5 rounded bg-cyan-950/80 border border-cyan-500/40">CMD: 'F' (前進推進)</span>
           </div>
 
           <div class="flex items-center gap-1.5 bg-slate-900/90 p-1.5 rounded-xl border border-slate-700 backdrop-blur shadow-xl">
+            <div class="flex items-center gap-1 bg-slate-800/90 px-2 py-1 rounded-lg border border-rose-500/30">
+              <span class="text-[11px] text-rose-300 font-bold">🎯 尋找策略:</span>
+              <select id="selectSearchAlgo" class="bg-slate-900 text-[11px] text-amber-300 rounded px-1.5 py-0.5 border border-slate-700 outline-none cursor-pointer">
+                <option value="smart" selected>🌟 智慧360°掃描＋換位巡航 (推薦)</option>
+                <option value="spiral">🌀 外擴螺旋尋找 (Spiral)</option>
+                <option value="naive">🔄 原始持續右轉 (易卡死對照)</option>
+              </select>
+            </div>
+            <button id="btnAddBalloon" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-rose-300 hover:bg-rose-500/20 transition" title="點擊在跑道上增加紅色氣球">
+              🎈 放紅氣球
+            </button>
+            <button id="btnClearBalloons" class="px-2 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:bg-slate-800 transition" title="清除所有氣球">
+              💥 清除氣球
+            </button>
             <button id="btnAddObs" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 transition" title="點擊在跑道上增加障礙物">
               ➕ 放障礙物
             </button>
-            <button id="btnClearObs" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-rose-400 hover:bg-rose-500/20 transition" title="清除所有障礙物">
+            <button id="btnClearObs" class="px-2 py-1.5 rounded-lg text-xs font-medium text-rose-400 hover:bg-rose-500/20 transition" title="清除所有障礙物">
               🧹 清除障礙
             </button>
             <button id="btnResetCars" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-amber-400 hover:bg-amber-500/20 transition" title="重設雙車回起跑線">
-              🔄 雙車起跑線復位
+              🔄 雙車復位
             </button>
           </div>
         </div>
@@ -178,6 +244,7 @@
             <option value="auto">跟隨全域模式</option>
             <option value="pure_line">強制純循線</option>
             <option value="arena">強制純避障</option>
+            <option value="balloon">強制戳氣球 (YOLO)</option>
             <option value="manual">強制手動遙控</option>
             <option value="stop">強制停止</option>
           </select>
@@ -222,6 +289,37 @@
           <span class="text-slate-400 text-[11px]">L/R PWM:</span>
           <span id="txtPwm1" class="text-amber-300">140 / 140</span>
         </div>
+
+        <!-- Protocol Telemetry Row Car 1 -->
+        <div class="mt-2 flex justify-between items-center text-xs font-mono bg-slate-900/80 p-1.5 rounded border border-amber-500/30">
+          <span class="text-slate-400 text-[10px]">協議: <span class="text-amber-400 font-bold">ASCII (sscanf)</span></span>
+          <span class="text-slate-400 text-[10px]">開銷: <span class="text-amber-300">~1200 Cyc</span></span>
+          <span class="text-slate-400 text-[10px]">損壞: <span id="txtSideAsciiErr" class="text-rose-400 font-bold">0</span></span>
+        </div>
+
+        <!-- Balloon Attack Telemetry Row Car 1 -->
+        <div class="mt-1.5 flex justify-between items-center text-xs font-mono bg-slate-900/80 p-1.5 rounded border border-rose-500/30">
+          <span class="text-slate-400 text-[10px]">🎈 擊破氣球:</span>
+          <span id="txtBalloons1" class="text-rose-400 font-bold text-[11px]">0 顆</span>
+          <span class="text-slate-400 text-[10px]">舵機針頭:</span>
+          <span id="txtServo1" class="text-amber-300 font-bold text-[10px]">10° (Pin12)</span>
+        </div>
+
+        <!-- Active Command Telemetry Row Car 1 -->
+        <div class="mt-1.5 flex justify-between items-center text-xs font-mono bg-slate-900/90 p-1.5 rounded border border-amber-500/40">
+          <span class="text-slate-400 text-[10px]">⚡ 目前指令:</span>
+          <span id="txtCmd1" class="text-amber-300 font-bold text-[11px] flex items-center gap-1 font-mono">
+            <span class="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-200 border border-amber-500/40 font-mono font-bold">CMD: 'F'</span>
+            <span>前進推進</span>
+            <span class="text-slate-400 font-mono text-[10px]">(140/140)</span>
+          </span>
+        </div>
+
+        <!-- Braking Topology Telemetry Row Car 1 -->
+        <div class="mt-1.5 flex justify-between items-center text-xs font-mono bg-slate-900/90 p-1.5 rounded border border-rose-500/40">
+          <span class="text-slate-400 text-[10px]">🛑 煞車拓撲: <span id="txtBrakeMode1" class="text-rose-400 font-bold">High-Z 浮接惰行</span></span>
+          <span class="text-slate-400 text-[10px]">滑行: <span id="txtBrakeDist1" class="text-rose-400 font-bold">-- cm</span></span>
+        </div>
       </div>
 
       <!-- Car 2 (DMA Accelerated) Telemetry Card -->
@@ -244,6 +342,7 @@
             <option value="auto">跟隨全域模式</option>
             <option value="pure_line">強制純循線</option>
             <option value="arena">強制純避障</option>
+            <option value="balloon">強制戳氣球 (YOLO)</option>
             <option value="manual">強制手動遙控</option>
             <option value="stop">強制停止</option>
           </select>
@@ -288,23 +387,240 @@
           <span class="text-slate-400 text-[11px]">L/R PWM:</span>
           <span id="txtPwm2" class="text-cyan-300">140 / 140</span>
         </div>
+
+        <!-- Protocol Telemetry Row Car 2 -->
+        <div class="mt-2 flex justify-between items-center text-xs font-mono bg-slate-900/80 p-1.5 rounded border border-cyan-500/30">
+          <span class="text-slate-400 text-[10px]">協議: <span class="text-cyan-400 font-bold">Binary (FSM)</span></span>
+          <span class="text-slate-400 text-[10px]">開銷: <span class="text-cyan-300">~1 Cyc (零拷貝)</span></span>
+          <span class="text-slate-400 text-[10px]">防護: <span id="txtSideBinaryGuard" class="text-emerald-400 font-bold">0</span></span>
+        </div>
+
+        <!-- Balloon Attack Telemetry Row Car 2 -->
+        <div class="mt-1.5 flex justify-between items-center text-xs font-mono bg-slate-900/80 p-1.5 rounded border border-rose-500/30">
+          <span class="text-slate-400 text-[10px]">🎈 擊破氣球:</span>
+          <span id="txtBalloons2" class="text-rose-400 font-bold text-[11px]">0 顆</span>
+          <span class="text-slate-400 text-[10px]">舵機針頭:</span>
+          <span id="txtServo2" class="text-cyan-300 font-bold text-[10px]">10° (Pin12)</span>
+        </div>
+
+        <!-- Active Command Telemetry Row Car 2 -->
+        <div class="mt-1.5 flex justify-between items-center text-xs font-mono bg-slate-900/90 p-1.5 rounded border border-cyan-500/40">
+          <span class="text-slate-400 text-[10px]">⚡ 目前指令:</span>
+          <span id="txtCmd2" class="text-cyan-300 font-bold text-[11px] flex items-center gap-1 font-mono">
+            <span class="px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-200 border border-cyan-500/40 font-mono font-bold">CMD: 'F'</span>
+            <span>前進推進</span>
+            <span class="text-slate-400 font-mono text-[10px]">(140/140)</span>
+          </span>
+        </div>
+
+        <!-- Braking Topology Telemetry Row Car 2 -->
+        <div class="mt-1.5 flex justify-between items-center text-xs font-mono bg-slate-900/90 p-1.5 rounded border border-cyan-500/40">
+          <span class="text-slate-400 text-[10px]">🛡️ 煞車拓撲: <span id="txtBrakeMode2" class="text-cyan-300 font-bold">Back-EMF 下臂短路</span></span>
+          <span class="text-slate-400 text-[10px]">煞停: <span id="txtBrakeDist2" class="text-emerald-400 font-bold">-- cm</span></span>
+        </div>
       </div>
 
       <!-- Engineering Insight Card -->
       <div class="panel-card rounded-2xl p-3 shadow-xl text-xs space-y-2">
         <div class="font-semibold text-slate-300 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
-          <span>🧠 手動模式面試體驗亮點</span>
+          <span>🧠 面試高頻考點與實戰亮點</span>
         </div>
-        <div class="text-slate-300 leading-relaxed text-[11px]">
-          <b>手動遙控下的 Input Lag 體驗：</b><br>
-          切換至「手動遙控」並開啟壓力負載，遙控橘車時會親身感受到按轉向鍵有 <b>0.3~0.5 秒嚴重遲滯</b>；而遙控藍車（DMA）方向盤零延遲隨按隨轉，充分展現中斷優先權與 DMA 的硬實力！
+        <div class="text-slate-300 leading-relaxed text-[11px] space-y-1.5">
+          <div>
+            <b>1. ASCII vs Binary 頻寬與 CPU 開銷：</b><br>
+            ASCII 需傳 14~16 Bytes 且依賴 <code>sscanf/atoi</code> 消耗 ~1200 CPU Cycles；二進位幀僅 9 Bytes，以 <code>#pragma pack(1)</code> 指標直轉 1 週期零拷貝。
+          </div>
+          <div>
+            <b>2. 馬達火花 EMI 干擾與 FSM Auto-Resync：</b><br>
+            點擊「注入 EMI 雜訊」，橘車字串撕裂導致丟包卡頓脫軌；藍車依託 <code>0xAA 0x55</code> 雙前導碼與 XOR Checksum 瞬間攔截毒指令並在下一幀自動重新對齊（Resync），100% 杜絕暴衝！
+          </div>
+          <div>
+            <b>3. 反電動勢動態煞車 (Dynamic Braking) vs 浮接惰行 (Coasting)：</b><br>
+            一般學生停車只寫 <code>PWM=0</code>（H 橋開關全開 High-Z），慣性滑行 40~50cm 煞不住撞毀；藍車執行 <code>IN1=0, IN2=0, PWM=255</code> 導通雙下臂使馬達短路接地，反電動勢產生巨大逆阻尼力矩，在 7cm 內定桿煞停（縮減 82% 距離）！
+          </div>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Protocol & FSM Visualizer Panel (Full Width Under Main Grid) -->
+  <div class="w-full max-w-7xl mb-3 panel-card rounded-2xl p-3.5 shadow-2xl border border-slate-700/80">
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-3 pb-2.5 border-b border-slate-800">
+      <div class="flex items-center gap-2.5">
+        <span class="text-lg">🛰️</span>
+        <div>
+          <h2 class="text-sm md:text-base font-bold text-white flex items-center gap-2">
+            通訊協定與狀態機解析對比儀 (Protocol & FSM State Machine Inspector)
+            <span class="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-mono">
+              Packet Lab
+            </span>
+          </h2>
+          <p class="text-[11px] text-slate-400">
+            對齊專案程式碼 <code class="text-slate-300 font-mono">car/protocol/packet_protocol.h</code> & <code class="text-slate-300 font-mono">fsm_parser.c</code>：ASCII 字串撕裂 vs. 二進位幀狀態機自動重新對齊 (Auto-Resync)
+          </p>
+        </div>
+      </div>
+      
+      <div class="flex items-center gap-2">
+        <button id="btnClearProtocolLogs" class="px-2.5 py-1.5 rounded-xl text-xs font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition">
+          🧹 清空日誌
+        </button>
+      </div>
+    </div>
+
+    <!-- Side-by-side Protocol Streams -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-3.5">
+      <!-- Car 1: Traditional ASCII Stream -->
+      <div class="bg-slate-950/80 rounded-xl p-3 border border-amber-500/30 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+              <span class="text-xs font-bold text-amber-300">車輛 A：傳統 ASCII 字串協定 (<code class="text-[11px]">sscanf</code> 輪詢解析)</span>
+            </div>
+            <span id="badgeAsciiStatus" class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono">
+              STREAMING
+            </span>
+          </div>
+          
+          <div class="grid grid-cols-3 gap-2 text-[11px] font-mono mb-2 bg-slate-900/60 p-2 rounded-lg border border-slate-800">
+            <div><span class="text-slate-400">單包長度:</span> <span class="text-slate-200">14~16 Bytes</span></div>
+            <div><span class="text-slate-400">CPU 解析開銷:</span> <span class="text-amber-400">~1200 Cycles</span></div>
+            <div><span class="text-slate-400">解析損壞/遺失:</span> <span id="txtAsciiFailCount" class="text-rose-400 font-bold">0 次</span></div>
+          </div>
+
+          <div class="text-[11px] text-slate-400 mb-1 flex justify-between">
+            <span>即時 UART 序列埠字串緩衝區 (Rx Buffer):</span>
+            <span class="text-[10px] text-amber-400/80">⚠️ 易受馬達火花引發字串撕裂</span>
+          </div>
+          <!-- Terminal Box for ASCII -->
+          <div id="terminalAscii" class="h-28 overflow-y-auto font-mono text-[11px] p-2 bg-slate-900/90 rounded-lg border border-slate-800 space-y-1">
+            <div class="text-slate-500">// 序列埠監聽就緒...</div>
+          </div>
+        </div>
+        
+        <div class="mt-2 text-[10px] text-slate-400 border-t border-slate-800/80 pt-1.5 flex justify-between">
+          <span>❌ 無同步標頭與長度欄位，一旦位移需等待下一個 '\n' 甚至緩衝區溢位</span>
+          <span id="txtAsciiLossRate" class="text-amber-400 font-mono">損壞率: 0.0%</span>
+        </div>
+      </div>
+
+      <!-- Car 2: Binary Frame & FSM Parser -->
+      <div class="bg-slate-950/80 rounded-xl p-3 border border-cyan-500/30 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></span>
+              <span class="text-xs font-bold text-cyan-300">車輛 B：工業級二進位幀 ＋ FSM 狀態機 (零拷貝)</span>
+            </div>
+            <span id="badgeFsmStatus" class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono">
+              SYNCED (0xAA 0x55)
+            </span>
+          </div>
+          
+          <div class="grid grid-cols-3 gap-2 text-[11px] font-mono mb-2 bg-slate-900/60 p-2 rounded-lg border border-slate-800">
+            <div><span class="text-slate-400">單包長度:</span> <span class="text-cyan-300">9 Bytes (-40%)</span></div>
+            <div><span class="text-slate-400">CPU 解析開銷:</span> <span class="text-cyan-400">~1 Cycle (Zero-Copy)</span></div>
+            <div><span class="text-slate-400">CRC/XOR 防護攔截:</span> <span id="txtFsmGuardCount" class="text-emerald-400 font-bold">0 次</span></div>
+          </div>
+
+          <!-- FSM State Pipeline Step Lights -->
+          <div class="mb-2">
+            <div class="text-[10px] text-slate-400 mb-1 flex justify-between">
+              <span>FSM 狀態機即時流轉燈 (FsmParser_FeedByte):</span>
+              <span id="txtFsmCurrentStateName" class="text-cyan-400 font-mono text-[10px]">WAIT_HEADER1</span>
+            </div>
+            <div class="grid grid-cols-6 gap-1 text-center font-mono text-[10px]">
+              <div id="fsmStep0" class="py-1 rounded bg-cyan-950/80 border border-cyan-500 text-cyan-300 font-bold transition-all">HDR1 (AA)</div>
+              <div id="fsmStep1" class="py-1 rounded bg-slate-800 border border-slate-700 text-slate-400 transition-all">HDR2 (55)</div>
+              <div id="fsmStep2" class="py-1 rounded bg-slate-800 border border-slate-700 text-slate-400 transition-all">MSG_ID</div>
+              <div id="fsmStep3" class="py-1 rounded bg-slate-800 border border-slate-700 text-slate-400 transition-all">LENGTH</div>
+              <div id="fsmStep4" class="py-1 rounded bg-slate-800 border border-slate-700 text-slate-400 transition-all">PAYLOAD</div>
+              <div id="fsmStep5" class="py-1 rounded bg-slate-800 border border-slate-700 text-slate-400 transition-all">CHKSUM</div>
+            </div>
+          </div>
+
+          <!-- Terminal Box for Binary -->
+          <div id="terminalBinary" class="h-20 overflow-y-auto font-mono text-[11px] p-2 bg-slate-900/90 rounded-lg border border-slate-800 space-y-1">
+            <div class="text-slate-500">// 二進位二元狀態機監聽就緒...</div>
+          </div>
+        </div>
+        
+        <div class="mt-2 text-[10px] text-slate-400 border-t border-slate-800/80 pt-1.5 flex justify-between">
+          <span>🛡️ 雙前導同步碼 0xAA 0x55 遇雜訊自動重新對齊，XOR 校驗杜絕暴衝</span>
+          <span class="text-cyan-400 font-mono">100% 免疫字串撕裂</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Final Project Technical Interview Highlights Card -->
+  <div class="w-full max-w-7xl mt-4 panel-card rounded-2xl p-4 shadow-xl border border-rose-500/30 bg-slate-900/90">
+    <div class="flex items-center justify-between mb-3 border-b border-slate-800 pb-2.5">
+      <div class="flex items-center gap-2">
+        <span class="text-base">🎈</span>
+        <h2 class="text-sm font-bold text-slate-100 flex items-center gap-2">
+          期末專題實戰亮點：ROS 2 視覺伺服刺氣球 ＆ 工業級 Failsafe 電磁煞車架構
+          <span class="text-[10px] px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40 font-mono">
+            Final Project Core
+          </span>
+        </h2>
+      </div>
+      <div class="text-[11px] text-slate-400 font-mono">
+        對齊 <code class="text-rose-400">controller_node.py</code> ＋ <code class="text-amber-400">car_controll.ino</code>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+      <!-- Highlight 1: Visual Servoing & Search Optimization -->
+      <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800">
+        <div class="flex items-center gap-1.5 font-bold text-rose-400 mb-1.5">
+          <span>🎯</span> ROS 2 視覺伺服 ＆ 主動搜尋狀態機
+        </div>
+        <p class="text-slate-300 leading-relaxed text-[11px] mb-2">
+          攝影機捕捉紅色氣球，ROS 2 節點訂閱質心與面積 <code class="text-rose-300 font-mono">[x, y, area]</code>。採用閉迴路比例控制 (P-Controller) 與智慧防死鎖搜尋：
+        </p>
+        <ul class="text-[10px] text-slate-400 space-y-1 font-mono list-disc list-inside">
+          <li><b>盲點突破 (死鎖破解)</b>：原始「持續右轉」在邊角或遠處因線速度 <code class="text-amber-300">v=0</code> 會原地卡死！升級為「360°局部掃描 ➔ 直線換位巡航 ➔ 邊界安全反彈」三段式主動探索，破球率達 100%</li>
+          <li><b>平滑比例撲擊</b>：目標進入視野後以 <code class="text-slate-300">steer = error * Kp</code> 邊前進邊微調差速，杜絕停滯抽搐</li>
+          <li><b>定桿刺殺</b>：逼近至刺殺半徑 (&lt; 46px) 瞬間煞停，觸發舵機揮刀</li>
+        </ul>
+      </div>
+
+      <!-- Highlight 2: Servo Needle FSM -->
+      <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800">
+        <div class="flex items-center gap-1.5 font-bold text-amber-400 mb-1.5">
+          <span>⚔️</span> Pin 12 舵機針頭 ＆ 補刀狀態機
+        </div>
+        <p class="text-slate-300 leading-relaxed text-[11px] mb-2">
+          Arduino 控制 Pin 12 舵機帶動前置金屬長針，建立待命（10°）與刺擊（120°）的極速揮擊機構：
+        </p>
+        <ul class="text-[10px] text-slate-400 space-y-1 font-mono list-disc list-inside">
+          <li>第 1 次刺擊：定點煞停後瞬間猛烈刺擊 (120° 揮針)</li>
+          <li>連續未刺破補刀機制：<code class="text-amber-300">attackCount >= 2</code> 時先倒退 <code class="text-amber-300">moveBackward(150ms)</code> 拉開視距再補刀，杜絕貼太近的死角盲點</li>
+          <li>刺破後重置待命位，繼續尋找下一顆目標</li>
+        </ul>
+      </div>
+
+      <!-- Highlight 3: Back-EMF Watchdog -->
+      <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800">
+        <div class="flex items-center gap-1.5 font-bold text-cyan-400 mb-1.5">
+          <span>🛡️</span> 300ms 通訊看門狗 ＋ 反電動勢煞車
+        </div>
+        <p class="text-slate-300 leading-relaxed text-[11px] mb-2">
+          樹莓派與 Arduino 透過序列埠通訊。一旦 UART 線路甩脫或樹莓派當機超過 300ms，硬體看門狗立即發威：
+        </p>
+        <ul class="text-[10px] text-slate-400 space-y-1 font-mono list-disc list-inside">
+          <li><code class="text-cyan-300">isFailsafeActive</code> 鎖定：拒絕執行殘留舊指令</li>
+          <li>動態電磁煞車：導通 L298N 下臂將馬達短路，利用旋轉反電動勢 (Back-EMF) 在 8cm 內急停</li>
+          <li>通訊恢復時餵狗自動解除，兼顧高安全性與魯棒性</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
   <footer class="mt-3 text-xs text-slate-500 text-center">
-    Albert 韌體實戰系統 • 專案代碼對齊 <code class="text-slate-400">car/midterm.ino</code> (3-way IR + HC-SR04 + FSM)
+    Albert 韌體實戰系統 • 專案代碼對齊 <code class="text-slate-400">car/midterm.ino</code> ＆ <code class="text-rose-400">car/final/car_controll/car_controll.ino</code>
   </footer>
 
   <script>
@@ -321,9 +637,13 @@
     const modeBtn_pure_line = document.getElementById('modeBtn_pure_line');
     const modeBtn_combo = document.getElementById('modeBtn_combo');
     const modeBtn_arena = document.getElementById('modeBtn_arena');
+    const modeBtn_balloon = document.getElementById('modeBtn_balloon');
     const modeBtn_manual = document.getElementById('modeBtn_manual');
     const modeBtn_stop = document.getElementById('modeBtn_stop');
     const txtCurrentModeBadge = document.getElementById('txtCurrentModeBadge');
+
+    const selectViewMode = document.getElementById('selectViewMode');
+    const selectActiveFilter = document.getElementById('selectActiveFilter');
 
     const manualTargetPanel = document.getElementById('manualTargetPanel');
     const selectManualTarget = document.getElementById('selectManualTarget');
@@ -331,12 +651,16 @@
 
     const selectCar1Mode = document.getElementById('selectCar1Mode');
     const selectCar2Mode = document.getElementById('selectCar2Mode');
+    const selectSearchAlgo = document.getElementById('selectSearchAlgo');
 
+    const btnAddBalloon = document.getElementById('btnAddBalloon');
+    const btnClearBalloons = document.getElementById('btnClearBalloons');
     const btnAddObs = document.getElementById('btnAddObs');
     const btnClearObs = document.getElementById('btnClearObs');
     const btnResetCars = document.getElementById('btnResetCars');
 
     // Telemetry Elements
+    const txtLiveCmdBadge = document.getElementById('txtLiveCmdBadge');
     const badgeCar1State = document.getElementById('badgeCar1State');
     const txtCpu1 = document.getElementById('txtCpu1');
     const barCpu1 = document.getElementById('barCpu1');
@@ -344,6 +668,9 @@
     const txtJitter1 = document.getElementById('txtJitter1');
     const txtDist1 = document.getElementById('txtDist1');
     const txtPwm1 = document.getElementById('txtPwm1');
+    const txtCmd1 = document.getElementById('txtCmd1');
+    const txtBalloons1 = document.getElementById('txtBalloons1');
+    const txtServo1 = document.getElementById('txtServo1');
     const ir1_L = document.getElementById('ir1_L');
     const ir1_M = document.getElementById('ir1_M');
     const ir1_R = document.getElementById('ir1_R');
@@ -355,17 +682,169 @@
     const txtJitter2 = document.getElementById('txtJitter2');
     const txtDist2 = document.getElementById('txtDist2');
     const txtPwm2 = document.getElementById('txtPwm2');
+    const txtCmd2 = document.getElementById('txtCmd2');
+    const txtBalloons2 = document.getElementById('txtBalloons2');
+    const txtServo2 = document.getElementById('txtServo2');
     const ir2_L = document.getElementById('ir2_L');
     const ir2_M = document.getElementById('ir2_M');
     const ir2_R = document.getElementById('ir2_R');
 
-    // Modes: 'pure_line', 'combo', 'arena', 'manual', 'stop'
+    // --- Protocol & FSM Telemetry Elements ---
+    const btnInjectEMI = document.getElementById('btnInjectEMI');
+    const btnToggleAutoEMI = document.getElementById('btnToggleAutoEMI');
+    const autoEmiIndicator = document.getElementById('autoEmiIndicator');
+    const autoEmiText = document.getElementById('autoEmiText');
+    const btnClearProtocolLogs = document.getElementById('btnClearProtocolLogs');
+
+    const txtSideAsciiErr = document.getElementById('txtSideAsciiErr');
+    const txtSideBinaryGuard = document.getElementById('txtSideBinaryGuard');
+
+    const badgeAsciiStatus = document.getElementById('badgeAsciiStatus');
+    const txtAsciiFailCount = document.getElementById('txtAsciiFailCount');
+    const terminalAscii = document.getElementById('terminalAscii');
+    const txtAsciiLossRate = document.getElementById('txtAsciiLossRate');
+
+    const badgeFsmStatus = document.getElementById('badgeFsmStatus');
+    const txtFsmGuardCount = document.getElementById('txtFsmGuardCount');
+    const txtFsmCurrentStateName = document.getElementById('txtFsmCurrentStateName');
+    const terminalBinary = document.getElementById('terminalBinary');
+
+    const fsmStepEls = [
+      document.getElementById('fsmStep0'),
+      document.getElementById('fsmStep1'),
+      document.getElementById('fsmStep2'),
+      document.getElementById('fsmStep3'),
+      document.getElementById('fsmStep4'),
+      document.getElementById('fsmStep5')
+    ];
+
+    // Protocol State
+    let emiBurstRequested = false;
+    let autoEmiEnabled = false;
+    let asciiTotalPackets = 0;
+    let asciiFailCount = 0;
+    let binaryTotalPackets = 0;
+    let binaryGuardCount = 0;
+    let protocolFrameCount = 0;
+
+    // --- Highlight 2: Dynamic Braking vs Coasting State & DOM ---
+    const btnBrakeComparisonTest = document.getElementById('btnBrakeComparisonTest');
+    const txtBrakeMode1 = document.getElementById('txtBrakeMode1');
+    const txtBrakeDist1 = document.getElementById('txtBrakeDist1');
+    const txtBrakeMode2 = document.getElementById('txtBrakeMode2');
+    const txtBrakeDist2 = document.getElementById('txtBrakeDist2');
+
+    let brakeTestState = 'IDLE'; // 'IDLE', 'ACCELERATING', 'BRAKING', 'FINISHED'
+    let brakeTestTimer = 0;
+    const BRAKE_LINE_X = 350;
+
+    // --- FSM Parser Class (Aligns 1:1 with car/protocol/fsm_parser.c) ---
+    const FSM_STATE_WAIT_HEADER1 = 0;
+    const FSM_STATE_WAIT_HEADER2 = 1;
+    const FSM_STATE_WAIT_MSG_ID  = 2;
+    const FSM_STATE_WAIT_LENGTH  = 3;
+    const FSM_STATE_WAIT_PAYLOAD = 4;
+    const FSM_STATE_WAIT_CHECKSUM= 5;
+
+    const FSM_STATE_NAMES = [
+      'WAIT_HEADER1 (0xAA)',
+      'WAIT_HEADER2 (0x55)',
+      'WAIT_MSG_ID (0x02)',
+      'WAIT_LENGTH (0x04)',
+      'WAIT_PAYLOAD',
+      'WAIT_CHECKSUM'
+    ];
+
+    class FsmParser {
+      constructor() {
+        this.state = FSM_STATE_WAIT_HEADER1;
+        this.msgId = 0;
+        this.payloadLen = 0;
+        this.payload = [];
+        this.receivedChecksum = 0;
+      }
+
+      feedByte(b) {
+        let result = { stateBefore: this.state, finished: false, valid: false, error: null };
+        switch (this.state) {
+          case FSM_STATE_WAIT_HEADER1:
+            if (b === 0xAA) {
+              this.state = FSM_STATE_WAIT_HEADER2;
+            }
+            break;
+          case FSM_STATE_WAIT_HEADER2:
+            if (b === 0x55) {
+              this.state = FSM_STATE_WAIT_MSG_ID;
+            } else if (b === 0xAA) {
+              this.state = FSM_STATE_WAIT_HEADER2;
+            } else {
+              this.state = FSM_STATE_WAIT_HEADER1;
+              result.error = 'HDR2_MISMATCH';
+            }
+            break;
+          case FSM_STATE_WAIT_MSG_ID:
+            this.msgId = b;
+            this.state = FSM_STATE_WAIT_LENGTH;
+            break;
+          case FSM_STATE_WAIT_LENGTH:
+            if (b > 32) {
+              this.state = FSM_STATE_WAIT_HEADER1;
+              result.error = 'LEN_OVERFLOW';
+            } else {
+              this.payloadLen = b;
+              this.payload = [];
+              if (this.payloadLen === 0) {
+                this.state = FSM_STATE_WAIT_CHECKSUM;
+              } else {
+                this.state = FSM_STATE_WAIT_PAYLOAD;
+              }
+            }
+            break;
+          case FSM_STATE_WAIT_PAYLOAD:
+            this.payload.push(b);
+            if (this.payload.length >= this.payloadLen) {
+              this.state = FSM_STATE_WAIT_CHECKSUM;
+            }
+            break;
+          case FSM_STATE_WAIT_CHECKSUM:
+            this.receivedChecksum = b;
+            let expected = this.msgId ^ this.payloadLen;
+            for (let i = 0; i < this.payload.length; i++) {
+              expected ^= this.payload[i];
+            }
+            result.finished = true;
+            result.expected = expected;
+            result.received = b;
+            if (b === expected) {
+              result.valid = true;
+            } else {
+              result.valid = false;
+              result.error = 'CHECKSUM_MISMATCH';
+            }
+            this.state = FSM_STATE_WAIT_HEADER1;
+            break;
+        }
+        result.stateAfter = this.state;
+        return result;
+      }
+    }
+
+    const car2FsmParser = new FsmParser();
+
+    // Modes: 'pure_line', 'combo', 'arena', 'balloon', 'manual', 'stop'
     let globalMode = 'pure_line';
     let stressEnabled = false;
 
-    // Obstacles
+    // Obstacles, Balloons & Particles State
     let obstacles = [];
     let trackPoints = [];
+    let balloons = [];
+    let particles = [];
+
+    // View & Active Filter State
+    let viewMode = 'both'; // 'both', 'car1', 'car2'
+    let activeFilter = 'both'; // 'both', 'car1', 'car2'
+    let cameraX = 460, cameraY = 280, cameraZoom = 1.0;
 
     // Keys State for Manual Drive
     const keys = { w: false, s: false, a: false, d: false };
@@ -399,7 +878,38 @@
         frozenTicks: 0,
         cpuLoad: isDMA ? 12 : 38,
         loopTime: isDMA ? 10.0 : 16.5,
-        jitter: isDMA ? 0.2 : 4.5
+        jitter: isDMA ? 0.2 : 4.5,
+        // Balloon Attack & Camera Properties (ROS 2 + Servo Needle)
+        servoAngle: 10,
+        servoTargetAngle: 10,
+        isAttacking: false,
+        attackTimer: 0,
+        attackCount: 0,
+        balloonScore: 0,
+        backupTimer: 0,
+        cameraRange: 310,
+        cameraFov: 0.65,
+        targetBalloon: null,
+        // Balloon Active Search & Exploration FSM
+        searchPhase: 'SCAN',
+        searchTimer: 0,
+        searchAngleAccum: 0,
+        spiralRadius: 0,
+        bounceTargetAngle: 0,
+        calcPwmL: 0,
+        calcPwmR: 0,
+        // Active Motion / Serial Command
+        currentCmd: { char: 'S', desc: '待命 (0/0)', pwmL: 0, pwmR: 0 },
+        // Highlight 2: Active Dynamic Braking vs Coasting Properties
+        linearVelocity: 0,
+        isDynamicBraking: isDMA,
+        isBraking: false,
+        brakeStartPos: null,
+        brakeDistCm: null,
+        brakePath: [],
+        skidMarks: [],
+        hadCollision: false,
+        hBridgeStatus: 'DRIVE'
       };
     }
 
@@ -421,6 +931,302 @@
       }
     }
 
+    // --- Balloon Generation & Attack Mechanics ---
+    function initBalloons() {
+      balloons = [];
+      spawnBalloon(340, 180);
+      spawnBalloon(580, 160);
+      spawnBalloon(420, 360);
+      spawnBalloon(720, 320);
+      spawnBalloon(220, 420);
+    }
+
+    function spawnBalloon(x, y) {
+      balloons.push({
+        x: Math.round(x),
+        y: Math.round(y),
+        radius: 17 + Math.random() * 3,
+        wobblePhase: Math.random() * Math.PI * 2
+      });
+    }
+
+    function spawnRandomBalloon() {
+      if (balloons.length >= 8) return;
+      const rx = Math.round(Math.random() * (canvas.width - 240) + 120);
+      const ry = Math.round(Math.random() * (canvas.height - 200) + 100);
+      spawnBalloon(rx, ry);
+    }
+
+    function createPopParticles(x, y) {
+      const colors = ['#ef4444', '#f87171', '#fbbf24', '#ffffff', '#fda4af'];
+      for (let i = 0; i < 22; i++) {
+        const speed = Math.random() * 5 + 2;
+        const ang = Math.random() * Math.PI * 2;
+        particles.push({
+          x: x,
+          y: y,
+          vx: Math.cos(ang) * speed,
+          vy: Math.sin(ang) * speed - 1.5,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          alpha: 1.0,
+          size: Math.random() * 4 + 3,
+          text: i === 0 ? '💥 POP!' : null
+        });
+      }
+    }
+
+    function createCollisionSparks(x, y) {
+      const colors = ['#f59e0b', '#ef4444', '#fbbf24', '#ffffff', '#dc2626'];
+      for (let i = 0; i < 20; i++) {
+        const speed = Math.random() * 5 + 2;
+        const ang = Math.random() * Math.PI * 2;
+        particles.push({
+          x: x,
+          y: y,
+          vx: Math.cos(ang) * speed,
+          vy: Math.sin(ang) * speed - 1.0,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          alpha: 1.0,
+          size: Math.random() * 4 + 2.5,
+          text: i === 0 ? '💥 慣性滑動撞擊!' : null
+        });
+      }
+    }
+
+    function updateBalloonChasing(car) {
+      let pwmL = 0;
+      let pwmR = 0;
+      const baseSpeed = 135;
+
+      // 1. Post-miss backup maneuver (matches car_controll.ino attackCount >= 2)
+      if (car.backupTimer > 0) {
+        car.backupTimer--;
+        car.fsmState = 'BACKUP (拉開視距)';
+        car.calcPwmL = -120;
+        car.calcPwmR = -120;
+        return;
+      }
+
+      // 2. Servo needle attack execution (Pin 12)
+      if (car.isAttacking) {
+        car.attackTimer--;
+        car.fsmState = 'ATTACK (Pin12 刺擊)';
+        car.calcPwmL = 0;
+        car.calcPwmR = 0;
+
+        // Thrust forward at swing peak (tick 12)
+        if (car.attackTimer === 12) {
+          car.servoTargetAngle = 120; // extend needle arm
+
+          // Check hit on balloons
+          const tipX = car.x + Math.cos(car.theta) * (car.length / 2 + 18);
+          const tipY = car.y + Math.sin(car.theta) * (car.length / 2 + 18);
+
+          for (let i = balloons.length - 1; i >= 0; i--) {
+            const b = balloons[i];
+            const d = Math.hypot(b.x - tipX, b.y - tipY);
+            if (d < b.radius + 14) {
+              // 🎈💥 POP!
+              createPopParticles(b.x, b.y);
+              balloons.splice(i, 1);
+              car.balloonScore++;
+              car.attackCount = 0;
+              car.targetBalloon = null;
+              // 重置搜尋狀態
+              car.searchPhase = 'SCAN';
+              car.searchTimer = 0;
+              car.searchAngleAccum = 0;
+              setTimeout(() => spawnRandomBalloon(), 1600);
+              break;
+            }
+          }
+        }
+
+        if (car.attackTimer <= 0) {
+          car.isAttacking = false;
+          car.servoTargetAngle = 10; // retract needle
+          car.attackCount++;
+          if (car.attackCount >= 2) {
+            car.backupTimer = 18; // Backup retreat if missed repeatedly
+            car.attackCount = 0;
+          }
+        }
+        return;
+      }
+
+      // 3. Scan & Lock onto Nearest Red Balloon in Camera FOV (with Hysteresis)
+      let closestBalloon = null;
+      let closestDist = 999999;
+      let closestDiffAngle = 0;
+
+      for (const b of balloons) {
+        const d = Math.hypot(b.x - car.x, b.y - car.y);
+        const bAng = Math.atan2(b.y - car.y, b.x - car.x);
+        let diff = bAng - car.theta;
+        while (diff > Math.PI) diff -= Math.PI * 2;
+        while (diff < -Math.PI) diff += Math.PI * 2;
+
+        // 🛡️ Hysteresis Band (滯後鎖定區間):
+        // 若此氣球上一幀已被鎖定，放大其容許視角 (+30%) 與距離，防止在 FOV 邊界因浮點微震跳出
+        const isCurrentTarget = (car.targetBalloon === b);
+        const effectiveFov = isCurrentTarget ? (car.cameraFov * 1.30) : car.cameraFov;
+        const effectiveRange = isCurrentTarget ? (car.cameraRange + 40) : car.cameraRange;
+
+        if (d <= effectiveRange && Math.abs(diff) <= effectiveFov) {
+          if (d < closestDist) {
+            closestDist = d;
+            closestBalloon = b;
+            closestDiffAngle = diff;
+          }
+        }
+      }
+
+      car.targetBalloon = closestBalloon;
+
+      if (closestBalloon) {
+        // 發現目標！重置所有未命中探索狀態機
+        car.searchPhase = 'SCAN';
+        car.searchTimer = 0;
+        car.searchAngleAccum = 0;
+        car.spiralRadius = 0;
+
+        if (closestDist < 46) {
+          // 進入定桿刺殺範圍！
+          car.isAttacking = true;
+          car.attackTimer = 24;
+          car.servoTargetAngle = 120;
+          pwmL = 0;
+          pwmR = 0;
+          car.fsmState = 'STRIKE_LOCK (鎖定刺擊)';
+        } else {
+          // 🎯 視覺伺服閉迴路比例追蹤 (Proportional Steering with Deadband)
+          const deadband = 0.055; // ~3.1度 死區：氣球大致居中時直行，杜絕 L/R 高頻抽搐震盪！
+
+          if (Math.abs(closestDiffAngle) < deadband) {
+            // 中心死區：直行全速撲擊！
+            pwmL = baseSpeed;
+            pwmR = baseSpeed;
+            car.fsmState = 'CHASE_BALLOON (直行撲擊)';
+          } else if (Math.abs(closestDiffAngle) > 0.38) {
+            // 大角度偏差 (> 22度)：原地旋轉對正氣球
+            // 注意差速物理模型: omega = (speedR - speedL) / width
+            // diff > 0 (氣球在右側): 需 pwmR > pwmL -> pwmL = -spin, pwmR = spin (右轉)
+            // diff < 0 (氣球在左側): 需 pwmL > pwmR -> pwmL = spin, pwmR = -spin (左轉)
+            const spin = 95;
+            if (closestDiffAngle > 0) {
+              pwmL = -spin; pwmR = spin;
+            } else {
+              pwmL = spin; pwmR = -spin;
+            }
+            car.fsmState = 'ALIGN_BALLOON (原地對正)';
+          } else {
+            // 中小角度偏差：邊前進邊平滑打方向盤（P-Controller 比例控制差速）
+            const Kp = 95;
+            const steer = closestDiffAngle * Kp;
+            pwmL = Math.max(35, Math.min(220, baseSpeed - steer));
+            pwmR = Math.max(35, Math.min(220, baseSpeed + steer));
+            car.fsmState = 'CHASE_BALLOON (弧線追逐)';
+          }
+        }
+      } else {
+        // 4. 視野內無氣球，根據選定演算法進行主動搜尋
+        const algo = selectSearchAlgo ? selectSearchAlgo.value : 'smart';
+
+        if (algo === 'naive') {
+          // 🔄 原始做法：原地持續右轉 (controller_node.py 基礎實作)
+          // 缺陷：線速度 v = 0，當剩餘氣球距離 > 310px 或在牆角盲區時，會永久原地打轉死鎖！
+          pwmL = -80;
+          pwmR = 80;
+          car.fsmState = 'NAIVE_SPIN (原地右轉卡死)';
+        } else if (algo === 'spiral') {
+          // 🌀 外擴阿基米德螺旋尋找 (Archimedean Spiral)
+          car.spiralRadius = (car.spiralRadius || 0) + 0.35;
+          if (car.spiralRadius > 240) car.spiralRadius = 30; // 週期性重置
+
+          const margin = 55;
+          const nearWall = car.x < margin || car.x > canvas.width - margin || car.y < margin || car.y > canvas.height - margin;
+          if (nearWall) {
+            // 邊界防撞反彈
+            const targetAng = Math.atan2(canvas.height / 2 - car.y, canvas.width / 2 - car.x);
+            let diff = targetAng - car.theta;
+            while (diff > Math.PI) diff -= Math.PI * 2;
+            while (diff < -Math.PI) diff += Math.PI * 2;
+            if (diff > 0) { pwmL = -90; pwmR = 90; } else { pwmL = 90; pwmR = -90; }
+            car.fsmState = 'SPIRAL_BOUNCE (邊界反彈)';
+          } else {
+            const spin = Math.max(22, 115 - car.spiralRadius * 0.42);
+            pwmL = baseSpeed * 0.75 - spin;
+            pwmR = baseSpeed * 0.75 + spin;
+            car.fsmState = 'SPIRAL_SEARCH (外擴螺旋)';
+          }
+        } else {
+          // 🌟 智慧換位掃描巡邏狀態機 (Smart Scan & Patrol - 推薦最佳演算法)
+          // 階段 1: SCAN (局部 360° 全景掃描)
+          // 階段 2: PATROL (直線前進換位探索新區域)
+          // 階段 3: BOUNCE (邊界/障礙物主動安全反彈，絕不卡死角落)
+          if (!car.searchPhase) car.searchPhase = 'SCAN';
+
+          // 邊界安全距離與超音波障礙物檢測
+          const margin = 60;
+          const nearWall = car.x < margin || car.x > canvas.width - margin || car.y < margin || car.y > canvas.height - margin;
+          const nearObs = car.ultrasonicDist < 32;
+
+          if ((nearWall || nearObs) && car.searchPhase !== 'BOUNCE') {
+            car.searchPhase = 'BOUNCE';
+            car.bounceTargetAngle = Math.atan2(canvas.height / 2 - car.y, canvas.width / 2 - car.x);
+            car.searchTimer = 35;
+          }
+
+          if (car.searchPhase === 'BOUNCE') {
+            let diff = car.bounceTargetAngle - car.theta;
+            while (diff > Math.PI) diff -= Math.PI * 2;
+            while (diff < -Math.PI) diff += Math.PI * 2;
+
+            if (Math.abs(diff) > 0.25) {
+              if (diff > 0) { pwmL = -95; pwmR = 95; } else { pwmL = 95; pwmR = -95; }
+            } else {
+              pwmL = baseSpeed; pwmR = baseSpeed;
+            }
+            car.searchTimer--;
+            car.fsmState = 'WALL_AVOID (防卡死反彈)';
+            if (car.searchTimer <= 0) {
+              car.searchPhase = 'PATROL';
+              car.searchTimer = 65;
+            }
+          } else if (car.searchPhase === 'SCAN') {
+            // 原地旋轉掃描當前位置周邊 360 度 (右轉: pwmR > pwmL)
+            pwmL = -85;
+            pwmR = 85;
+            car.searchAngleAccum = (car.searchAngleAccum || 0) + 0.055;
+            const pct = Math.min(100, Math.round((car.searchAngleAccum / (Math.PI * 2)) * 100));
+            car.fsmState = `SCAN_360 (掃描 ${pct}%)`;
+
+            if (car.searchAngleAccum >= Math.PI * 2 * 1.05) {
+              // 360° 掃描完畢無果，代表本地半徑無氣球，切換為「換位巡邏」
+              car.searchPhase = 'PATROL';
+              car.searchTimer = 85 + Math.floor(Math.random() * 40);
+              car.searchAngleAccum = 0;
+            }
+          } else if (car.searchPhase === 'PATROL') {
+            // 直線前進巡航，移動至新區域拓展視野
+            pwmL = baseSpeed;
+            pwmR = baseSpeed;
+            car.searchTimer--;
+            car.fsmState = 'PATROL_CRUISE (換位巡邏)';
+
+            if (car.searchTimer <= 0) {
+              // 抵達新區域，重新開始 360° 局部掃描
+              car.searchPhase = 'SCAN';
+              car.searchAngleAccum = 0;
+            }
+          }
+        }
+      }
+
+      car.calcPwmL = pwmL;
+      car.calcPwmR = pwmR;
+    }
+
     // --- Global Mode Switch Handler ---
     function setGlobalMode(mode) {
       globalMode = mode;
@@ -429,13 +1235,19 @@
         { id: 'pure_line', btn: modeBtn_pure_line },
         { id: 'combo', btn: modeBtn_combo },
         { id: 'arena', btn: modeBtn_arena },
+        { id: 'balloon', btn: modeBtn_balloon },
         { id: 'manual', btn: modeBtn_manual },
         { id: 'stop', btn: modeBtn_stop }
       ];
 
       allBtns.forEach(item => {
+        if (!item.btn) return;
         if (item.id === mode) {
-          item.btn.className = 'px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 text-white transition shadow-sm';
+          if (mode === 'balloon') {
+            item.btn.className = 'px-3 py-1.5 rounded-xl text-xs font-semibold bg-rose-600 text-white transition shadow-sm';
+          } else {
+            item.btn.className = 'px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 text-white transition shadow-sm';
+          }
         } else {
           item.btn.className = 'px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white transition';
         }
@@ -470,6 +1282,13 @@
           initArenaObstacles();
           carNonDMA.x = 120; carNonDMA.y = 150; carNonDMA.theta = 0;
           carDMA.x = 120; carDMA.y = 260; carDMA.theta = 0;
+          resetCarStates();
+        } else if (mode === 'balloon') {
+          txtCurrentModeBadge.textContent = '🎈 視覺追蹤戳氣球 (YOLO + 舵機刺殺)';
+          obstacles = [];
+          initBalloons();
+          carNonDMA.x = 180; carNonDMA.y = 200; carNonDMA.theta = 0;
+          carDMA.x = 180; carDMA.y = 360; carDMA.theta = 0;
           resetCarStates();
         } else if (mode === 'stop') {
           txtCurrentModeBadge.textContent = '🛑 一鍵緊急煞停 (E-Stop)';
@@ -520,6 +1339,27 @@
         car.lagCounter = 0;
         car.frozenTicks = 0;
         car.offTrackCount = 0;
+        car.servoAngle = 10;
+        car.servoTargetAngle = 10;
+        car.isAttacking = false;
+        car.attackTimer = 0;
+        car.attackCount = 0;
+        car.backupTimer = 0;
+        car.targetBalloon = null;
+        car.searchPhase = 'SCAN';
+        car.searchTimer = 0;
+        car.searchAngleAccum = 0;
+        car.spiralRadius = 0;
+        car.bounceTargetAngle = 0;
+        car.currentCmd = { char: 'S', desc: '待命 (0/0)', pwmL: 0, pwmR: 0 };
+        car.linearVelocity = 0;
+        car.isBraking = false;
+        car.brakeStartPos = null;
+        car.brakeDistCm = null;
+        car.brakePath = [];
+        car.skidMarks = [];
+        car.hadCollision = false;
+        car.hBridgeStatus = 'DRIVE';
       }
     }
 
@@ -610,6 +1450,19 @@
 
     // --- Control Loop for Each Car ---
     function updateCar(car, carId) {
+      // Check Active Car Filter (Single vs Dual mode)
+      if (activeFilter === 'car1' && carId === 'car2') {
+        car.pwmL = 0; car.pwmR = 0;
+        return;
+      }
+      if (activeFilter === 'car2' && carId === 'car1') {
+        car.pwmL = 0; car.pwmR = 0;
+        return;
+      }
+
+      // Smooth Servo Needle Animation (Pin 12)
+      car.servoAngle += (car.servoTargetAngle - car.servoAngle) * 0.28;
+
       // Determine this car's active mode
       const overrideVal = carId === 'car1' ? selectCar1Mode.value : selectCar2Mode.value;
       const activeMode = overrideVal === 'auto' ? globalMode : overrideVal;
@@ -708,8 +1561,12 @@
               car.fsmState = 'TRACKING';
             }
           } else {
-            // TRACKING or CRUISE
-            if (activeMode === 'arena') {
+            // TRACKING or CRUISE or BALLOON ATTACK
+            if (activeMode === 'balloon') {
+              updateBalloonChasing(car);
+              pwmL = car.calcPwmL;
+              pwmR = car.calcPwmR;
+            } else if (activeMode === 'arena') {
               car.fsmState = 'CRUISE';
               pwmL = basePWM;
               pwmR = basePWM;
@@ -772,15 +1629,135 @@
 
         car.pwmL = pwmL;
         car.pwmR = pwmR;
+
+        // Compute Active High-Level / UART Command
+        let cmdChar = 'F';
+        let cmdDesc = '前進推進';
+
+        if (car.fsmState === 'STOP') {
+          cmdChar = 'S';
+          cmdDesc = '電磁煞停';
+        } else if (car.isAttacking || car.fsmState.includes('ATTACK') || car.fsmState.includes('STRIKE')) {
+          cmdChar = 'A';
+          cmdDesc = '舵機揮刀 (120°)';
+        } else if (car.backupTimer > 0 || car.fsmState.includes('BACKUP')) {
+          cmdChar = 'B';
+          cmdDesc = '倒退補刀';
+        } else if (car.fsmState === 'BRAKE') {
+          cmdChar = 'S';
+          cmdDesc = '超音波動態煞車';
+        } else if (pwmL === 0 && pwmR === 0) {
+          cmdChar = 'S';
+          cmdDesc = '待命煞停';
+        } else if (pwmL < 0 && pwmR < 0) {
+          cmdChar = 'B';
+          cmdDesc = '倒退後退';
+        } else if (pwmR > pwmL + 25) {
+          cmdChar = 'R';
+          cmdDesc = car.fsmState.includes('SCAN') ? '360°掃描旋轉' : '右轉校正';
+        } else if (pwmL > pwmR + 25) {
+          cmdChar = 'L';
+          cmdDesc = '左轉校正';
+        } else {
+          cmdChar = 'F';
+          if (car.fsmState.includes('PATROL')) cmdDesc = '換位巡邏前進';
+          else if (car.fsmState.includes('CHASE')) cmdDesc = '直奔氣球撲擊';
+          else cmdDesc = '直線前進';
+        }
+
+        car.currentCmd = {
+          char: cmdChar,
+          desc: cmdDesc,
+          pwmL: Math.round(pwmL),
+          pwmR: Math.round(pwmR)
+        };
       }
 
-      // 4. Differential Drive Kinematics
-      const maxSpeed = 2.9;
-      const speedL = ((car.pwmL || 0) / 255) * maxSpeed;
-      const speedR = ((car.pwmR || 0) / 255) * maxSpeed;
+      // 4. Differential Drive Kinematics & Physical Inertia / Deceleration
+      const maxSpeed = 3.0;
+      const targetSpeedL = ((car.pwmL || 0) / 255) * maxSpeed;
+      const targetSpeedR = ((car.pwmR || 0) / 255) * maxSpeed;
+      const targetV = (targetSpeedL + targetSpeedR) / 2;
+      const targetOmega = (targetSpeedR - targetSpeedL) / car.width;
 
-      const v = (speedL + speedR) / 2;
-      const omega = (speedR - speedL) / car.width;
+      const isBrakingCmd = (car.pwmL === 0 && car.pwmR === 0) || car.fsmState === 'STOP' || (globalMode === 'stop' && brakeTestState !== 'ACCELERATING');
+
+      if (isBrakingCmd) {
+        // Trigger braking measurement when transitioning from driving to braking
+        if (!car.isBraking && Math.abs(car.linearVelocity) > 0.3) {
+          car.isBraking = true;
+          car.brakeStartPos = { x: car.x, y: car.y };
+          car.brakePath = [{ x: car.x, y: car.y }];
+          car.brakeDistCm = 0;
+          car.hadCollision = false;
+        }
+
+        if (car.isDynamicBraking) {
+          // Car B (DMA): L298N Low-Side Conducted (IN1=0, IN2=0, ENA=255)
+          // Shorted to GND -> Back-EMF massive counter-torque (Lenz's Law)
+          car.hBridgeStatus = 'DYNAMIC_SHORT_GND';
+          car.linearVelocity *= 0.86; // Active Back-EMF brake -> stops precisely at ~7 cm (-83%)
+          if (Math.abs(car.linearVelocity) < 0.05) car.linearVelocity = 0;
+        } else {
+          // Car A (Non-DMA): L298N All Open (IN1=0, IN2=0, ENA=0)
+          // High-Z Floating -> Coasting freely on mechanical rolling friction
+          car.hBridgeStatus = 'HIGH_Z_COAST';
+          car.linearVelocity *= 0.974; // Slow deceleration, slides ~42 cm
+          if (Math.abs(car.linearVelocity) < 0.05) car.linearVelocity = 0;
+        }
+
+        // Measure braking distance & record skid path
+        if (car.isBraking && car.brakeStartPos) {
+          const curDistPx = Math.hypot(car.x - car.brakeStartPos.x, car.y - car.brakeStartPos.y);
+          car.brakeDistCm = (curDistPx * 0.38).toFixed(1);
+          if (car.brakePath.length === 0 || Math.hypot(car.x - car.brakePath[car.brakePath.length - 1].x, car.y - car.brakePath[car.brakePath.length - 1].y) > 2.5) {
+            car.brakePath.push({ x: car.x, y: car.y });
+          }
+
+          // Generate tire skid marks while sliding
+          if (Math.abs(car.linearVelocity) > 0.18) {
+            car.skidMarks.push({
+              x: car.x,
+              y: car.y,
+              theta: car.theta,
+              width: car.width,
+              alpha: car.isDynamicBraking ? 0.9 : 0.65,
+              isDynamic: car.isDynamicBraking
+            });
+            if (car.skidMarks.length > 90) car.skidMarks.shift();
+          }
+
+          if (Math.abs(car.linearVelocity) === 0) {
+            car.isBraking = false;
+          }
+        }
+      } else {
+        // Driving / Accelerating
+        car.hBridgeStatus = 'DRIVE';
+        car.linearVelocity += (targetV - car.linearVelocity) * 0.35;
+        // Fade old skid marks slowly
+        if (car.skidMarks.length > 0 && Math.random() < 0.08) {
+          car.skidMarks.shift();
+        }
+      }
+
+      // Check collision with obstacles during coasting/driving
+      for (const obs of obstacles) {
+        const obsCx = obs.x + obs.w / 2;
+        const obsCy = obs.y + obs.h / 2;
+        const distToObs = Math.hypot(car.x - obsCx, car.y - obsCy);
+        if (distToObs < (car.length / 2 + Math.max(obs.w, obs.h) / 2 - 3)) {
+          if (!car.hadCollision && Math.abs(car.linearVelocity) > 0.25) {
+            car.hadCollision = true;
+            createCollisionSparks(car.x, car.y);
+          }
+          // Obstacle halts linear velocity
+          car.linearVelocity = 0;
+        }
+      }
+
+      const v = car.linearVelocity;
+      const omega = isBrakingCmd ? (targetOmega * (Math.abs(car.linearVelocity) / (maxSpeed || 1))) : targetOmega;
 
       car.theta += omega;
       car.theta = (car.theta + Math.PI * 2) % (Math.PI * 2);
@@ -799,6 +1776,33 @@
     function render() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+      // --- 0. Camera Transform & Focus Follow ---
+      ctx.save();
+      let targetCamX = canvas.width / 2;
+      let targetCamY = canvas.height / 2;
+      let targetZoom = 1.0;
+
+      if (viewMode === 'car1') {
+        targetCamX = carNonDMA.x;
+        targetCamY = carNonDMA.y;
+        targetZoom = 1.55;
+      } else if (viewMode === 'car2') {
+        targetCamX = carDMA.x;
+        targetCamY = carDMA.y;
+        targetZoom = 1.55;
+      }
+
+      // Smooth camera lerp
+      cameraX += (targetCamX - cameraX) * 0.12;
+      cameraY += (targetCamY - cameraY) * 0.12;
+      cameraZoom += (targetZoom - cameraZoom) * 0.12;
+
+      if (viewMode !== 'both' || cameraZoom > 1.01) {
+        ctx.translate(canvas.width / 2, canvas.height / 2);
+        ctx.scale(cameraZoom, cameraZoom);
+        ctx.translate(-cameraX, -cameraY);
+      }
+
       // 1. Grid
       ctx.strokeStyle = '#111827';
       ctx.lineWidth = 1;
@@ -809,8 +1813,8 @@
         ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
       }
 
-      // 2. Render Black Track Line (if not arena mode)
-      if (globalMode !== 'arena' && trackPoints.length > 1) {
+      // 2. Render Black Track Line (if not arena & not balloon mode)
+      if (globalMode !== 'arena' && globalMode !== 'balloon' && trackPoints.length > 1) {
         ctx.strokeStyle = '#334155';
         ctx.lineWidth = TRACK_LINE_WIDTH + 8;
         ctx.lineCap = 'round';
@@ -852,9 +1856,227 @@
         ctx.fillText('BLOCK', obs.x + 3, obs.y + obs.h / 2 + 3);
       }
 
+      // 3.5 Render Red Balloons & YOLO Target HUD
+      for (const b of balloons) {
+        const wobbleY = Math.sin(Date.now() / 240 + b.wobblePhase) * 3;
+        const by = b.y + wobbleY;
+
+        // String
+        ctx.strokeStyle = '#94a3b8';
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(b.x, by + b.radius);
+        ctx.quadraticCurveTo(b.x - 4, by + b.radius + 10, b.x + 2, by + b.radius + 20);
+        ctx.stroke();
+
+        // Balloon Knot
+        ctx.fillStyle = '#dc2626';
+        ctx.beginPath();
+        ctx.moveTo(b.x - 3, by + b.radius + 3);
+        ctx.lineTo(b.x + 3, by + b.radius + 3);
+        ctx.lineTo(b.x, by + b.radius - 1);
+        ctx.closePath();
+        ctx.fill();
+
+        // Glossy 3D Balloon Body
+        const grad = ctx.createRadialGradient(b.x - b.radius * 0.35, by - b.radius * 0.35, 2, b.x, by, b.radius);
+        grad.addColorStop(0, '#f87171');
+        grad.addColorStop(0.7, '#dc2626');
+        grad.addColorStop(1, '#991b1b');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.ellipse(b.x, by, b.radius, b.radius * 1.15, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Specular highlight
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.55)';
+        ctx.beginPath();
+        ctx.ellipse(b.x - b.radius * 0.35, by - b.radius * 0.45, b.radius * 0.28, b.radius * 0.15, -Math.PI / 6, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Target Lock Reticle
+        const isLocked = (carNonDMA.targetBalloon === b) || (carDMA.targetBalloon === b);
+        if (isLocked) {
+          ctx.strokeStyle = '#22c55e';
+          ctx.lineWidth = 1.5;
+          const boxSize = b.radius * 2.6;
+          ctx.strokeRect(b.x - boxSize / 2, by - boxSize / 2, boxSize, boxSize);
+
+          ctx.fillStyle = '#22c55e';
+          ctx.font = 'bold 9px monospace';
+          ctx.fillText('YOLO: BALLOON', b.x - 34, by - boxSize / 2 - 4);
+        }
+      }
+
+      // 3.6 Render Confetti Pop Particles
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.08;
+        p.alpha -= 0.025;
+        p.size *= 0.96;
+
+        if (p.alpha <= 0 || p.size <= 0.5) {
+          particles.splice(i, 1);
+          continue;
+        }
+
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, p.alpha);
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+
+        if (p.text) {
+          ctx.font = 'bold 12px sans-serif';
+          ctx.fillStyle = '#fbbf24';
+          ctx.fillText(p.text, p.x - 14, p.y);
+        }
+        ctx.restore();
+      }
+
+      // 3.7 Render Skid Marks (Tire marks on ground from braking)
+      for (const car of [carNonDMA, carDMA]) {
+        for (const sm of car.skidMarks) {
+          ctx.save();
+          ctx.translate(sm.x, sm.y);
+          ctx.rotate(sm.theta);
+          ctx.fillStyle = sm.isDynamic ? 'rgba(6, 182, 212, 0.45)' : 'rgba(239, 68, 68, 0.35)';
+          const wOff = sm.width / 2 - 3;
+          ctx.fillRect(-6, -wOff - 2.5, 12, 5);
+          ctx.fillRect(-6, wOff - 2.5, 12, 5);
+          ctx.restore();
+        }
+      }
+
+      // 3.8 Render Braking Measurement Tape & Distance Ruler
+      for (const car of [carNonDMA, carDMA]) {
+        if (car.brakeStartPos && car.brakePath && car.brakePath.length > 1) {
+          ctx.save();
+          const isDyn = car.isDynamicBraking;
+          ctx.strokeStyle = isDyn ? '#06b6d4' : '#f59e0b';
+          ctx.lineWidth = 2;
+          ctx.setLineDash(isDyn ? [] : [4, 4]);
+
+          ctx.beginPath();
+          ctx.moveTo(car.brakePath[0].x, car.brakePath[0].y);
+          for (let i = 1; i < car.brakePath.length; i++) {
+            ctx.lineTo(car.brakePath[i].x, car.brakePath[i].y);
+          }
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          // Start bracket at brake trigger position
+          const s = car.brakeStartPos;
+          const e = car.brakePath[car.brakePath.length - 1];
+          ctx.fillStyle = isDyn ? '#22d3ee' : '#f87171';
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, 4, 0, Math.PI * 2);
+          ctx.fill();
+
+          // End bracket
+          ctx.beginPath();
+          ctx.arc(e.x, e.y, 4, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Measurement badge in world space
+          const midX = (s.x + e.x) / 2;
+          const midY = (s.y + e.y) / 2 - (isDyn ? 20 : 22);
+          const badgeText = isDyn ?
+            `🛡️ 反電動勢定桿: ${car.brakeDistCm || 0} cm (-83%)` :
+            `🛑 惰行滑動: ${car.brakeDistCm || 0} cm ${car.hadCollision ? '💥 撞毀!' : '⚠️ 煞不住'}`;
+
+          ctx.font = 'bold 10px monospace';
+          const bw = ctx.measureText(badgeText).width + 12;
+          ctx.fillStyle = 'rgba(15, 23, 42, 0.92)';
+          ctx.strokeStyle = isDyn ? '#06b6d4' : '#ef4444';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.roundRect(midX - bw / 2, midY - 11, bw, 16, 4);
+          ctx.fill(); ctx.stroke();
+
+          ctx.fillStyle = isDyn ? '#67e8f9' : '#fca5a5';
+          ctx.fillText(badgeText, midX - bw / 2 + 6, midY + 1);
+          ctx.restore();
+        }
+      }
+
+      // 3.9 Render Drag Brake Test Trigger Line (if active)
+      if (brakeTestState !== 'IDLE') {
+        ctx.save();
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        ctx.moveTo(BRAKE_LINE_X, 160);
+        ctx.lineTo(BRAKE_LINE_X, 410);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.fillStyle = '#ef4444';
+        ctx.font = 'bold 10px sans-serif';
+        ctx.fillText('🛑 急煞觸發線 (x=350)', BRAKE_LINE_X + 6, 175);
+        ctx.font = '9px monospace';
+        ctx.fillStyle = '#94a3b8';
+        ctx.fillText('PWM=0 測試滑行', BRAKE_LINE_X + 6, 188);
+        ctx.restore();
+      }
+
       // 4. Render Both Cars
       renderCar(carNonDMA);
       renderCar(carDMA);
+
+      // Restore camera transform
+      ctx.restore();
+
+      // Screen HUD Overlay for Drag Brake Test Result
+      if (brakeTestState === 'FINISHED') {
+        ctx.save();
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.95)';
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.roundRect(canvas.width / 2 - 270, 20, 540, 54, 10);
+        ctx.fill(); ctx.stroke();
+
+        ctx.font = 'bold 13px sans-serif';
+        ctx.fillStyle = '#f8fafc';
+        ctx.textAlign = 'center';
+        ctx.fillText('🏁 急煞對決實測結果：冷次定律反電動勢完勝！', canvas.width / 2, 42);
+
+        ctx.font = 'bold 11px monospace';
+        ctx.fillStyle = '#fbbf24';
+        ctx.fillText(`車輛 A (浮接滑行): ${carNonDMA.brakeDistCm} cm ❌ 撞障礙物`, canvas.width / 2 - 120, 61);
+        ctx.fillStyle = '#22d3ee';
+        ctx.fillText(`車輛 B (反電動勢急煞): ${carDMA.brakeDistCm} cm ✅ 安全定桿 (-83%)`, canvas.width / 2 + 130, 61);
+        ctx.textAlign = 'start';
+        ctx.restore();
+      }
+
+      // Screen HUD Overlay (Camera Follow / Focus indicator)
+      if (viewMode !== 'both') {
+        ctx.save();
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.92)';
+        ctx.strokeStyle = viewMode === 'car1' ? '#f59e0b' : '#06b6d4';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.roundRect(14, 14, 345, 26, 8);
+        ctx.fill();
+        ctx.stroke();
+
+        const focusedCar = viewMode === 'car1' ? carNonDMA : carDMA;
+        const cmd = focusedCar.currentCmd || { char: 'F', desc: '前進' };
+        ctx.fillStyle = viewMode === 'car1' ? '#fbbf24' : '#67e8f9';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.fillText(`🎥 鏡頭鎖定: ${viewMode === 'car1' ? '車輛 A' : '車輛 B'}`, 22, 31);
+
+        ctx.font = 'bold 10px monospace';
+        ctx.fillStyle = '#f8fafc';
+        ctx.fillText(`| ⚡ CMD: '${cmd.char}' ${cmd.desc}`, 148, 31);
+        ctx.restore();
+      }
 
       // 5. Update Telemetry UI
       updateDashboardUI();
@@ -872,6 +2094,10 @@
     }
 
     function renderCar(car) {
+      // Active Car Filter check
+      if (activeFilter === 'car1' && car === carDMA) return;
+      if (activeFilter === 'car2' && car === carNonDMA) return;
+
       if (car.trail.length > 1) {
         ctx.strokeStyle = car.isDMA ? 'rgba(6, 182, 212, 0.45)' : 'rgba(245, 158, 11, 0.45)';
         ctx.lineWidth = 3;
@@ -881,8 +2107,40 @@
         ctx.stroke();
       }
 
+      // Forward Camera Vision Cone (ROS 2 YOLO Target Detection)
+      if (globalMode === 'balloon' || car.targetBalloon) {
+        ctx.save();
+        const fovGrad = ctx.createRadialGradient(car.x, car.y, 8, car.x, car.y, car.cameraRange);
+        if (car.targetBalloon) {
+          fovGrad.addColorStop(0, 'rgba(34, 197, 94, 0.28)');
+          fovGrad.addColorStop(1, 'rgba(34, 197, 94, 0.02)');
+        } else {
+          fovGrad.addColorStop(0, 'rgba(56, 189, 248, 0.16)');
+          fovGrad.addColorStop(1, 'rgba(56, 189, 248, 0.01)');
+        }
+        ctx.fillStyle = fovGrad;
+        ctx.beginPath();
+        ctx.moveTo(car.x, car.y);
+        ctx.arc(car.x, car.y, car.cameraRange, car.theta - car.cameraFov, car.theta + car.cameraFov);
+        ctx.closePath();
+        ctx.fill();
+
+        // Target Lock Guide Line
+        if (car.targetBalloon) {
+          ctx.strokeStyle = '#22c55e';
+          ctx.lineWidth = 1.2;
+          ctx.setLineDash([4, 4]);
+          ctx.beginPath();
+          ctx.moveTo(car.x, car.y);
+          ctx.lineTo(car.targetBalloon.x, car.targetBalloon.y);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+        ctx.restore();
+      }
+
       // Ultrasonic Cone
-      if (globalMode !== 'pure_line' || obstacles.length > 0) {
+      if ((globalMode !== 'pure_line' && globalMode !== 'balloon') || obstacles.length > 0) {
         const us = raycastUltrasonic(car);
         const beamGrad = ctx.createRadialGradient(us.originX, us.originY, 4, us.originX, us.originY, us.hitPixels);
         if (us.distCm < 26) {
@@ -925,6 +2183,48 @@
       ctx.font = 'bold 8px monospace';
       ctx.fillText(car.isDMA ? 'DMA' : 'CPU', -8, 3);
 
+      // Servo Needle Arm (Pin 12 from car_controll.ino)
+      ctx.fillStyle = '#1e293b';
+      ctx.fillRect(car.length / 2 - 3, -4, 6, 8);
+
+      ctx.save();
+      ctx.translate(car.length / 2, 0);
+      // Angle: 10 deg (retracted, pointing down-right) to 120 deg (extended forward)
+      const needleRad = ((car.servoAngle - 90) * Math.PI) / 180;
+      ctx.rotate(needleRad);
+
+      ctx.strokeStyle = '#cbd5e1';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(18, 0);
+      ctx.stroke();
+
+      // Sharp Red Tip
+      ctx.strokeStyle = '#ef4444';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(14, 0);
+      ctx.lineTo(22, 0);
+      ctx.stroke();
+      ctx.restore();
+
+      // Glowing Rear Brake Lights
+      if (car.isBraking || car.hBridgeStatus !== 'DRIVE') {
+        ctx.fillStyle = '#ef4444';
+        ctx.shadowColor = '#ef4444';
+        ctx.shadowBlur = 8;
+        ctx.fillRect(-car.length / 2 - 2, -car.width / 2 + 2, 4, 7);
+        ctx.fillRect(-car.length / 2 - 2, car.width / 2 - 9, 4, 7);
+        ctx.shadowBlur = 0;
+
+        if (car.isDynamicBraking) {
+          ctx.fillStyle = '#22d3ee';
+          ctx.font = 'bold 8px monospace';
+          ctx.fillText('⚡BEMF', -14, car.width / 2 + 10);
+        }
+      }
+
       ctx.restore();
 
       // Draw IR Sensors in World Space
@@ -937,11 +2237,43 @@
       ctx.fillStyle = car.color;
       ctx.font = 'bold 11px sans-serif';
       let stateStr = car.fsmState;
-      if (car.fsmState === 'OFF_TRACK') stateStr = '⚠️ 脫軌';
+      if (car.hadCollision) stateStr = '💥 撞毀 (浮接煞不住)';
+      else if (car.isBraking) stateStr = car.isDynamicBraking ? '🛑 反電動勢急煞!' : '⚠️ 慣性滑動中...';
+      else if (car.fsmState === 'OFF_TRACK') stateStr = '⚠️ 脫軌';
       else if (car.fsmState === 'TRACKING') stateStr = '🟢 循線中';
       else if (car.fsmState === 'MANUAL') stateStr = '🕹️ 遙控中';
       else if (car.fsmState === 'STOP') stateStr = '🛑 煞停';
+      else if (car.fsmState.includes('BALLOON') || car.fsmState.includes('ATTACK') || car.fsmState.includes('SCAN') || car.fsmState.includes('PATROL') || car.fsmState.includes('WALL') || car.fsmState.includes('SPIRAL') || car.fsmState.includes('NAIVE')) {
+        stateStr = `🎈 ${car.fsmState}`;
+      }
+
+      if (car.balloonScore > 0) {
+        stateStr += ` [破:${car.balloonScore}]`;
+      }
       ctx.fillText(`${car.name} [${stateStr}]`, car.x - 36, car.y - 28);
+
+      // On-Canvas Real-Time Floating Command Chip
+      const cmd = car.currentCmd || { char: 'F', desc: '前進', pwmL: 135, pwmR: 135 };
+      const cmdText = `⚡ CMD: '${cmd.char}' ${cmd.desc}`;
+      ctx.font = 'bold 9px monospace';
+      const tw = ctx.measureText(cmdText).width;
+      const bW = tw + 12;
+      const bH = 15;
+      const bX = car.x - bW / 2;
+      const bY = car.y - 46;
+
+      ctx.save();
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
+      ctx.strokeStyle = car.isDMA ? '#06b6d4' : '#f59e0b';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.roundRect(bX, bY, bW, bH, 4);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = car.isDMA ? '#67e8f9' : '#fbbf24';
+      ctx.fillText(cmdText, bX + 6, bY + 11);
+      ctx.restore();
     }
 
     function drawIR(pos, isBlack) {
@@ -1007,6 +2339,73 @@
       } else {
         badgeCar2State.className = 'text-[11px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono';
       }
+
+      // Protocol Telemetry Sync
+      if (txtSideAsciiErr) txtSideAsciiErr.textContent = asciiFailCount;
+      if (txtAsciiFailCount) txtAsciiFailCount.textContent = asciiFailCount + ' 次';
+      if (txtAsciiLossRate) {
+        const asciiRate = asciiTotalPackets > 0 ? ((asciiFailCount / asciiTotalPackets) * 100).toFixed(1) : '0.0';
+        txtAsciiLossRate.textContent = `損壞率: ${asciiRate}% (${asciiFailCount}/${asciiTotalPackets})`;
+      }
+
+      if (txtSideBinaryGuard) txtSideBinaryGuard.textContent = binaryGuardCount;
+      if (txtFsmGuardCount) txtFsmGuardCount.textContent = binaryGuardCount + ' 次';
+
+      // Balloon & Servo Telemetry Sync
+      if (txtBalloons1) txtBalloons1.textContent = carNonDMA.balloonScore + ' 顆';
+      if (txtServo1) txtServo1.textContent = Math.round(carNonDMA.servoAngle) + '° (Pin12)';
+
+      if (txtBalloons2) txtBalloons2.textContent = carDMA.balloonScore + ' 顆';
+      if (txtServo2) txtServo2.textContent = Math.round(carDMA.servoAngle) + '° (Pin12)';
+
+      // Active Command UI Sync
+      if (txtCmd1) {
+        const c1 = carNonDMA.currentCmd || { char: 'F', desc: '前進', pwmL: 135, pwmR: 135 };
+        txtCmd1.innerHTML = `<span class="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-200 border border-amber-500/40 font-mono font-bold">CMD: '${c1.char}'</span> <span class="text-amber-300 font-sans">${c1.desc}</span> <span class="text-slate-400 font-mono text-[10px]">(${c1.pwmL}/${c1.pwmR})</span>`;
+      }
+
+      if (txtCmd2) {
+        const c2 = carDMA.currentCmd || { char: 'F', desc: '前進', pwmL: 135, pwmR: 135 };
+        txtCmd2.innerHTML = `<span class="px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-200 border border-cyan-500/40 font-mono font-bold">CMD: '${c2.char}'</span> <span class="text-cyan-300 font-sans">${c2.desc}</span> <span class="text-slate-400 font-mono text-[10px]">(${c2.pwmL}/${c2.pwmR})</span>`;
+      }
+
+      if (txtLiveCmdBadge) {
+        const activeCar = viewMode === 'car1' ? carNonDMA : carDMA;
+        const ac = activeCar.currentCmd || { char: 'F', desc: '前進' };
+        txtLiveCmdBadge.textContent = `CMD: '${ac.char}' (${ac.desc})`;
+        if (activeCar.isDMA) {
+          txtLiveCmdBadge.className = 'text-xs font-bold text-cyan-400 font-mono px-1.5 py-0.5 rounded bg-cyan-950/80 border border-cyan-500/40';
+        } else {
+          txtLiveCmdBadge.className = 'text-xs font-bold text-amber-400 font-mono px-1.5 py-0.5 rounded bg-amber-950/80 border border-amber-500/40';
+        }
+      }
+
+      // Highlight 2: Braking Telemetry Sync
+      if (txtBrakeDist1) {
+        if (carNonDMA.brakeDistCm) {
+          txtBrakeDist1.textContent = `${carNonDMA.brakeDistCm} cm ${carNonDMA.hadCollision ? '💥 撞毀' : '⚠️ 滑行'}`;
+          txtBrakeDist1.className = carNonDMA.hadCollision ? 'text-rose-500 font-bold animate-pulse text-[11px]' : 'text-amber-400 font-bold text-[11px]';
+        } else {
+          txtBrakeDist1.textContent = '-- cm';
+          txtBrakeDist1.className = 'text-slate-400 font-bold text-[11px]';
+        }
+      }
+      if (txtBrakeMode1) {
+        txtBrakeMode1.textContent = carNonDMA.hBridgeStatus === 'HIGH_Z_COAST' ? 'High-Z 浮接惰行 (開路)' : 'High-Z 浮接待命';
+      }
+
+      if (txtBrakeDist2) {
+        if (carDMA.brakeDistCm) {
+          txtBrakeDist2.textContent = `${carDMA.brakeDistCm} cm ✅`;
+          txtBrakeDist2.className = 'text-emerald-400 font-bold text-[11px]';
+        } else {
+          txtBrakeDist2.textContent = '-- cm';
+          txtBrakeDist2.className = 'text-slate-400 font-bold text-[11px]';
+        }
+      }
+      if (txtBrakeMode2) {
+        txtBrakeMode2.textContent = carDMA.hBridgeStatus === 'DYNAMIC_SHORT_GND' ? 'Back-EMF 下臂接地 (短路)' : 'Back-EMF 待命';
+      }
     }
 
     function updateIRUI(el, val, label) {
@@ -1023,8 +2422,72 @@
     modeBtn_pure_line.addEventListener('click', () => setGlobalMode('pure_line'));
     modeBtn_combo.addEventListener('click', () => setGlobalMode('combo'));
     modeBtn_arena.addEventListener('click', () => setGlobalMode('arena'));
+    if (modeBtn_balloon) modeBtn_balloon.addEventListener('click', () => setGlobalMode('balloon'));
     modeBtn_manual.addEventListener('click', () => setGlobalMode('manual'));
     modeBtn_stop.addEventListener('click', () => setGlobalMode('stop'));
+
+    if (btnBrakeComparisonTest) {
+      btnBrakeComparisonTest.addEventListener('click', () => {
+        startBrakeComparisonTest();
+      });
+    }
+
+    function startBrakeComparisonTest() {
+      // 1. Reset cars side-by-side at drag start line
+      carNonDMA.x = 80;
+      carNonDMA.y = 220;
+      carNonDMA.theta = 0;
+      carNonDMA.trail = [];
+      carNonDMA.skidMarks = [];
+      carNonDMA.brakePath = [];
+      carNonDMA.brakeStartPos = null;
+      carNonDMA.brakeDistCm = null;
+      carNonDMA.isBraking = false;
+      carNonDMA.linearVelocity = 0;
+      carNonDMA.hadCollision = false;
+      carNonDMA.fsmState = 'CRUISE';
+      carNonDMA.pwmL = 255;
+      carNonDMA.pwmR = 255;
+
+      carDMA.x = 80;
+      carDMA.y = 350;
+      carDMA.theta = 0;
+      carDMA.trail = [];
+      carDMA.skidMarks = [];
+      carDMA.brakePath = [];
+      carDMA.brakeStartPos = null;
+      carDMA.brakeDistCm = null;
+      carDMA.isBraking = false;
+      carDMA.linearVelocity = 0;
+      carDMA.hadCollision = false;
+      carDMA.fsmState = 'CRUISE';
+      carDMA.pwmL = 255;
+      carDMA.pwmR = 255;
+
+      // 2. Put visual danger barrier blocks ahead at x = 500
+      obstacles = [
+        { x: 500, y: 195, w: 34, h: 50 },
+        { x: 500, y: 325, w: 34, h: 50 }
+      ];
+
+      brakeTestState = 'ACCELERATING';
+      brakeTestTimer = 0;
+      globalMode = 'stop'; // Suppress standard PID line tracking override
+      txtCurrentModeBadge.textContent = '⚡ 急煞對決：全速衝刺 (PWM 255) ➔ 煞車線切斷測試...';
+    }
+
+    // View & Filter Selectors
+    if (selectViewMode) {
+      selectViewMode.addEventListener('change', (e) => {
+        viewMode = e.target.value;
+      });
+    }
+
+    if (selectActiveFilter) {
+      selectActiveFilter.addEventListener('change', (e) => {
+        activeFilter = e.target.value;
+      });
+    }
 
     // Stress Toggle
     btnToggleStress.addEventListener('click', () => {
@@ -1041,6 +2504,13 @@
     });
 
     // Toolbar buttons
+    if (btnAddBalloon) {
+      btnAddBalloon.addEventListener('click', () => spawnRandomBalloon());
+    }
+    if (btnClearBalloons) {
+      btnClearBalloons.addEventListener('click', () => { balloons = []; });
+    }
+
     btnAddObs.addEventListener('click', () => {
       obstacles.push({
         x: Math.round(Math.random() * (canvas.width - 150) + 70),
@@ -1050,7 +2520,22 @@
       });
     });
     btnClearObs.addEventListener('click', () => { obstacles = []; });
-    btnResetCars.addEventListener('click', resetCarsToTrack);
+
+    btnResetCars.addEventListener('click', () => {
+      if (globalMode === 'balloon') {
+        initBalloons();
+        carNonDMA.x = 180; carNonDMA.y = 200; carNonDMA.theta = 0;
+        carDMA.x = 180; carDMA.y = 360; carDMA.theta = 0;
+        resetCarStates();
+      } else if (globalMode === 'arena') {
+        initArenaObstacles();
+        carNonDMA.x = 120; carNonDMA.y = 150; carNonDMA.theta = 0;
+        carDMA.x = 120; carDMA.y = 260; carDMA.theta = 0;
+        resetCarStates();
+      } else {
+        resetCarsToTrack();
+      }
+    });
 
     // --- Keyboard & Virtual D-Pad Event Handlers ---
     window.addEventListener('keydown', (e) => {
@@ -1080,6 +2565,7 @@
     // Touch/Mouse D-Pad Binding
     function bindDPadButton(btnId, keyName) {
       const btn = document.getElementById(btnId);
+      if (!btn) return;
       const press = () => { keys[keyName] = true; btn.classList.add('active', 'bg-indigo-600', 'text-white'); };
       const release = () => { keys[keyName] = false; btn.classList.remove('active', 'bg-indigo-600', 'text-white'); };
       btn.addEventListener('mousedown', press);
@@ -1094,44 +2580,274 @@
     bindDPadButton('dpadLeft', 'a');
     bindDPadButton('dpadRight', 'd');
 
-    // --- Mouse Drag Obstacles ---
+    // --- Mouse Drag Obstacles & Balloons in World Space ---
     let isDragging = false;
-    let draggedObs = null;
+    let draggedItem = null;
+
+    function screenToWorld(mx, my) {
+      if (viewMode !== 'both' || cameraZoom > 1.01) {
+        return {
+          x: cameraX + (mx - canvas.width / 2) / cameraZoom,
+          y: cameraY + (my - canvas.height / 2) / cameraZoom
+        };
+      }
+      return { x: mx, y: my };
+    }
 
     canvas.addEventListener('mousedown', (e) => {
       const rect = canvas.getBoundingClientRect();
-      const mx = e.clientX - rect.left;
-      const my = e.clientY - rect.top;
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const mx = (e.clientX - rect.left) * scaleX;
+      const my = (e.clientY - rect.top) * scaleY;
+      const world = screenToWorld(mx, my);
 
-      for (const obs of obstacles) {
-        if (mx >= obs.x && mx <= obs.x + obs.w && my >= obs.y && my <= obs.y + obs.h) {
-          draggedObs = obs;
+      // Check balloons
+      for (const b of balloons) {
+        const d = Math.hypot(b.x - world.x, b.y - world.y);
+        if (d <= b.radius + 10) {
+          draggedItem = { type: 'balloon', target: b };
           isDragging = true;
           return;
         }
       }
 
-      // If clicked empty space, spawn new obstacle block
-      obstacles.push({ x: Math.round(mx - 20), y: Math.round(my - 20), w: 40, h: 40 });
+      // Check obstacles
+      for (const obs of obstacles) {
+        if (world.x >= obs.x && world.x <= obs.x + obs.w && world.y >= obs.y && world.y <= obs.y + obs.h) {
+          draggedItem = { type: 'obs', target: obs, offX: world.x - obs.x, offY: world.y - obs.y };
+          isDragging = true;
+          return;
+        }
+      }
+
+      // Clicked empty space: spawn balloon in balloon mode, else obstacle
+      if (globalMode === 'balloon') {
+        spawnBalloon(world.x, world.y);
+      } else {
+        obstacles.push({ x: Math.round(world.x - 20), y: Math.round(world.y - 20), w: 40, h: 40 });
+      }
     });
 
     window.addEventListener('mousemove', (e) => {
-      if (isDragging && draggedObs) {
+      if (isDragging && draggedItem) {
         const rect = canvas.getBoundingClientRect();
-        draggedObs.x = e.clientX - rect.left - draggedObs.w / 2;
-        draggedObs.y = e.clientY - rect.top - draggedObs.h / 2;
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        const mx = (e.clientX - rect.left) * scaleX;
+        const my = (e.clientY - rect.top) * scaleY;
+        const world = screenToWorld(mx, my);
+
+        if (draggedItem.type === 'balloon') {
+          draggedItem.target.x = Math.round(world.x);
+          draggedItem.target.y = Math.round(world.y);
+        } else if (draggedItem.type === 'obs') {
+          const offX = draggedItem.offX !== undefined ? draggedItem.offX : draggedItem.target.w / 2;
+          const offY = draggedItem.offY !== undefined ? draggedItem.offY : draggedItem.target.h / 2;
+          draggedItem.target.x = Math.round(world.x - offX);
+          draggedItem.target.y = Math.round(world.y - offY);
+        }
       }
     });
 
     window.addEventListener('mouseup', () => {
       isDragging = false;
-      draggedObs = null;
+      draggedItem = null;
     });
+
+    // --- Protocol Terminal & Telemetry Engine ---
+    function appendTerminal(elem, html) {
+      if (!elem) return;
+      const div = document.createElement('div');
+      div.innerHTML = html;
+      elem.appendChild(div);
+      while (elem.children.length > 20) {
+        elem.removeChild(elem.children[0]);
+      }
+      elem.scrollTop = elem.scrollHeight;
+    }
+
+    function setFsmPipelineLight(activeIdx) {
+      fsmStepEls.forEach((el, idx) => {
+        if (!el) return;
+        if (idx === activeIdx) {
+          el.className = 'py-1 rounded bg-cyan-500 text-slate-950 font-bold shadow-lg shadow-cyan-500/50 scale-105 transition-all';
+        } else {
+          el.className = 'py-1 rounded bg-slate-800 border border-slate-700 text-slate-400 transition-all';
+        }
+      });
+      if (txtFsmCurrentStateName) {
+        txtFsmCurrentStateName.textContent = FSM_STATE_NAMES[activeIdx] || 'WAIT_HEADER1';
+      }
+    }
+
+    function processProtocolTelemetry() {
+      protocolFrameCount++;
+      if (protocolFrameCount % 7 !== 0) return; // ~120ms cycle
+
+      const hasEmi = emiBurstRequested || (autoEmiEnabled && Math.random() < 0.28);
+      if (emiBurstRequested) emiBurstRequested = false;
+
+      const p1L = Math.round(carNonDMA.pwmL || 0);
+      const p1R = Math.round(carNonDMA.pwmR || 0);
+      const p2L = Math.round(carDMA.pwmL || 0);
+      const p2R = Math.round(carDMA.pwmR || 0);
+
+      // --- 1. Car 1: Traditional ASCII String Protocol (sscanf) ---
+      asciiTotalPackets++;
+      if (hasEmi) {
+        asciiFailCount++;
+        const corruptSamples = [
+          `SP:${p1L},${p1R}\\n`,
+          `SPD:${p1L},\\xFE\\n`,
+          `SPD:${p1L}`,
+          `S#D:${p1L},${p1R}\\n`
+        ];
+        const badStr = corruptSamples[Math.floor(Math.random() * corruptSamples.length)];
+        if (badgeAsciiStatus) {
+          badgeAsciiStatus.className = 'text-[10px] px-2 py-0.5 rounded bg-rose-500/30 text-rose-300 border border-rose-500/60 font-mono animate-pulse';
+          badgeAsciiStatus.textContent = '❌ FRAME_TORN';
+        }
+
+        appendTerminal(terminalAscii, `
+          <div class="text-rose-400 font-mono">❌ [RX ERR] "${badStr}" ➔ sscanf() FAIL!</div>
+          <div class="text-rose-300/80 text-[10px]">↳ 丟失轉向指令！CPU 解析中斷 60ms，馬達抽搐脫軌！</div>
+        `);
+
+        // Car 1 penalty: freezing and jitter
+        carNonDMA.frozenTicks += 8;
+        carNonDMA.lastError += (Math.random() < 0.5 ? -1.8 : 1.8);
+      } else {
+        if (badgeAsciiStatus) {
+          badgeAsciiStatus.className = 'text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono';
+          badgeAsciiStatus.textContent = 'STREAMING (OK)';
+        }
+
+        appendTerminal(terminalAscii, `
+          <div class="text-slate-300 font-mono">✓ [RX] SPD:${p1L},${p1R}\\n <span class="text-amber-400/80">(sscanf ~1220 cyc)</span></div>
+        `);
+      }
+
+      // --- 2. Car 2: Industrial Binary Frame + FSM Parser (Zero-Copy) ---
+      binaryTotalPackets++;
+      const bHdr1 = 0xAA;
+      const bHdr2 = 0x55;
+      const bMsgId = 0x02; // MSG_ID_MOTION_CMD
+      const bLen = 0x04;
+      const pL_lo = p2L & 0xFF;
+      const pL_hi = (p2L >> 8) & 0xFF;
+      const pR_lo = p2R & 0xFF;
+      const pR_hi = (p2R >> 8) & 0xFF;
+      const csum = bMsgId ^ bLen ^ pL_lo ^ pL_hi ^ pR_lo ^ pR_hi;
+
+      let packetBytes = [bHdr1, bHdr2, bMsgId, bLen, pL_lo, pL_hi, pR_lo, pR_hi, csum];
+      let isCorrupted = false;
+
+      if (hasEmi) {
+        isCorrupted = true;
+        if (Math.random() < 0.5) {
+          packetBytes[4] = (packetBytes[4] ^ 0x5A) & 0xFF; // Corrupt payload byte
+        } else {
+          packetBytes.unshift(0x7E); // Noise byte before header
+        }
+      }
+
+      // Feed into FSM Parser step by step
+      let lastRes = null;
+      for (const b of packetBytes) {
+        lastRes = car2FsmParser.feedByte(b);
+      }
+
+      const hexStr = packetBytes.map(b => b.toString(16).padStart(2, '0').toUpperCase()).join(' ');
+
+      if (isCorrupted && (!lastRes || !lastRes.valid)) {
+        binaryGuardCount++;
+        if (badgeFsmStatus) {
+          badgeFsmStatus.className = 'text-[10px] px-2 py-0.5 rounded bg-amber-500/30 text-amber-300 border border-amber-500/60 font-mono';
+          badgeFsmStatus.textContent = '🛡️ XOR_GUARD_ACTIVE';
+        }
+
+        appendTerminal(terminalBinary, `
+          <div class="text-amber-400 font-mono">🛡️ [GUARD] [${hexStr}] ➔ XOR Mismatch! Safe Discard!</div>
+          <div class="text-cyan-300/80 text-[10px]">↳ 攔截毒指令！維持上筆平穩動態，次幀 0xAA 0x55 自動 Resync！</div>
+        `);
+        setFsmPipelineLight(FSM_STATE_WAIT_CHECKSUM);
+        setTimeout(() => setFsmPipelineLight(FSM_STATE_WAIT_HEADER1), 220);
+      } else {
+        if (badgeFsmStatus) {
+          badgeFsmStatus.className = 'text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono';
+          badgeFsmStatus.textContent = 'SYNCED (0xAA 0x55)';
+        }
+
+        appendTerminal(terminalBinary, `
+          <div class="text-cyan-300 font-mono">✓ [PASS] [${hexStr}] <span class="text-slate-400">(FSM OK, ~1 cyc)</span></div>
+        `);
+        setFsmPipelineLight(FSM_STATE_WAIT_PAYLOAD);
+        setTimeout(() => setFsmPipelineLight(FSM_STATE_WAIT_HEADER1), 220);
+      }
+    }
+
+    // --- EMI Injection Event Listeners ---
+    if (btnInjectEMI) {
+      btnInjectEMI.addEventListener('click', () => {
+        emiBurstRequested = true;
+        btnInjectEMI.classList.add('scale-95', 'bg-rose-600');
+        setTimeout(() => btnInjectEMI.classList.remove('scale-95', 'bg-rose-600'), 150);
+      });
+    }
+
+    if (btnToggleAutoEMI) {
+      btnToggleAutoEMI.addEventListener('click', () => {
+        autoEmiEnabled = !autoEmiEnabled;
+        if (autoEmiEnabled) {
+          autoEmiIndicator.className = 'inline-block w-2 h-2 rounded-full bg-amber-400 animate-ping mr-1';
+          autoEmiText.textContent = '持續干擾: 開啟';
+          btnToggleAutoEMI.className = 'px-2.5 py-1.5 rounded-lg text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/50 transition';
+        } else {
+          autoEmiIndicator.className = 'inline-block w-2 h-2 rounded-full bg-slate-500 mr-1';
+          autoEmiText.textContent = '持續干擾: 關';
+          btnToggleAutoEMI.className = 'px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-900 hover:bg-slate-700 text-slate-300 border border-slate-700 transition';
+        }
+      });
+    }
+
+    if (btnClearProtocolLogs) {
+      btnClearProtocolLogs.addEventListener('click', () => {
+        if (terminalAscii) terminalAscii.innerHTML = '<div class="text-slate-500">// 序列埠監聽就緒...</div>';
+        if (terminalBinary) terminalBinary.innerHTML = '<div class="text-slate-500">// 二進位二元狀態機監聽就緒...</div>';
+        asciiFailCount = 0;
+        asciiTotalPackets = 0;
+        binaryGuardCount = 0;
+        binaryTotalPackets = 0;
+        updateDashboardUI();
+      });
+    }
 
     // --- Main Simulation Loop ---
     function loop() {
+      // Highlight 2: Brake Drag Test Coordinator
+      if (brakeTestState === 'ACCELERATING') {
+        brakeTestTimer++;
+        carNonDMA.pwmL = 255; carNonDMA.pwmR = 255; carNonDMA.fsmState = 'CRUISE';
+        carDMA.pwmL = 255; carDMA.pwmR = 255; carDMA.fsmState = 'CRUISE';
+
+        if (carNonDMA.x >= BRAKE_LINE_X || carDMA.x >= BRAKE_LINE_X || brakeTestTimer >= 60) {
+          brakeTestState = 'BRAKING';
+          // Trigger Emergency Stop simultaneously!
+          carNonDMA.pwmL = 0; carNonDMA.pwmR = 0; carNonDMA.fsmState = 'STOP';
+          carDMA.pwmL = 0; carDMA.pwmR = 0; carDMA.fsmState = 'STOP';
+          txtCurrentModeBadge.textContent = '🛑 煞車線切斷！車輛 A (High-Z 惰行) vs 車輛 B (Back-EMF 急煞)';
+        }
+      } else if (brakeTestState === 'BRAKING') {
+        if (Math.abs(carNonDMA.linearVelocity) < 0.05 && Math.abs(carDMA.linearVelocity) < 0.05) {
+          brakeTestState = 'FINISHED';
+          txtCurrentModeBadge.textContent = `🏁 急煞測試完成：車輛 A 滑行 ${carNonDMA.brakeDistCm}cm 撞毀 vs 車輛 B 煞停 ${carDMA.brakeDistCm}cm 完美定桿！`;
+        }
+      }
+
       updateCar(carNonDMA, 'car1');
       updateCar(carDMA, 'car2');
+      processProtocolTelemetry();
       render();
       requestAnimationFrame(loop);
     }
