@@ -99,13 +99,13 @@ def submit_solution(slug, question_id, code_path):
 if __name__ == '__main__':
     import glob
     problem = sys.argv[1].lower() if len(sys.argv) > 1 else 'p1'
-    day_matches = glob.glob('Day113*')
-    day_dir = day_matches[0] if day_matches else 'Day113'
+    day_matches = glob.glob('Day114*')
+    day_dir = day_matches[0] if day_matches else 'Day114'
     
     mapping = {
-        'p1': ('missing-number', 268, f'{day_dir}/p1.c'),
-        'p2': ('move-zeroes', 283, f'{day_dir}/p2.c'),
-        'p3': ('middle-of-the-linked-list', 908, f'{day_dir}/p3.c')
+        'p1': ('sort-colors', 75, f'{day_dir}/p1.c'),
+        'p2': ('power-of-two', 231, f'{day_dir}/p2.c'),
+        'p3': ('swap-nodes-in-pairs', 24, f'{day_dir}/p3.c')
     }
 
     if problem in mapping:
