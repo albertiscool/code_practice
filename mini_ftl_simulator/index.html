@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini FTL Simulator | 固態硬碟主控視覺化</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            darkBg: '#0f172a',
+            cardBg: '#1e293b',
+            cardBorder: '#334155'
+          },
+          fontFamily: {
+            mono: ['JetBrains Mono', 'Fira Code', 'Courier New', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #06b6d4; }
+
+    /* Flash highlight */
+    @keyframes flashActive {
+      0% { transform: scale(1.08); filter: brightness(1.8); }
+      100% { transform: scale(1); filter: brightness(1); }
+    }
+    .page-pulse { animation: flashActive 0.5s ease-out; }
+
+    @keyframes pulseVictim {
+      0%, 100% { box-shadow: 0 0 12px rgba(239, 68, 68, 0.5); }
+      50% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.9); }
+    }
+    .victim-glow {
+      animation: pulseVictim 1.8s infinite;
+      border-color: #ef4444 !important;
+    }
+
+    @keyframes pulseActiveBlock {
+      0%, 100% { box-shadow: 0 0 10px rgba(6, 182, 212, 0.4); }
+      50% { box-shadow: 0 0 18px rgba(6, 182, 212, 0.8); }
+    }
+    .active-glow {
+      animation: pulseActiveBlock 2s infinite;
+      border-color: #06b6d4 !important;
+    }
+  </style>
+</head>
+<body class="bg-darkBg text-slate-100 min-h-screen font-sans flex flex-col p-4 md:p-6 lg:p-8 space-y-6 max-w-6xl mx-auto selection:bg-cyan-500 selection:text-black">
+
+  <!-- ======================================================================== -->
+  <!-- 簡化頂部導覽與關鍵指標 -->
+  <!-- ======================================================================== -->
+  <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+    <div>
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-lg bg-cyan-600 flex items-center justify-center font-mono font-bold text-white shadow-md shadow-cyan-600/30">
+          SSD
+        </div>
+        <h1 class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+          Mini FTL 固態硬碟主控模擬器
+          <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800">可視化教具</span>
+        </h1>
+      </div>
+      <p class="text-xs text-slate-400 mt-1">
+        L2P 映射轉換 &bull; 異地更新 &bull; 垃圾回收 (GC) &bull; 寫入放大 (WAF) &bull; TRIM 指令
+      </p>
+    </div>
+
+    <!-- 4 個核心數據膠囊 (Clean & Concise Metrics) -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
+      <!-- Host Writes -->
+      <div class="bg-cardBg px-3 py-2 rounded-xl border border-cardBorder">
+        <div class="text-[10px] text-slate-400">主機寫入 (Host)</div>
+        <div class="text-lg font-bold text-cyan-400 mt-0.5" id="metricHostWrites">0</div>
+      </div>
+      <!-- NAND Programs -->
+      <div class="bg-cardBg px-3 py-2 rounded-xl border border-cardBorder">
+        <div class="text-[10px] text-slate-400">NAND 實體寫入</div>
+        <div class="text-lg font-bold text-blue-400 mt-0.5" id="metricNandPrograms">0</div>
+      </div>
+      <!-- WAF Gauge -->
+      <div class="bg-cardBg px-3 py-2 rounded-xl border border-cardBorder">
+        <div class="text-[10px] text-slate-400 flex items-center justify-between">
+          <span>寫入放大 (WAF)</span>
+        </div>
+        <div class="text-lg font-bold text-emerald-400 mt-0.5" id="metricWaf">1.00</div>
+      </div>
+      <!-- GC Count -->
+      <div class="bg-cardBg px-3 py-2 rounded-xl border border-cardBorder">
+        <div class="text-[10px] text-slate-400">GC 觸發次數</div>
+        <div class="text-lg font-bold text-amber-400 mt-0.5" id="metricGcTriggers">0</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ======================================================================== -->
+  <!-- 核心引導控制台 (簡化為單一互動導覽面板) -->
+  <!-- ======================================================================== -->
+  <section class="bg-cardBg rounded-2xl border border-cardBorder p-4 md:p-5 shadow-lg space-y-4">
+    <!-- Stepper Buttons (5 步驟直覺切換) -->
+    <div class="flex items-center justify-between gap-2 overflow-x-auto pb-1 text-xs font-mono">
+      <div class="flex gap-2">
+        <button onclick="jumpToStep(1)" id="step-btn-1" class="px-3 py-1.5 rounded-lg bg-cyan-600 text-white font-bold transition shadow">
+          1. 循序寫入 L0~7
+        </button>
+        <button onclick="jumpToStep(2)" id="step-btn-2" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition">
+          2. 覆寫產生垃圾
+        </button>
+        <button onclick="jumpToStep(3)" id="step-btn-3" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition">
+          3. 空間不足觸發 GC
+        </button>
+        <button onclick="jumpToStep(4)" id="step-btn-4" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition">
+          4. 讀取校驗無損
+        </button>
+        <button onclick="jumpToStep(5)" id="step-btn-5" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition">
+          5. TRIM 演示
+        </button>
+      </div>
+
+      <!-- Playback Controls -->
+      <div class="flex items-center gap-1.5 shrink-0 ml-auto">
+        <button onclick="prevStep()" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs transition" title="上一步">
+          ◀ 上一步
+        </button>
+        <button onclick="nextStep()" class="px-3.5 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 font-bold text-white text-xs shadow transition" title="執行下一步">
+          下一步 ▶
+        </button>
+        <button onclick="resetSimulator()" class="px-2.5 py-1.5 rounded-lg bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-800/50 text-xs transition" title="重設模擬器">
+          🔄 重設
+        </button>
+      </div>
+    </div>
+
+    <!-- 動態白話解說卡片 (Big, Clear Explanation) -->
+    <div class="bg-slate-900/90 rounded-xl p-3.5 border border-slate-700/60 flex items-start gap-3">
+      <div class="text-xl shrink-0 mt-0.5" id="stepIcon">💡</div>
+      <div class="space-y-1">
+        <div class="text-sm font-bold text-white flex items-center gap-2">
+          <span id="stepTitle">階段 1: 循序寫入 LBA 0 ~ 7 (填滿 8 邏輯空間)</span>
+        </div>
+        <p class="text-xs text-slate-300 leading-relaxed" id="stepDesc">
+          主機初次寫入 LBA 0 到 7。FTL 循序配置實體空白頁 (Block 0 與 Block 1) 並建立 L2P 表。目前全為有效頁，無任何垃圾，寫入放大 WAF = 1.00。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================== -->
+  <!-- 核心可視化：左側 DRAM 映射表 + 右側 NAND 晶片陣列 -->
+  <!-- ======================================================================== -->
+  <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+    <!-- 左側：DRAM L2P 映射表 (5 Cols) -->
+    <div class="lg:col-span-5 bg-cardBg rounded-2xl border border-cardBorder p-4 space-y-3">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+        <h2 class="text-sm font-bold text-white flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+          DRAM 映射表 (L2P Table)
+        </h2>
+        <span class="text-[11px] font-mono text-cyan-400 bg-cyan-950 px-2 py-0.5 rounded border border-cyan-800" id="activeWritePointer">
+          Active: B0, P0
+        </span>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs font-mono">
+          <thead>
+            <tr class="text-slate-400 border-b border-slate-800">
+              <th class="py-1.5 px-2">邏輯 LBA</th>
+              <th class="py-1.5 px-2">映射實體 PBA</th>
+              <th class="py-1.5 px-2 text-right">單鍵操作</th>
+            </tr>
+          </thead>
+          <tbody id="l2pTableBody" class="divide-y divide-slate-800/40">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="text-[11px] text-slate-400 bg-slate-900/60 p-2 rounded-lg border border-slate-800 flex items-center gap-1.5">
+        <span>💡</span>
+        <span>將滑鼠懸停在 LBA 列上，右側實體頁面將同步亮起！</span>
+      </div>
+    </div>
+
+    <!-- 右側：NAND Flash 4x4 物理陣列 (7 Cols) -->
+    <div class="lg:col-span-7 bg-cardBg rounded-2xl border border-cardBorder p-4 space-y-3">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+        <h2 class="text-sm font-bold text-white flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
+          NAND Flash 物理晶片陣列
+        </h2>
+        <!-- 圖例 -->
+        <div class="flex items-center gap-2.5 text-[10px] font-mono">
+          <span class="flex items-center gap-1 text-slate-400">
+            <span class="w-2 h-2 rounded bg-slate-700 inline-block"></span> 空白(F)
+          </span>
+          <span class="flex items-center gap-1 text-cyan-300">
+            <span class="w-2 h-2 rounded bg-cyan-500 inline-block"></span> 有效(V)
+          </span>
+          <span class="flex items-center gap-1 text-rose-400">
+            <span class="w-2 h-2 rounded bg-rose-500 inline-block"></span> 垃圾(I)
+          </span>
+        </div>
+      </div>
+
+      <!-- 4 個 Block 簡潔網格 -->
+      <div class="grid grid-cols-2 gap-3" id="nandMatrixContainer">
+        <!-- Dynamically populated by JS -->
+      </div>
+
+      <div class="flex items-center justify-between text-[11px] font-mono text-slate-400 pt-1">
+        <span>剩餘空白區塊：<strong id="freeBlockCountText" class="text-emerald-400">4 / 4</strong></span>
+        <span>OP 預留水線：<span class="text-cyan-400">50% (8 LBA / 16 物理頁)</span></span>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ======================================================================== -->
+  <!-- 簡化手動測試條 & 韌體最新事件 -->
+  <!-- ======================================================================== -->
+  <section class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- 快速手動操作條 (5 Cols) -->
+    <div class="lg:col-span-5 bg-cardBg rounded-2xl border border-cardBorder p-4 space-y-3">
+      <h3 class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+        <span>🛠️</span> 自由手動操作 (Playground)
+      </h3>
+      <div class="grid grid-cols-3 gap-2 text-xs">
+        <!-- 寫入按鈕組 -->
+        <div class="space-y-1">
+          <span class="text-[10px] text-slate-400 font-mono">寫入 LBA</span>
+          <div class="flex gap-1">
+            <select id="manualWriteLba" class="bg-slate-900 border border-slate-700 rounded px-1.5 py-1 text-white font-mono text-xs w-14">
+              <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+              <option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option>
+            </select>
+            <button onclick="handleManualWrite()" class="flex-1 bg-cyan-600 hover:bg-cyan-500 text-white rounded px-2 py-1 font-semibold text-xs transition">
+              寫入
+            </button>
+          </div>
+        </div>
+
+        <!-- 讀取按鈕組 -->
+        <div class="space-y-1">
+          <span class="text-[10px] text-slate-400 font-mono">讀取 LBA</span>
+          <div class="flex gap-1">
+            <select id="manualReadLba" class="bg-slate-900 border border-slate-700 rounded px-1.5 py-1 text-white font-mono text-xs w-14">
+              <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+              <option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option>
+            </select>
+            <button onclick="handleManualRead()" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white rounded px-2 py-1 font-semibold text-xs transition">
+              讀取
+            </button>
+          </div>
+        </div>
+
+        <!-- TRIM & GC 組 -->
+        <div class="space-y-1">
+          <span class="text-[10px] text-slate-400 font-mono">TRIM / GC</span>
+          <div class="flex gap-1">
+            <button onclick="handleManualTrim()" class="flex-1 bg-rose-700 hover:bg-rose-600 text-white rounded px-1.5 py-1 font-semibold text-xs transition" title="TRIM 所選 LBA">
+              TRIM
+            </button>
+            <button onclick="handleManualGc()" class="flex-1 bg-amber-600 hover:bg-amber-500 text-white rounded px-1.5 py-1 font-semibold text-xs transition" title="手動強制觸發 GC">
+              GC
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 讀取回傳提示 -->
+      <div id="quickResultBox" class="text-[11px] font-mono text-slate-300 bg-slate-900 p-2 rounded border border-slate-800 hidden">
+        狀態：<span id="quickResultText" class="text-emerald-400"></span>
+      </div>
+    </div>
+
+    <!-- 韌體最新動態日誌 (7 Cols) -->
+    <div class="lg:col-span-7 bg-cardBg rounded-2xl border border-cardBorder p-4 space-y-2">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
+        <h3 class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+          <span>📟</span> 韌體動作日誌 (Firmware Log)
+        </h3>
+        <button onclick="clearLogs()" class="text-[10px] text-slate-400 hover:text-white px-1.5 py-0.5 rounded bg-slate-800">
+          清空
+        </button>
+      </div>
+      <div id="simpleLogConsole" class="h-28 overflow-y-auto font-mono text-xs text-slate-300 space-y-1 bg-slate-950 p-2.5 rounded-xl border border-slate-900">
+        <!-- Logs populated here -->
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ======================================================================== -->
+  <!-- 底部可摺疊面試知識卡 (不干擾操作，需要時點開) -->
+  <!-- ======================================================================== -->
+  <footer class="pt-2">
+    <details class="bg-cardBg/60 rounded-xl border border-cardBorder p-3.5 group">
+      <summary class="cursor-pointer text-xs font-bold text-slate-300 flex items-center justify-between select-none">
+        <span class="flex items-center gap-2">
+          <span>📚</span> 儲存晶片廠（群聯 Phison / 慧榮 SMI）核心面試速記卡 (點擊展開)
+        </span>
+        <span class="text-cyan-400 group-open:rotate-180 transition-transform">▼</span>
+      </summary>
+      <div class="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3 text-xs text-slate-300 border-t border-slate-800 pt-3 leading-relaxed">
+        <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-800 space-y-1">
+          <div class="font-bold text-cyan-300">1. 為什麼 NAND 需要 FTL？</div>
+          <p class="text-slate-400 text-[11px]">
+            NAND 具有 <strong>Erase-before-Write</strong> 物理鐵律，且讀寫以 Page 為單位、抹除以 Block 為單位。FTL 負責將 LBA 動態映射至實體 PBA，並處理異地更新與磨損均衡。
+          </p>
+        </div>
+        <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-800 space-y-1">
+          <div class="font-bold text-amber-300">2. 什麼是寫入放大 (WAF)？</div>
+          <p class="text-slate-400 text-[11px]">
+            $$\text{WAF} = \frac{\text{NAND 實體寫入量}}{\text{Host 請求寫入量}}$$
+            當 GC 搬遷受害者區塊內的「有效頁」時，會產生額外物理寫入，導致 WAF &gt; 1.0，加速顆粒損耗。
+          </p>
+        </div>
+        <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-800 space-y-1">
+          <div class="font-bold text-rose-300">3. TRIM 的核心拯救價值？</div>
+          <p class="text-slate-400 text-[11px]">
+            作業系統刪檔只清 Metadata。下發 TRIM 能主動通知 FTL 將該頁轉為 INVALID。GC 時直接抹除，省去搬遷開銷，大幅壓低 WAF！
+          </p>
+        </div>
+      </div>
+    </details>
+  </footer>
+
+  <!-- ======================================================================== -->
+  <!-- JavaScript: 輕量穩健的 FTL 模擬器邏輯 -->
+  <!-- ======================================================================== -->
+  <script>
+    const BLOCK_NUM = 4;
+    const PAGES_PER_BLOCK = 4;
+    const LOGICAL_LBA_NUM = 8;
+
+    const PAGE_FREE = 0;
+    const PAGE_VALID = 1;
+    const PAGE_INVALID = 2;
+
+    let flash_blocks = [];
+    let l2p_table = [];
+    let active_block = -1;
+    let active_page = 0;
+
+    let stats = {
+      host_write_count: 0,
+      host_read_count: 0,
+      gc_trigger_count: 0,
+      program_count: 0,
+      erase_count: 0
+    };
+
+    let currentStep = 1;
+
+    // ------------------------------------------------------------------------
+    // NAND Flash & FTL Implementation
+    // ------------------------------------------------------------------------
+    function nand_init() {
+      flash_blocks = [];
+      for (let b = 0; b < BLOCK_NUM; b++) {
+        let pages = [];
+        for (let p = 0; p < PAGES_PER_BLOCK; p++) {
+          pages.push({ state: PAGE_FREE, lba: -1, data: "0xFF" });
+        }
+        flash_blocks.push({ pages, erase_count: 0 });
+      }
+      stats.program_count = 0;
+      stats.erase_count = 0;
+    }
+
+    function find_free_block() {
+      for (let b = 0; b < BLOCK_NUM; b++) {
+        let all_free = flash_blocks[b].pages.every(p => p.state === PAGE_FREE);
+        if (all_free) return b;
+      }
+      return -1;
+    }
+
+    function count_free_blocks() {
+      return flash_blocks.filter(b => b.pages.every(p => p.state === PAGE_FREE)).length;
+    }
+
+    function ftl_init() {
+      nand_init();
+      stats.host_write_count = 0;
+      stats.host_read_count = 0;
+      stats.gc_trigger_count = 0;
+
+      l2p_table = Array.from({ length: LOGICAL_LBA_NUM }, () => ({ block: -1, page: -1 }));
+      active_block = find_free_block();
+      active_page = 0;
+      addLog("FTL", `FTL 初始化完成，啟用 Block ${active_block} 作為 Active Block`);
+    }
+
+    function ftl_trigger_gc() {
+      stats.gc_trigger_count++;
+      // Greedy: 找非活躍中、Invalid 最多的區塊
+      let victim = -1;
+      let maxInv = 0;
+      for (let b = 0; b < BLOCK_NUM; b++) {
+        if (b === active_block) continue;
+        let inv = flash_blocks[b].pages.filter(p => p.state === PAGE_INVALID).length;
+        if (inv > maxInv) { maxInv = inv; victim = b; }
+      }
+
+      if (victim === -1) {
+        addLog("GC", "未找到含有無效頁的區塊，無需回收。");
+        return false;
+      }
+
+      addLog("GC", `觸發 GC：鎖定受害者 Block ${victim} (含 ${maxInv} 個垃圾頁)`);
+
+      // 搬遷有效頁
+      for (let p = 0; p < PAGES_PER_BLOCK; p++) {
+        const page = flash_blocks[victim].pages[p];
+        if (page.state === PAGE_VALID) {
+          if (active_page >= PAGES_PER_BLOCK) {
+            active_block = find_free_block();
+            active_page = 0;
+          }
+          const lba = page.lba;
+          const data = page.data;
+
+          // 寫入新頁
+          flash_blocks[active_block].pages[active_page] = { state: PAGE_VALID, lba, data };
+          stats.program_count++;
+
+          // 更新 L2P
+          l2p_table[lba] = { block: active_block, page: active_page };
+          addLog("GC", `搬遷 LBA ${lba} 至 (Block ${active_block}, Page ${active_page}) [WAF 增加]`);
+          active_page++;
+        }
+      }
+
+      // 整塊抹除
+      for (let p = 0; p < PAGES_PER_BLOCK; p++) {
+        flash_blocks[victim].pages[p] = { state: PAGE_FREE, lba: -1, data: "0xFF" };
+      }
+      flash_blocks[victim].erase_count++;
+      stats.erase_count++;
+      addLog("NAND", `抹除 Block ${victim}，重設為全部 FREE 空白頁！`);
+
+      return true;
+    }
+
+    function ftl_write(lba, dataStr) {
+      if (lba >= LOGICAL_LBA_NUM) return false;
+      stats.host_write_count++;
+
+      // 1. 異地更新判定：舊位置改 INVALID
+      if (l2p_table[lba].block !== -1) {
+        const ob = l2p_table[lba].block;
+        const op = l2p_table[lba].page;
+        flash_blocks[ob].pages[op].state = PAGE_INVALID;
+        addLog("FTL", `異地更新：舊位置 (B${ob}, P${op}) 標記為 INVALID`);
+      }
+
+      // 2. 空間檢查
+      if (active_block === -1 || active_page >= PAGES_PER_BLOCK) {
+        if (count_free_blocks() <= 1) {
+          ftl_trigger_gc();
+        }
+        active_block = find_free_block();
+        active_page = 0;
+      }
+
+      // 3. 寫入
+      flash_blocks[active_block].pages[active_page] = { state: PAGE_VALID, lba, data: dataStr };
+      stats.program_count++;
+      l2p_table[lba] = { block: active_block, page: active_page };
+      addLog("FTL", `寫入 LBA ${lba} &rarr; 實體 (Block ${active_block}, Page ${active_page})`);
+      active_page++;
+
+      updateUI();
+      return true;
+    }
+
+    function ftl_read(lba) {
+      if (lba >= LOGICAL_LBA_NUM) return null;
+      stats.host_read_count++;
+      if (l2p_table[lba].block === -1) {
+        addLog("HOST", `讀取 LBA ${lba}: 尚未映射 (0xFF)`);
+        return "0xFF (Unmapped)";
+      }
+      const b = l2p_table[lba].block;
+      const p = l2p_table[lba].page;
+      const val = flash_blocks[b].pages[p].data;
+      addLog("HOST", `讀取 LBA ${lba}: 命中 (B${b}, P${p}) &rarr; "${val}"`);
+      return val;
+    }
+
+    function ftl_trim(lba) {
+      if (lba >= LOGICAL_LBA_NUM) return false;
+      if (l2p_table[lba].block !== -1) {
+        const b = l2p_table[lba].block;
+        const p = l2p_table[lba].page;
+        flash_blocks[b].pages[p].state = PAGE_INVALID;
+        l2p_table[lba] = { block: -1, page: -1 };
+        addLog("TRIM", `TRIM 釋放 LBA ${lba}！實體 (B${b}, P${p}) 轉為 INVALID`);
+        updateUI();
+        return true;
+      }
+      return false;
+    }
+
+    // ------------------------------------------------------------------------
+    // UI Rendering
+    // ------------------------------------------------------------------------
+    function updateUI() {
+      // 1. Metrics
+      document.getElementById('metricHostWrites').innerText = stats.host_write_count;
+      document.getElementById('metricNandPrograms').innerText = stats.program_count;
+      const waf = stats.host_write_count === 0 ? 1.00 : (stats.program_count / stats.host_write_count);
+      document.getElementById('metricWaf').innerText = waf.toFixed(2);
+      document.getElementById('metricGcTriggers').innerText = stats.gc_trigger_count;
+
+      const freeCnt = count_free_blocks();
+      document.getElementById('freeBlockCountText').innerText = `${freeCnt} / ${BLOCK_NUM}`;
+      document.getElementById('activeWritePointer').innerText = 
+        active_block !== -1 ? `Active: B${active_block}, P${active_page}` : "無可用區塊";
+
+      // 2. Render L2P
+      const l2pTbody = document.getElementById('l2pTableBody');
+      l2pTbody.innerHTML = '';
+      for (let lba = 0; lba < LOGICAL_LBA_NUM; lba++) {
+        const item = l2p_table[lba];
+        const isMapped = item.block !== -1;
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-800/60 transition cursor-pointer';
+        tr.onmouseenter = () => highlightPage(item.block, item.page, true);
+        tr.onmouseleave = () => highlightPage(item.block, item.page, false);
+
+        tr.innerHTML = `
+          <td class="py-1.5 px-2 flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full ${isMapped ? 'bg-cyan-400' : 'bg-slate-600'}"></span>
+            <span class="${isMapped ? 'text-white font-bold' : 'text-slate-500'}">LBA ${lba}</span>
+          </td>
+          <td class="py-1.5 px-2">
+            ${isMapped ? 
+              `<span class="px-1.5 py-0.2 rounded bg-blue-950 text-blue-300 border border-blue-800 text-[11px]">
+                Block ${item.block}, Page ${item.page}
+              </span>` : 
+              `<span class="text-slate-500 italic">Unmapped</span>`
+            }
+          </td>
+          <td class="py-1.5 px-2 text-right space-x-1">
+            <button onclick="ftl_write(${lba}, 'V_${lba}')" class="px-1.5 py-0.5 rounded bg-cyan-950 hover:bg-cyan-800 text-cyan-400 text-[10px] border border-cyan-800" title="寫入">寫</button>
+            <button onclick="quickRead(${lba})" class="px-1.5 py-0.5 rounded bg-blue-950 hover:bg-blue-800 text-blue-400 text-[10px] border border-blue-800" title="讀取">讀</button>
+            <button onclick="ftl_trim(${lba})" class="px-1.5 py-0.5 rounded bg-rose-950 hover:bg-rose-800 text-rose-400 text-[10px] border border-rose-800" title="TRIM">切</button>
+          </td>
+        `;
+        l2pTbody.appendChild(tr);
+      }
+
+      // 3. Render 4 NAND Blocks
+      const nandBox = document.getElementById('nandMatrixContainer');
+      nandBox.innerHTML = '';
+
+      // Find victim
+      let candidateVictim = -1, maxInv = 0;
+      for (let b = 0; b < BLOCK_NUM; b++) {
+        if (b === active_block) continue;
+        let inv = flash_blocks[b].pages.filter(p => p.state === PAGE_INVALID).length;
+        if (inv > maxInv) { maxInv = inv; candidateVictim = b; }
+      }
+
+      for (let b = 0; b < BLOCK_NUM; b++) {
+        const blk = flash_blocks[b];
+        const isActive = (b === active_block);
+        const isVictim = (b === candidateVictim && maxInv > 0);
+
+        const card = document.createElement('div');
+        card.className = `p-2.5 rounded-xl border transition ${
+          isActive ? 'bg-cyan-950/20 active-glow border-cyan-500' :
+          (isVictim ? 'bg-rose-950/20 victim-glow border-rose-500' : 'bg-slate-900/80 border-slate-800')
+        }`;
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between pb-1.5 border-b border-slate-800 mb-1.5 text-xs">
+            <div class="flex items-center gap-1 font-mono">
+              <span class="font-bold text-white">Block ${b}</span>
+              ${isActive ? '<span class="text-[9px] px-1 rounded bg-cyan-500/20 text-cyan-300">Active</span>' : ''}
+              ${isVictim ? '<span class="text-[9px] px-1 rounded bg-rose-500/20 text-rose-300">Victim</span>' : ''}
+            </div>
+            <span class="text-[10px] text-slate-400 font-mono">Erase: <strong class="text-rose-400">${blk.erase_count}</strong></span>
+          </div>
+
+          <!-- 4 Pages Grid -->
+          <div class="grid grid-cols-2 gap-1.5 font-mono text-[11px]">
+            ${blk.pages.map((p, pIdx) => {
+              let cls = '', badge = '', val = '';
+              if (p.state === PAGE_FREE) {
+                cls = 'bg-slate-900 border-dashed border-slate-700 text-slate-500';
+                badge = '[ F ]';
+                val = '0xFF';
+              } else if (p.state === PAGE_VALID) {
+                cls = 'bg-cyan-950/50 border-cyan-500/60 text-cyan-300';
+                badge = `[V:L${p.lba}]`;
+                val = `"${p.data}"`;
+              } else {
+                cls = 'bg-rose-950/50 border-rose-500/60 text-rose-400 line-through';
+                badge = `[I:L${p.lba}]`;
+                val = '垃圾';
+              }
+              const isPtr = (isActive && pIdx === active_page);
+              return `
+                <div id="page-${b}-${pIdx}" class="p-1.5 rounded border ${cls} ${isPtr ? 'ring-1 ring-cyan-400' : ''}">
+                  <div class="flex justify-between text-[9px] text-slate-400">
+                    <span>P${pIdx}</span>
+                    <span class="font-bold">${badge}</span>
+                  </div>
+                  <div class="truncate text-[10px] text-slate-300 mt-0.5">${val}</div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+        nandBox.appendChild(card);
+      }
+    }
+
+    function highlightPage(b, p, isHighlight) {
+      if (b === -1 || p === -1) return;
+      const el = document.getElementById(`page-${b}-${p}`);
+      if (el) {
+        if (isHighlight) el.classList.add('ring-2', 'ring-cyan-300', 'scale-105');
+        else el.classList.remove('ring-2', 'ring-cyan-300', 'scale-105');
+      }
+    }
+
+    // ------------------------------------------------------------------------
+    // Log Helpers
+    // ------------------------------------------------------------------------
+    function addLog(cat, msg) {
+      const box = document.getElementById('simpleLogConsole');
+      const time = new Date().toTimeString().split(' ')[0];
+      const div = document.createElement('div');
+      div.className = 'flex items-start gap-1.5 text-slate-300 text-[11px]';
+      div.innerHTML = `
+        <span class="text-slate-600 shrink-0">[${time}]</span>
+        <span class="px-1 rounded text-[9px] font-bold shrink-0 ${
+          cat === 'HOST' ? 'bg-cyan-950 text-cyan-400' :
+          cat === 'GC' ? 'bg-amber-950 text-amber-400' :
+          cat === 'TRIM' ? 'bg-rose-950 text-rose-400' : 'bg-blue-950 text-blue-400'
+        }">${cat}</span>
+        <span class="break-all">${msg}</span>
+      `;
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function clearLogs() {
+      document.getElementById('simpleLogConsole').innerHTML = '';
+    }
+
+    // ------------------------------------------------------------------------
+    // Step by Step Tour (5 Stages)
+    // ------------------------------------------------------------------------
+    const tourData = [
+      {
+        step: 1,
+        title: "階段 1: 循序寫入 LBA 0 ~ 7 (填滿 8 邏輯空間)",
+        desc: "主機初次寫入 LBA 0 到 7。FTL 循序配置實體空白頁 (Block 0 與 Block 1) 並建立 L2P 表。目前全為有效頁，無任何垃圾，寫入放大 WAF = 1.00。",
+        action: () => {
+          ftl_init();
+          for (let i = 0; i < LOGICAL_LBA_NUM; i++) ftl_write(i, `Data_${i}`);
+        }
+      },
+      {
+        step: 2,
+        title: "階段 2: 隨機覆寫 LBA 0, 1, 2 (異地更新產生無效頁)",
+        desc: "主機覆寫相同 LBA。因 NAND 具有 Erase-before-Write 物理鐵律，無法原地覆寫。FTL 採用「異地更新」：將舊位置標記為紅色的 INVALID 作廢頁，新資料寫入 Block 2，並即時更新 L2P 表。",
+        action: () => {
+          for (let i = 0; i < 3; i++) ftl_write(i, `New_${i}`);
+        }
+      },
+      {
+        step: 3,
+        title: "階段 3: 空間不足，自動觸發 Greedy 垃圾回收 (GC)",
+        desc: "持續寫入 LBA 3 到 7，剩餘空白區塊降至水線 (Free &le; 1)。FTL 自動啟動 Greedy GC：挑出垃圾最多的 Block 0 作為受害者，整塊抹除並回收為全新空白區塊！",
+        action: () => {
+          for (let i = 3; i < LOGICAL_LBA_NUM; i++) ftl_write(i, `New_${i}`);
+        }
+      },
+      {
+        step: 4,
+        title: "階段 4: 全域資料校驗 (Read Verification 100% 通過)",
+        desc: "主機讀取所有 LBA 0 到 7，驗證資料即使經過多次覆寫、GC 搬遷與區塊抹除，透過 L2P 查表還原的資料依然 100% 正確無誤！",
+        action: () => {
+          for (let i = 0; i < LOGICAL_LBA_NUM; i++) ftl_read(i);
+        }
+      },
+      {
+        step: 5,
+        title: "階段 5: TRIM 指令演示 (主機通知刪檔，釋放空間)",
+        desc: "主機發送 TRIM 刪除 LBA 6 與 7。FTL 將對應實體頁直接轉為 INVALID。下次 GC 遇到該區塊時，直接整塊抹除，省去搬遷有效頁的巨額開銷，成功降低寫入放大 (WAF)！",
+        action: () => {
+          ftl_trim(6);
+          ftl_trim(7);
+        }
+      }
+    ];
+
+    function updateStepUI() {
+      const cur = tourData[currentStep - 1];
+      document.getElementById('stepTitle').innerText = cur.title;
+      document.getElementById('stepDesc').innerText = cur.desc;
+
+      for (let i = 1; i <= 5; i++) {
+        const btn = document.getElementById(`step-btn-${i}`);
+        if (i === currentStep) {
+          btn.className = 'px-3 py-1.5 rounded-lg bg-cyan-600 text-white font-bold transition shadow';
+        } else if (i < currentStep) {
+          btn.className = 'px-3 py-1.5 rounded-lg bg-emerald-950 text-emerald-400 border border-emerald-800 transition';
+        } else {
+          btn.className = 'px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition';
+        }
+      }
+    }
+
+    function jumpToStep(step) {
+      currentStep = step;
+      ftl_init();
+      for (let s = 1; s <= step; s++) {
+        tourData[s - 1].action();
+      }
+      updateStepUI();
+      updateUI();
+    }
+
+    function nextStep() {
+      if (currentStep < 5) jumpToStep(currentStep + 1);
+      else alert('已達最後階段！點擊「重設」或點選其他步驟重新體驗。');
+    }
+
+    function prevStep() {
+      if (currentStep > 1) jumpToStep(currentStep - 1);
+    }
+
+    function resetSimulator() {
+      jumpToStep(1);
+    }
+
+    // ------------------------------------------------------------------------
+    // Manual Actions
+    // ------------------------------------------------------------------------
+    function handleManualWrite() {
+      const lba = parseInt(document.getElementById('manualWriteLba').value);
+      ftl_write(lba, `U_${Math.floor(Math.random()*90+10)}`);
+    }
+
+    function handleManualRead() {
+      const lba = parseInt(document.getElementById('manualReadLba').value);
+      quickRead(lba);
+    }
+
+    function quickRead(lba) {
+      const res = ftl_read(lba);
+      const box = document.getElementById('quickResultBox');
+      const txt = document.getElementById('quickResultText');
+      box.classList.remove('hidden');
+      txt.innerText = `LBA ${lba} 內容: "${res}"`;
+    }
+
+    function handleManualTrim() {
+      const lba = parseInt(document.getElementById('manualReadLba').value);
+      ftl_trim(lba);
+    }
+
+    function handleManualGc() {
+      const ok = ftl_trigger_gc();
+      if (!ok) alert('目前沒有包含垃圾無效頁的區塊可供回收！');
+      updateUI();
+    }
+
+    // ------------------------------------------------------------------------
+    // Start
+    // ------------------------------------------------------------------------
+    window.addEventListener('DOMContentLoaded', () => {
+      jumpToStep(1);
+    });
+  </script>
+</body>
+</html>

@@ -182,6 +182,8 @@ cl /utf-8 /nologo /W4 main.c ftl.c nand_flash.c /Fe:ftl_sim.exe
 ## 📄 專案目錄結構
 ```
 .
+├── index.html          # ★ 互動可視化網頁 (純瀏覽器開啟，含完整 FTL/NAND 狀態機動畫與面試寶典)
+├── open_visualizer.bat # 快速雙擊開啟可視化網頁批次檔
 ├── README.md           # 專案詳細架構、影片對照、編譯說明與面試 Q&A
 ├── nand_flash.h        # NAND Flash 物理層結構與狀態機定義 (Block/Page/PageState)
 ├── nand_flash.c        # NAND Flash 物理層實作 (Erase-before-Write 防禦、佈局輸出)
@@ -190,3 +192,4 @@ cl /utf-8 /nologo /W4 main.c ftl.c nand_flash.c /Fe:ftl_sim.exe
 ├── main.c              # 完整 SSD 生命週期測試展示驅動
 └── .gitignore          # 忽略編譯產物
 ```
+
