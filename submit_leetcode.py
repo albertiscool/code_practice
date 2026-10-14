@@ -99,13 +99,13 @@ def submit_solution(slug, question_id, code_path):
 if __name__ == '__main__':
     import glob
     problem = sys.argv[1].lower() if len(sys.argv) > 1 else 'p1'
-    day_matches = glob.glob('Day115*')
-    day_dir = day_matches[0] if day_matches else 'Day115'
+    day_matches = glob.glob('Day116*')
+    day_dir = day_matches[0] if day_matches else 'Day116'
     
     mapping = {
-        'p1': ('merge-sorted-array', 88, f'{day_dir}/p1.c'),
-        'p2': ('reverse-bits', 190, f'{day_dir}/p2.c'),
-        'p3': ('remove-linked-list-elements', 203, f'{day_dir}/p3.c')
+        'p1': ('majority-element', 169, f'{day_dir}/p1.c'),
+        'p2': ('counting-bits', 338, f'{day_dir}/p2.c'),
+        'p3': ('palindrome-linked-list', 234, f'{day_dir}/p3.c')
     }
 
     if problem in mapping:
