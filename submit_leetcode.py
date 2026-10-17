@@ -99,13 +99,13 @@ def submit_solution(slug, question_id, code_path):
 if __name__ == '__main__':
     import glob
     problem = sys.argv[1].lower() if len(sys.argv) > 1 else 'p1'
-    day_matches = glob.glob('Day117*')
-    day_dir = day_matches[0] if day_matches else 'Day117'
+    day_matches = glob.glob('Day118*')
+    day_dir = day_matches[0] if day_matches else 'Day118'
     
     mapping = {
-        'p1': ('binary-gap', 899, f'{day_dir}/p1.c'),
-        'p2': ('sort-array-by-parity-ii', 958, f'{day_dir}/p2.c'),
-        'p3': ('odd-even-linked-list', 328, f'{day_dir}/p3.c')
+        'p1': ('number-of-steps-to-reduce-a-number-to-zero', 1444, f'{day_dir}/p1.c'),
+        'p2': ('shuffle-the-array', 1580, f'{day_dir}/p2.c'),
+        'p3': ('delete-the-middle-node-of-a-linked-list', 2216, f'{day_dir}/p3.c')
     }
 
     if problem in mapping:
