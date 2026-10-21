@@ -99,13 +99,13 @@ def submit_solution(slug, question_id, code_path):
 if __name__ == '__main__':
     import glob
     problem = sys.argv[1].lower() if len(sys.argv) > 1 else 'p1'
-    day_matches = glob.glob('Day120*')
-    day_dir = day_matches[0] if day_matches else 'Day120'
+    day_matches = glob.glob('Day121*')
+    day_dir = day_matches[0] if day_matches else 'Day121'
     
     mapping = {
-        'p1': ('number-of-even-and-odd-bits', 2659, f'{day_dir}/p1.c'),
-        'p2': ('find-all-numbers-disappeared-in-an-array', 448, f'{day_dir}/p2.c'),
-        'p3': ('remove-duplicates-from-sorted-list-ii', 82, f'{day_dir}/p3.c')
+        'p1': ('decode-xored-array', 1839, f'{day_dir}/p1.c'),
+        'p2': ('reverse-words-in-a-string-iii', 557, f'{day_dir}/p2.c'),
+        'p3': ('merge-nodes-in-between-zeros', 2299, f'{day_dir}/p3.c')
     }
 
     if problem in mapping:

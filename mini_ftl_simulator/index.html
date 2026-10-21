@@ -73,7 +73,7 @@
         </h1>
       </div>
       <p class="text-xs text-slate-400 mt-1">
-        L2P 映射轉換 &bull; 異地更新 &bull; 垃圾回收 (GC) &bull; 寫入放大 (WAF) &bull; TRIM 指令
+        L2P 映射轉換 &bull; 抹損均衡 &bull; 垃圾回收 (GC) &bull; 寫入放大 (WAF) &bull; TRIM 指令
       </p>
     </div>
 
@@ -81,12 +81,12 @@
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
       <!-- Host Writes -->
       <div class="bg-cardBg px-3 py-2 rounded-xl border border-cardBorder">
-        <div class="text-[10px] text-slate-400">主機寫入 (Host)</div>
+        <div class="text-[10px] text-slate-400">主機請求寫入 (Host)</div>
         <div class="text-lg font-bold text-cyan-400 mt-0.5" id="metricHostWrites">0</div>
       </div>
       <!-- NAND Programs -->
       <div class="bg-cardBg px-3 py-2 rounded-xl border border-cardBorder">
-        <div class="text-[10px] text-slate-400">NAND 實體寫入</div>
+        <div class="text-[10px] text-slate-400">NAND 實體寫入 (含GC)</div>
         <div class="text-lg font-bold text-blue-400 mt-0.5" id="metricNandPrograms">0</div>
       </div>
       <!-- WAF Gauge -->
@@ -105,10 +105,10 @@
   </header>
 
   <!-- ======================================================================== -->
-  <!-- 核心引導控制台 (簡化為單一互動導覽面板) -->
+  <!-- 核心引導控制台 (5 步驟直覺切換) -->
   <!-- ======================================================================== -->
   <section class="bg-cardBg rounded-2xl border border-cardBorder p-4 md:p-5 shadow-lg space-y-4">
-    <!-- Stepper Buttons (5 步驟直覺切換) -->
+    <!-- Stepper Buttons -->
     <div class="flex items-center justify-between gap-2 overflow-x-auto pb-1 text-xs font-mono">
       <div class="flex gap-2">
         <button onclick="jumpToStep(1)" id="step-btn-1" class="px-3 py-1.5 rounded-lg bg-cyan-600 text-white font-bold transition shadow">
@@ -118,7 +118,7 @@
           2. 覆寫產生垃圾
         </button>
         <button onclick="jumpToStep(3)" id="step-btn-3" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition">
-          3. 空間不足觸發 GC
+          3. 啟用 B3 & GC 搬遷 (WAF上升)
         </button>
         <button onclick="jumpToStep(4)" id="step-btn-4" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition">
           4. 讀取校驗無損
@@ -142,7 +142,7 @@
       </div>
     </div>
 
-    <!-- 動態白話解說卡片 (Big, Clear Explanation) -->
+    <!-- 動態白話解說卡片 -->
     <div class="bg-slate-900/90 rounded-xl p-3.5 border border-slate-700/60 flex items-start gap-3">
       <div class="text-xl shrink-0 mt-0.5" id="stepIcon">💡</div>
       <div class="space-y-1">
@@ -199,7 +199,7 @@
       <div class="flex items-center justify-between border-b border-slate-800 pb-2">
         <h2 class="text-sm font-bold text-white flex items-center gap-2">
           <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
-          NAND Flash 物理晶片陣列
+          NAND Flash 物理晶片陣列 (4 Blocks &times; 4 Pages)
         </h2>
         <!-- 圖例 -->
         <div class="flex items-center gap-2.5 text-[10px] font-mono">
@@ -325,8 +325,8 @@
         <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-800 space-y-1">
           <div class="font-bold text-amber-300">2. 什麼是寫入放大 (WAF)？</div>
           <p class="text-slate-400 text-[11px]">
-            $$\text{WAF} = \frac{\text{NAND 實體寫入量}}{\text{Host 請求寫入量}}$$
-            當 GC 搬遷受害者區塊內的「有效頁」時，會產生額外物理寫入，導致 WAF &gt; 1.0，加速顆粒損耗。
+            $$\text{WAF} = \frac{\text{NAND 實體寫入量 (Host + GC 搬遷)}}{\text{Host 請求寫入量}}$$
+            當 GC 搬遷受害者區塊內的「有效頁」時，會產生額外的物理寫入，導致 WAF &gt; 1.00，加速顆粒損耗！
           </p>
         </div>
         <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-800 space-y-1">
@@ -340,7 +340,7 @@
   </footer>
 
   <!-- ======================================================================== -->
-  <!-- JavaScript: 輕量穩健的 FTL 模擬器邏輯 -->
+  <!-- JavaScript: 包含抹損均衡 (Wear Leveling) 與真正 WAF 搬遷的 FTL 核心 -->
   <!-- ======================================================================== -->
   <script>
     const BLOCK_NUM = 4;
@@ -382,12 +382,21 @@
       stats.erase_count = 0;
     }
 
+    // ★ 關鍵修復 1：抹損均衡 (Wear Leveling) + 環狀指針搜尋
+    // 解決原本只會回傳 Block 0 導致 Block 3 永遠輪不到的問題！
     function find_free_block() {
-      for (let b = 0; b < BLOCK_NUM; b++) {
-        let all_free = flash_blocks[b].pages.every(p => p.state === PAGE_FREE);
-        if (all_free) return b;
+      let candidates = [];
+      for (let i = 0; i < BLOCK_NUM; i++) {
+        let b = (active_block + 1 + i) % BLOCK_NUM;
+        if (b < 0) b = 0;
+        if (flash_blocks[b].pages.every(p => p.state === PAGE_FREE)) {
+          candidates.push(b);
+        }
       }
-      return -1;
+      if (candidates.length === 0) return -1;
+      // Wear Leveling 策略：優先挑選抹寫次數 (erase_count) 最低的空白區塊
+      candidates.sort((a, b) => flash_blocks[a].erase_count - flash_blocks[b].erase_count);
+      return candidates[0];
     }
 
     function count_free_blocks() {
@@ -401,14 +410,15 @@
       stats.gc_trigger_count = 0;
 
       l2p_table = Array.from({ length: LOGICAL_LBA_NUM }, () => ({ block: -1, page: -1 }));
-      active_block = find_free_block();
+      active_block = 0;
       active_page = 0;
       addLog("FTL", `FTL 初始化完成，啟用 Block ${active_block} 作為 Active Block`);
     }
 
+    // ★ 關鍵修復 2：GC 真正搬遷有效頁，產生寫入放大 (WAF > 1.00)
     function ftl_trigger_gc() {
       stats.gc_trigger_count++;
-      // Greedy: 找非活躍中、Invalid 最多的區塊
+      // Greedy Policy: 挑選含有最多 INVALID 垃圾頁的受害者區塊
       let victim = -1;
       let maxInv = 0;
       for (let b = 0; b < BLOCK_NUM; b++) {
@@ -422,37 +432,40 @@
         return false;
       }
 
-      addLog("GC", `觸發 GC：鎖定受害者 Block ${victim} (含 ${maxInv} 個垃圾頁)`);
+      addLog("GC", `>>> [GC 觸發] 鎖定受害者 Block ${victim} (內含 ${maxInv} 個垃圾頁)`);
 
-      // 搬遷有效頁
+      // 檢查受害者區塊內是否有有效頁 (Valid Pages) 需要搬遷
+      let validCountInVictim = 0;
       for (let p = 0; p < PAGES_PER_BLOCK; p++) {
         const page = flash_blocks[victim].pages[p];
         if (page.state === PAGE_VALID) {
-          if (active_page >= PAGES_PER_BLOCK) {
+          validCountInVictim++;
+          // 若活躍區塊滿了，切換至下一個空白區塊 (例如 Block 3)
+          if (active_block === -1 || active_page >= PAGES_PER_BLOCK) {
             active_block = find_free_block();
             active_page = 0;
           }
           const lba = page.lba;
           const data = page.data;
 
-          // 寫入新頁
+          // ★ 產生額外實體寫入 (GC Relocation Write)
           flash_blocks[active_block].pages[active_page] = { state: PAGE_VALID, lba, data };
-          stats.program_count++;
+          stats.program_count++; // 物理寫入次數累加，導致 WAF 升高！
 
-          // 更新 L2P
+          // 更新 L2P 映射表
           l2p_table[lba] = { block: active_block, page: active_page };
-          addLog("GC", `搬遷 LBA ${lba} 至 (Block ${active_block}, Page ${active_page}) [WAF 增加]`);
+          addLog("GC", `  [有效頁搬遷] LBA ${lba}: (B${victim}, P${p}) &rarr; (B${active_block}, P${active_page}) [★ 額外寫入！WAF 提升]`);
           active_page++;
         }
       }
 
-      // 整塊抹除
+      // 整塊抹除受害者區塊
       for (let p = 0; p < PAGES_PER_BLOCK; p++) {
         flash_blocks[victim].pages[p] = { state: PAGE_FREE, lba: -1, data: "0xFF" };
       }
       flash_blocks[victim].erase_count++;
       stats.erase_count++;
-      addLog("NAND", `抹除 Block ${victim}，重設為全部 FREE 空白頁！`);
+      addLog("NAND", `>>> [抹除區塊] Block ${victim} 整塊刷回 0xFF，轉為全新空白頁！`);
 
       return true;
     }
@@ -469,20 +482,22 @@
         addLog("FTL", `異地更新：舊位置 (B${ob}, P${op}) 標記為 INVALID`);
       }
 
-      // 2. 空間檢查
+      // 2. 空間檢查：若目前區塊寫滿，檢查水線並分配新區塊
       if (active_block === -1 || active_page >= PAGES_PER_BLOCK) {
         if (count_free_blocks() <= 1) {
           ftl_trigger_gc();
         }
-        active_block = find_free_block();
-        active_page = 0;
+        if (active_block === -1 || active_page >= PAGES_PER_BLOCK) {
+          active_block = find_free_block();
+          active_page = 0;
+        }
       }
 
-      // 3. 寫入
+      // 3. 寫入新實體頁
       flash_blocks[active_block].pages[active_page] = { state: PAGE_VALID, lba, data: dataStr };
       stats.program_count++;
       l2p_table[lba] = { block: active_block, page: active_page };
-      addLog("FTL", `寫入 LBA ${lba} &rarr; 實體 (Block ${active_block}, Page ${active_page})`);
+      addLog("FTL", `寫入 LBA ${lba} &rarr; (Block ${active_block}, Page ${active_page})`);
       active_page++;
 
       updateUI();
@@ -510,7 +525,7 @@
         const p = l2p_table[lba].page;
         flash_blocks[b].pages[p].state = PAGE_INVALID;
         l2p_table[lba] = { block: -1, page: -1 };
-        addLog("TRIM", `TRIM 釋放 LBA ${lba}！實體 (B${b}, P${p}) 轉為 INVALID`);
+        addLog("TRIM", `TRIM 釋放 LBA ${lba}！實體 (B${b}, P${p}) 轉為 INVALID，免去搬遷負擔！`);
         updateUI();
         return true;
       }
@@ -521,11 +536,19 @@
     // UI Rendering
     // ------------------------------------------------------------------------
     function updateUI() {
-      // 1. Metrics
+      // 1. Metrics & WAF
       document.getElementById('metricHostWrites').innerText = stats.host_write_count;
       document.getElementById('metricNandPrograms').innerText = stats.program_count;
+      
       const waf = stats.host_write_count === 0 ? 1.00 : (stats.program_count / stats.host_write_count);
-      document.getElementById('metricWaf').innerText = waf.toFixed(2);
+      const wafElem = document.getElementById('metricWaf');
+      wafElem.innerText = waf.toFixed(2);
+      if (waf > 1.00) {
+        wafElem.className = 'text-lg font-bold text-amber-400 mt-0.5 animate-pulse';
+      } else {
+        wafElem.className = 'text-lg font-bold text-emerald-400 mt-0.5';
+      }
+
       document.getElementById('metricGcTriggers').innerText = stats.gc_trigger_count;
 
       const freeCnt = count_free_blocks();
@@ -533,7 +556,7 @@
       document.getElementById('activeWritePointer').innerText = 
         active_block !== -1 ? `Active: B${active_block}, P${active_page}` : "無可用區塊";
 
-      // 2. Render L2P
+      // 2. Render L2P Table
       const l2pTbody = document.getElementById('l2pTableBody');
       l2pTbody.innerHTML = '';
       for (let lba = 0; lba < LOGICAL_LBA_NUM; lba++) {
@@ -551,7 +574,7 @@
           </td>
           <td class="py-1.5 px-2">
             ${isMapped ? 
-              `<span class="px-1.5 py-0.2 rounded bg-blue-950 text-blue-300 border border-blue-800 text-[11px]">
+              `<span class="px-1.5 py-0.2 rounded bg-blue-950 text-blue-300 border border-blue-800 text-[11px] font-bold">
                 Block ${item.block}, Page ${item.page}
               </span>` : 
               `<span class="text-slate-500 italic">Unmapped</span>`
@@ -566,11 +589,11 @@
         l2pTbody.appendChild(tr);
       }
 
-      // 3. Render 4 NAND Blocks
+      // 3. Render 4 NAND Blocks (All 4 Blocks displayed)
       const nandBox = document.getElementById('nandMatrixContainer');
       nandBox.innerHTML = '';
 
-      // Find victim
+      // Find victim candidate
       let candidateVictim = -1, maxInv = 0;
       for (let b = 0; b < BLOCK_NUM; b++) {
         if (b === active_block) continue;
@@ -606,15 +629,15 @@
               if (p.state === PAGE_FREE) {
                 cls = 'bg-slate-900 border-dashed border-slate-700 text-slate-500';
                 badge = '[ F ]';
-                val = '0xFF';
+                val = '0xFF (空白)';
               } else if (p.state === PAGE_VALID) {
-                cls = 'bg-cyan-950/50 border-cyan-500/60 text-cyan-300';
+                cls = 'bg-cyan-950/50 border-cyan-500/60 text-cyan-300 shadow-sm';
                 badge = `[V:L${p.lba}]`;
                 val = `"${p.data}"`;
               } else {
                 cls = 'bg-rose-950/50 border-rose-500/60 text-rose-400 line-through';
                 badge = `[I:L${p.lba}]`;
-                val = '垃圾';
+                val = '垃圾作廢';
               }
               const isPtr = (isActive && pIdx === active_page);
               return `
@@ -668,49 +691,57 @@
     }
 
     // ------------------------------------------------------------------------
-    // Step by Step Tour (5 Stages)
+    // ★ 關鍵修復 3：精準設計 5 階段流程，保證 Block 3 全面使用且 WAF > 1.00
     // ------------------------------------------------------------------------
     const tourData = [
       {
         step: 1,
-        title: "階段 1: 循序寫入 LBA 0 ~ 7 (填滿 8 邏輯空間)",
-        desc: "主機初次寫入 LBA 0 到 7。FTL 循序配置實體空白頁 (Block 0 與 Block 1) 並建立 L2P 表。目前全為有效頁，無任何垃圾，寫入放大 WAF = 1.00。",
+        title: "階段 1: 循序寫入 LBA 0 ~ 7 (填滿 Block 0 與 Block 1)",
+        desc: "主機初次寫入 8 筆資料。FTL 循序配置實體空白頁：Block 0 存放 LBA 0~3，Block 1 存放 LBA 4~7。此時無任何垃圾頁，Host 寫入 8 = NAND 寫入 8，WAF 完美等於 1.00。",
         action: () => {
           ftl_init();
-          for (let i = 0; i < LOGICAL_LBA_NUM; i++) ftl_write(i, `Data_${i}`);
+          for (let i = 0; i < LOGICAL_LBA_NUM; i++) {
+            ftl_write(i, `Data_${i}`);
+          }
         }
       },
       {
         step: 2,
-        title: "階段 2: 隨機覆寫 LBA 0, 1, 2 (異地更新產生無效頁)",
-        desc: "主機覆寫相同 LBA。因 NAND 具有 Erase-before-Write 物理鐵律，無法原地覆寫。FTL 採用「異地更新」：將舊位置標記為紅色的 INVALID 作廢頁，新資料寫入 Block 2，並即時更新 L2P 表。",
+        title: "階段 2: 覆寫部分資料至 Block 2 (產生垃圾頁與有效頁混合)",
+        desc: "主機覆寫 LBA 0 與 LBA 1。FTL 分配全新 Block 2 存放新資料，舊位置轉為紅色 INVALID 垃圾頁。此時 Block 0 內保留著 2 個有效頁 (LBA 2, 3)，這將是下一階段 GC 搬遷的核心！",
         action: () => {
-          for (let i = 0; i < 3; i++) ftl_write(i, `New_${i}`);
+          ftl_write(0, "New_0");
+          ftl_write(1, "New_1");
+          ftl_write(0, "V2_0");
+          ftl_write(1, "V2_1");
         }
       },
       {
         step: 3,
-        title: "階段 3: 空間不足，自動觸發 Greedy 垃圾回收 (GC)",
-        desc: "持續寫入 LBA 3 到 7，剩餘空白區塊降至水線 (Free &le; 1)。FTL 自動啟動 Greedy GC：挑出垃圾最多的 Block 0 作為受害者，整塊抹除並回收為全新空白區塊！",
+        title: "階段 3: 空間吃緊觸發 GC！啟用 Block 3 並搬遷有效頁 (★ WAF 升至 1.14)",
+        desc: "主機持續寫入使空間耗盡，FTL 啟用全新 Block 3！觸發 GC 時，受害者 Block 0 內仍有 2 個有效頁 (LBA 2, 3)。FTL 必須先將這 2 個有效頁「額外搬遷寫入 Block 3」，才能抹除 Block 0。這 2 次額外實體寫入使 WAF 飆升至 1.14！",
         action: () => {
-          for (let i = 3; i < LOGICAL_LBA_NUM; i++) ftl_write(i, `New_${i}`);
+          // 空間吃緊觸發 GC，挑中 Block 0，將其有效頁 LBA 2, 3 搬遷至 Block 3 (額外寫入！WAF上升)
+          // 接著新寫入 LBA 4, 5 也存入 Block 3
+          ftl_write(4, "New_4");
+          ftl_write(5, "New_5");
         }
       },
       {
         step: 4,
         title: "階段 4: 全域資料校驗 (Read Verification 100% 通過)",
-        desc: "主機讀取所有 LBA 0 到 7，驗證資料即使經過多次覆寫、GC 搬遷與區塊抹除，透過 L2P 查表還原的資料依然 100% 正確無誤！",
+        desc: "主機讀取所有 LBA 0 到 7。其中 LBA 2, 3, 4, 5 精準從 Block 3 讀出 (含搬遷後的 LBA 2, 3)，LBA 0, 1 從 Block 2 讀出，LBA 6, 7 從 Block 1 讀出。證明歷經 GC 搬遷、區塊抹除，資料依然 100% 完好無損！",
         action: () => {
           for (let i = 0; i < LOGICAL_LBA_NUM; i++) ftl_read(i);
         }
       },
       {
         step: 5,
-        title: "階段 5: TRIM 指令演示 (主機通知刪檔，釋放空間)",
-        desc: "主機發送 TRIM 刪除 LBA 6 與 7。FTL 將對應實體頁直接轉為 INVALID。下次 GC 遇到該區塊時，直接整塊抹除，省去搬遷有效頁的巨額開銷，成功降低寫入放大 (WAF)！",
+        title: "階段 5: TRIM 演示 (主機通知刪檔，防止未來 GC 搬遷產生 WAF)",
+        desc: "主機發送 TRIM 釋放 Block 3 中的 LBA 2 與 3。FTL 將對應實體頁直接轉為紅色 INVALID。下次 GC 遇到該區塊時，就可以直接整塊抹除，省去搬遷開銷，徹底杜絕寫入放大！",
         action: () => {
-          ftl_trim(6);
-          ftl_trim(7);
+          ftl_trim(2);
+          ftl_trim(3);
         }
       }
     ];
