@@ -99,13 +99,13 @@ def submit_solution(slug, question_id, code_path):
 if __name__ == '__main__':
     import glob
     problem = sys.argv[1].lower() if len(sys.argv) > 1 else 'p1'
-    day_matches = glob.glob('Day121*')
-    day_dir = day_matches[0] if day_matches else 'Day121'
+    day_matches = glob.glob('Day122*')
+    day_dir = day_matches[0] if day_matches else 'Day122'
     
     mapping = {
-        'p1': ('decode-xored-array', 1839, f'{day_dir}/p1.c'),
-        'p2': ('reverse-words-in-a-string-iii', 557, f'{day_dir}/p2.c'),
-        'p3': ('merge-nodes-in-between-zeros', 2299, f'{day_dir}/p3.c')
+        'p1': ('max-consecutive-ones', 485, f'{day_dir}/p1.c'),
+        'p2': ('add-strings', 415, f'{day_dir}/p2.c'),
+        'p3': ('merge-in-between-linked-lists', 1765, f'{day_dir}/p3.c')
     }
 
     if problem in mapping:
