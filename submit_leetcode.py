@@ -99,13 +99,13 @@ def submit_solution(slug, question_id, code_path):
 if __name__ == '__main__':
     import glob
     problem = sys.argv[1].lower() if len(sys.argv) > 1 else 'p1'
-    day_matches = glob.glob('Day123*')
-    day_dir = day_matches[0] if day_matches else 'Day123'
+    day_matches = glob.glob('Day124*')
+    day_dir = day_matches[0] if day_matches else 'Day124'
     
     mapping = {
-        'p1': ('single-number-iii', 260, f'{day_dir}/p1.c'),
-        'p2': ('reverse-string-ii', 541, f'{day_dir}/p2.c'),
-        'p3': ('add-two-numbers', 2, f'{day_dir}/p3.c')
+        'p1': ('xor-operation-in-an-array', 1610, f'{day_dir}/p1.c'),
+        'p2': ('valid-parentheses', 20, f'{day_dir}/p2.c'),
+        'p3': ('find-first-and-last-position-of-element-in-sorted-array', 34, f'{day_dir}/p3.c')
     }
 
     if problem in mapping:
