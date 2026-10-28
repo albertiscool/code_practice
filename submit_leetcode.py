@@ -99,13 +99,13 @@ def submit_solution(slug, question_id, code_path):
 if __name__ == '__main__':
     import glob
     problem = sys.argv[1].lower() if len(sys.argv) > 1 else 'p1'
-    day_matches = glob.glob('Day126*')
-    day_dir = day_matches[0] if day_matches else 'Day126'
+    day_matches = glob.glob('Day128*')
+    day_dir = day_matches[0] if day_matches else 'Day128'
     
     mapping = {
-        'p1': ('sort-integers-by-the-number-of-1-bits', 1458, f'{day_dir}/p1.c'),
-        'p2': ('is-subsequence', 392, f'{day_dir}/p2.c'),
-        'p3': ('add-two-numbers-ii', 445, f'{day_dir}/p3.c')
+        'p1': ('prime-number-of-set-bits-in-binary-representation', 767, f'{day_dir}/p1.c'),
+        'p2': ('flipping-an-image', 861, f'{day_dir}/p2.c'),
+        'p3': ('swapping-nodes-in-a-linked-list', 528, f'{day_dir}/p3.c')
     }
 
     if problem in mapping:

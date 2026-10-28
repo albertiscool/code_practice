@@ -6,8 +6,8 @@ import glob
 GCC_PATH = r"C:\Program Files\CodeBlocks\MinGW\bin\gcc.exe"
 
 def run_test(target):
-    day_matches = glob.glob('Day127*')
-    day_dir = day_matches[0] if day_matches else 'Day127'
+    day_matches = glob.glob('Day128*')
+    day_dir = day_matches[0] if day_matches else 'Day128'
     src_file = os.path.join(day_dir, f"{target}.c")
     exe_file = os.path.join(day_dir, f"{target}.exe")
 
