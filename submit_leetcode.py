@@ -99,13 +99,13 @@ def submit_solution(slug, question_id, code_path):
 if __name__ == '__main__':
     import glob
     problem = sys.argv[1].lower() if len(sys.argv) > 1 else 'p1'
-    day_matches = glob.glob('Day129*')
-    day_dir = day_matches[0] if day_matches else 'Day129'
+    day_matches = glob.glob('Day130*')
+    day_dir = day_matches[0] if day_matches else 'Day130'
     
     mapping = {
-        'p1': ('bitwise-and-of-numbers-range', 201, f'{day_dir}/p1.c'),
-        'p2': ('reverse-only-letters', 953, f'{day_dir}/p2.c'),
-        'p3': ('add-two-numbers-ii', 445, f'{day_dir}/p3.c')
+        'p1': ('minimum-flips-to-make-a-or-b-equal-to-c', 1441, f'{day_dir}/p1.c'),
+        'p2': ('backspace-string-compare', 874, f'{day_dir}/p2.c'),
+        'p3': ('split-linked-list-in-parts', 725, f'{day_dir}/p3.c')
     }
 
     if problem in mapping:
